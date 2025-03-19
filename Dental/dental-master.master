@@ -1,0 +1,99 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="dental-master.master.cs" Inherits="dental_master" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <style type="text/css">
+        .auto-style1 {
+            width: 100%;
+        }
+        .auto-style4 {
+            height: 27px;
+        }
+        .auto-style8 {
+            text-align: center;
+        }
+        .auto-style9 {
+            height: 50px;
+        }
+        </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <table class="auto-style1">
+            <tr>
+                <td class="auto-style4">
+                    <asp:Menu ID="Menu1" runat="server" BackColor="#B5C7DE" DynamicHorizontalOffset="2" Font-Names="Verdana" Font-Size="0.8em" ForeColor="#284E98" Orientation="Horizontal" StaticSubMenuIndent="10px">
+                        <DynamicHoverStyle BackColor="#284E98" ForeColor="White" />
+                        <DynamicMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
+                        <DynamicMenuStyle BackColor="#B5C7DE" />
+                        <DynamicSelectedStyle BackColor="#507CD1" />
+                        <DynamicItemTemplate>
+                            <%# Eval("Text") %>
+                        </DynamicItemTemplate>
+                        <Items>
+                            <asp:MenuItem Text="Home" Value="Home"></asp:MenuItem>
+                            <asp:MenuItem Text="Basic Data" Value="Basic data">
+                                <asp:MenuItem NavigateUrl="~/customers.aspx" Text="Customers" Value="customers">
+                                    <asp:MenuItem NavigateUrl="~/appointments.aspx" Text="Schedules" Value="Schedules"></asp:MenuItem>
+                                    <asp:MenuItem Text="Calls" Value="Calls"></asp:MenuItem>
+                                    <asp:MenuItem Text="Products" Value="Products"></asp:MenuItem>
+                                </asp:MenuItem>
+                                <asp:MenuItem NavigateUrl="~/suppliers.aspx" Text="Suppliers" Value="suppliers"></asp:MenuItem>
+                                <asp:MenuItem NavigateUrl="~/products.aspx" Text="Prodcuts" Value="Prodcuts">
+                                    <asp:MenuItem NavigateUrl="~/price_list.aspx" Text="Price List" Value="Price List"></asp:MenuItem>
+                                    <asp:MenuItem NavigateUrl="~/categories.aspx" Text="Category" Value="Category"></asp:MenuItem>
+                                    <asp:MenuItem NavigateUrl="~/types.aspx" Text="Types" Value="Types"></asp:MenuItem>
+                                    <asp:MenuItem Text="Sizes" Value="Sizes" NavigateUrl="~/sizes.aspx"></asp:MenuItem>
+                                    <asp:MenuItem Text="Colors" Value="Colors" NavigateUrl="~/colors.aspx"></asp:MenuItem>
+                                </asp:MenuItem>
+                                <asp:MenuItem Text="Cashs" Value="New Item" NavigateUrl="~/cashes.aspx"></asp:MenuItem>
+                                <asp:MenuItem Text="Inventory" Value="Inventory"></asp:MenuItem>
+                                <asp:MenuItem NavigateUrl="~/regions.aspx" Text="Regions" Value="Regions"></asp:MenuItem>
+                            </asp:MenuItem>
+                            <asp:MenuItem Text="Transactions" Value="Transactions">
+                                <asp:MenuItem NavigateUrl="~/purchases.aspx" Text="Purchases" Value="Purchases"></asp:MenuItem>
+                                <asp:MenuItem Text="Sales" Value="Sales" NavigateUrl="~/sales.aspx"></asp:MenuItem>
+                                <asp:MenuItem Text="Stock" Value="Stock">
+                                    <asp:MenuItem Text="IN/Out" Value="IN/Out" NavigateUrl="~/stock_in_out.aspx"></asp:MenuItem>
+                                    <asp:MenuItem Text="Total QTY" Value="Total QTY" NavigateUrl="~/stock_quantity.aspx"></asp:MenuItem>
+                                </asp:MenuItem>
+                                <asp:MenuItem Text="Payments" Value="Payments"></asp:MenuItem>
+                                <asp:MenuItem Text="Debit" Value="Debit"></asp:MenuItem>
+                                <asp:MenuItem NavigateUrl="~/cash_trans.aspx" Text="Cash Transactions" Value="Cash Transactions"></asp:MenuItem>
+                            </asp:MenuItem>
+                            <asp:MenuItem Text="Report" Value="Report">
+                                <asp:MenuItem Text="Profit" Value="Profit"></asp:MenuItem>
+                                <asp:MenuItem Text="Capital" Value="Capital"></asp:MenuItem>
+                                <asp:MenuItem Text="Price Changing" Value="Price Changing"></asp:MenuItem>
+                            </asp:MenuItem>
+                        </Items>
+                        <StaticHoverStyle BackColor="#284E98" ForeColor="White" />
+                        <StaticMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
+                        <StaticSelectedStyle BackColor="#507CD1" />
+                    </asp:Menu>
+                </td>
+            </tr>
+            <tr>
+                <td id="content-left" style="border-style: solid; border-color: buttonface;" aria-orientation="horizontal" class="auto-style9">
+
+                    <asp:ContentPlaceHolder ID="PLACE_MASTER" runat="server">
+                        <asp:Panel ID="PANEL_MASTER" runat="server">
+                        </asp:Panel>
+                    </asp:ContentPlaceHolder>
+
+                </td>
+            </tr>
+            <tr>
+                <td class="auto-style8">Power By Ahmed Othman</td>
+            </tr>
+        </table>
+    </div>
+    </form>
+</body>
+</html>
