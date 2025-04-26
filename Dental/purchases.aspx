@@ -25,36 +25,13 @@
         <asp:TextBox ID="TXT_ID" runat="server" OnTextChanged="TXT_ID_TextChanged" ></asp:TextBox>
         <br />
         <br />
-        <asp:Label ID="Label6" runat="server" Text="Cash"></asp:Label>
-        &nbsp;&nbsp;&nbsp; &nbsp;
-        <asp:DropDownList ID="DRP_CASH" runat="server" Height="21px" Width="136px" AutoPostBack="true" OnSelectedIndexChanged="DRP_CASH_SelectedIndexChanged">
-        </asp:DropDownList>
-        &nbsp;
-        <asp:Label ID="LBL_CASH_AMOUNT" runat="server" Text="Label"></asp:Label>
-        <br />
-        <br />
-        <asp:Label ID="Label3" runat="server" Text="Supplier"></asp:Label>
+        <asp:Label ID="LBL_SUPP" runat="server" Text="Supplier"></asp:Label>
         &nbsp;
         <asp:DropDownList ID="DRP_SUPPLIER" runat="server" Height="21px" Width="136px" AutoPostBack="True" OnSelectedIndexChanged="DRP_SUPPLIER_SelectedIndexChanged" OnTextChanged="DRP_SUPPLIER_TextChanged">
         </asp:DropDownList>
-        <br />
-        <br />
-        <asp:Label ID="Label4" runat="server" Text="Product"></asp:Label>
         &nbsp;
-        <asp:DropDownList ID="DRP_PRODUCT" runat="server" AutoPostBack="true" Height="17px" Width="139px" OnSelectedIndexChanged="DRP_PRODUCT_SelectedIndexChanged">
-        </asp:DropDownList>
         <br />
         <br />
-        <table class="auto-style10">
-            <tr>
-                
-                <td>
-                    <asp:Button ID="BTN_NEW" runat="server" Text="New" OnClick="BTN_NEW_Click" Width="117px" />
-                </td>
-                
-
-            </tr>
-        </table>
 
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
         <table class="auto-style10">
@@ -92,39 +69,20 @@
         <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowUpdating="GridView1_RowUpdating" OnRowCancelingEdit="GridView1_RowCancelingEdit" OnRowDeleting="GridView1_RowDeleting" OnSelectedIndexChanged="GridView1_SelectedIndexChanged1">
             <AlternatingRowStyle BackColor="White" />
             <Columns>
-                <asp:TemplateField HeaderText="ID">
+                <asp:TemplateField HeaderText="Product Name">
                     <EditItemTemplate>
-                        <asp:TextBox ID="TXT_ID_GRD" runat="server" Text='<%# Bind("id") %>' Height="16px" Width="95px"></asp:TextBox>
-                    </EditItemTemplate>
-                    <ItemTemplate>
-                        <asp:Label ID="LBL_ID_GRD" runat="server" Text='<%# Bind("id") %>'></asp:Label>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Date">
-                    <EditItemTemplate>
-                        <asp:TextBox ID="TXT_DATE_GRD" runat="server" Text='<%# Bind("date") %>' TextMode="Date"></asp:TextBox>
-                    </EditItemTemplate>
-                    <ItemTemplate>
-                        <asp:Label ID="LBL_DATE_GRD" runat="server" Text='<%# Bind("date") %>'></asp:Label>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Name">
-                    <EditItemTemplate>
-                        <asp:TextBox ID="TXT_NAME_GRD" runat="server" Text='<%# Bind("product") %>'></asp:TextBox>
+                        <asp:DropDownList ID="DRP_NAME_GRD" runat="server" DataSourceID="prod" DataTextField="name" DataValueField="id">
+
+                        </asp:DropDownList>
+                        
+                         <asp:SqlDataSource ID="prod" runat="server" ConnectionString="<%$ ConnectionStrings:DentalConnectionString2 %>" SelectCommand="SELECT [id], [name] FROM [products] ORDER BY [id]" ProviderName="<%$ ConnectionStrings:DentalConnectionString2.ProviderName %>"></asp:SqlDataSource>
+                        
                     </EditItemTemplate>
                     <ItemTemplate>
                         <asp:Label ID="LBL_NAME_GRD" runat="server" Text='<%# Bind("product") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Supplier Name">
-                    <EditItemTemplate>
-                        <asp:TextBox ID="TXT_SUPP_NAME_GRD" runat="server" Text='<%# Bind("supplier") %>' ></asp:TextBox>
-                    </EditItemTemplate>
-                    <ItemTemplate>
-                        <asp:Label ID="LBL_SUPP_NAME_GRD" runat="server" Text='<%# Bind("supplier") %>'></asp:Label>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="quantity">
+                <asp:TemplateField HeaderText="Quantity">
                     <EditItemTemplate>
                         <asp:TextBox ID="TXT_QTY_GRD" runat="server" OnTextChanged="TXT_QTY_GRD_TextChanged" Text='<%# Bind("quantity") %>' AutoPostBack="True" Height="16px" Width="95px" ></asp:TextBox>
                     </EditItemTemplate>
@@ -132,7 +90,7 @@
                         <asp:Label ID="LBL_QTY_GRD" runat="server" Text='<%# Bind("quantity") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="price">
+                <asp:TemplateField HeaderText="Price">
                     <EditItemTemplate>
                         <asp:TextBox ID="TXT_PRICE_GRD" runat="server" Text='<%# Bind("price") %>' AutoPostBack="True" OnTextChanged="TXT_PRICE_GRD_TextChanged" Height="16px" Width="95px"></asp:TextBox>
                     </EditItemTemplate>
@@ -148,7 +106,7 @@
                         <asp:Label ID="LBL_TOTAL_PRICE_GRD" runat="server" Text='<%# Bind("total_price") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="disaccount">
+                <asp:TemplateField HeaderText="Disaccount">
                     <EditItemTemplate>
                         <asp:TextBox ID="TXT_DISACC_DRG" runat="server" Text='<%# Bind("disaccount") %>' AutoPostBack="True"  Width="89px" OnTextChanged="TXT_DISACC_DRG_TextChanged"></asp:TextBox>
                     </EditItemTemplate>

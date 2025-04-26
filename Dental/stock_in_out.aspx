@@ -10,7 +10,7 @@
         <br />
         <br />
     </dev>
-    <asp:GridView ID="sales_grid" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None">
+    <asp:GridView ID="sales_grid" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" OnSelectedIndexChanged="sales_grid_SelectedIndexChanged">
         <AlternatingRowStyle BackColor="White" />
         <EditRowStyle BackColor="#2461BF" />
         <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />

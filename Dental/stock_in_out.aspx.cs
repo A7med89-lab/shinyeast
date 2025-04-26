@@ -35,4 +35,9 @@ public partial class stock_in_out : System.Web.UI.Page
             fill_grid_sales();
         }
     }
+
+    protected void sales_grid_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+    }
 }
