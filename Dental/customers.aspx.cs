@@ -238,5 +238,10 @@ public partial class customers : System.Web.UI.Page
         txt_id();
     }
 
-    
+
+
+    protected void TXT_LAB_NAME_TextChanged(object sender, EventArgs e)
+    {
+
+    }
 }

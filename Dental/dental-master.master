@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="ar" dir="rtl">
 <head runat="server">
     <title></title>
     <asp:ContentPlaceHolder id="head" runat="server">
@@ -37,50 +37,60 @@
                             <%# Eval("Text") %>
                         </DynamicItemTemplate>
                         <Items>
-                            <asp:MenuItem Text="Home" Value="Home"></asp:MenuItem>
-                            <asp:MenuItem Text="Basic Data" Value="Basic data">
-                                <asp:MenuItem NavigateUrl="~/customers.aspx" Text="Customers" Value="customers">
-                                    <asp:MenuItem NavigateUrl="~/appointments.aspx" Text="Schedules" Value="Schedules"></asp:MenuItem>
-                                    <asp:MenuItem Text="Calls" Value="Calls"></asp:MenuItem>
-                                    <asp:MenuItem Text="Products" Value="Products"></asp:MenuItem>
+                            <asp:MenuItem Text="الصفحة الرئيسية" Value="Home"></asp:MenuItem>
+                            <asp:MenuItem Text="البيانات الاساسية" Value="Basic data">
+                                <asp:MenuItem NavigateUrl="~/customers.aspx" Text="العملاء" Value="customers">
+                                    <asp:MenuItem NavigateUrl="~/appointments.aspx" Text="الجدوله" Value="Schedules"></asp:MenuItem>
                                 </asp:MenuItem>
-                                <asp:MenuItem NavigateUrl="~/suppliers.aspx" Text="Suppliers" Value="suppliers"></asp:MenuItem>
-                                <asp:MenuItem NavigateUrl="~/products.aspx" Text="Prodcuts" Value="Prodcuts">
-                                    <asp:MenuItem NavigateUrl="~/price_list.aspx" Text="Price List" Value="Price List"></asp:MenuItem>
-                                    <asp:MenuItem NavigateUrl="~/categories.aspx" Text="Category" Value="Category"></asp:MenuItem>
-                                    <asp:MenuItem NavigateUrl="~/types.aspx" Text="Types" Value="Types"></asp:MenuItem>
-                                    <asp:MenuItem Text="Sizes" Value="Sizes" NavigateUrl="~/sizes.aspx"></asp:MenuItem>
-                                    <asp:MenuItem Text="Colors" Value="Colors" NavigateUrl="~/colors.aspx"></asp:MenuItem>
+                                <asp:MenuItem NavigateUrl="~/suppliers.aspx" Text="الموردين" Value="suppliers"></asp:MenuItem>
+                                <asp:MenuItem NavigateUrl="~/products.aspx" Text="الاصناف" Value="Prodcuts">
+                                    <asp:MenuItem NavigateUrl="~/price_list.aspx" Text="قائمة الاسعار" Value="Price List"></asp:MenuItem>
+                                    <asp:MenuItem NavigateUrl="~/categories.aspx" Text="تصنيف" Value="Category"></asp:MenuItem>
+                                    <asp:MenuItem NavigateUrl="~/types.aspx" Text="الانواع" Value="Types"></asp:MenuItem>
+                                    <asp:MenuItem Text="المقاسات" Value="Sizes" NavigateUrl="~/sizes.aspx"></asp:MenuItem>
+                                    <asp:MenuItem Text="الالوان" Value="Colors" NavigateUrl="~/colors.aspx"></asp:MenuItem>
                                 </asp:MenuItem>
-                                <asp:MenuItem Text="Cashs" Value="New Item" NavigateUrl="~/cashes.aspx"></asp:MenuItem>
-                                <asp:MenuItem Text="Inventory" Value="Inventory"></asp:MenuItem>
-                                <asp:MenuItem NavigateUrl="~/regions.aspx" Text="Regions" Value="Regions"></asp:MenuItem>
+                                <asp:MenuItem Text="الخزنة\بنك" Value="Cashs" NavigateUrl="~/cashes.aspx"></asp:MenuItem>
+                                <asp:MenuItem Text="المخزن" Value="Inventory"></asp:MenuItem>
+                                <asp:MenuItem NavigateUrl="~/regions.aspx" Text="المنطقه" Value="Regions"></asp:MenuItem>
                             </asp:MenuItem>
-                            <asp:MenuItem Text="Transactions" Value="Transactions">
-                                <asp:MenuItem NavigateUrl="~/purchases.aspx" Text="Purchases" Value="Purchases"></asp:MenuItem>
-                                <asp:MenuItem Text="Sales" Value="Sales" NavigateUrl="~/sales.aspx"></asp:MenuItem>
-                                <asp:MenuItem Text="Stock" Value="Stock">
-                                    <asp:MenuItem Text="IN/Out" Value="IN/Out" NavigateUrl="~/stock_in_out.aspx"></asp:MenuItem>
-                                    <asp:MenuItem Text="Total QTY" Value="Total QTY" NavigateUrl="~/stock_quantity.aspx"></asp:MenuItem>
-                                </asp:MenuItem>
-                                <asp:MenuItem Text="Payments" Value="Payments"></asp:MenuItem>
-                                <asp:MenuItem Text="Debit" Value="Debit"></asp:MenuItem>
-                                <asp:MenuItem NavigateUrl="~/cash_trans.aspx" Text="Cash Transactions" Value="Cash Transactions"></asp:MenuItem>
+                            <asp:MenuItem Text="مبيعات" Value="Sales">
+                                <asp:MenuItem NavigateUrl="~/sales.aspx" Text="امر بيع" Value="امر بيع"></asp:MenuItem>
+                                <asp:MenuItem Text="امر مرتجع بيع" Value="امر مرتجع بيع"></asp:MenuItem>
                             </asp:MenuItem>
-                            <asp:MenuItem Text="Report" Value="Report">
-                                <asp:MenuItem Text="Profit" Value="Profit"></asp:MenuItem>
-                                <asp:MenuItem Text="Capital" Value="Capital"></asp:MenuItem>
-                                <asp:MenuItem Text="Price Changing" Value="Price Changing"></asp:MenuItem>
+                            <asp:MenuItem Text="المشتريات" Value="Purchases">
+                                <asp:MenuItem NavigateUrl="~/purchases.aspx" Text="امر شراء" Value="امر شراء"></asp:MenuItem>
+                                <asp:MenuItem Text="امر مرتجع شراء" Value="امر مرتجع شراء"></asp:MenuItem>
+                            </asp:MenuItem>
+                            <asp:MenuItem Text="المخزن" Value="Stock">
+                                <asp:MenuItem Text="امر توريد" Value="امر توريد"></asp:MenuItem>
+                                <asp:MenuItem Text="امر صرف" Value="امر صرف"></asp:MenuItem>
+                                <asp:MenuItem Text="امر مرتجع صرف" Value="امر مرتجع صرف"></asp:MenuItem>
+                                <asp:MenuItem Text="امر مرتجع توريد" Value="امر مرتجع توريد"></asp:MenuItem>
+                                <asp:MenuItem NavigateUrl="~/stock_in_out.aspx" Text="اوامر الصرف و التوريد" Value="IN/Out"></asp:MenuItem>
+                                <asp:MenuItem NavigateUrl="~/stock_quantity.aspx" Text="الاجماليات" Value="Total QTY"></asp:MenuItem>
+                            </asp:MenuItem>
+<asp:MenuItem Text="حركات االخزنة" Value="Cash Transactions" NavigateUrl="~/cash_trans.aspx">
+    <asp:MenuItem Text="مصروفات" Value="مصروفات"></asp:MenuItem>
+    <asp:MenuItem Text="ايرادات" Value="ايرادات"></asp:MenuItem>
+</asp:MenuItem>
+                            <asp:MenuItem Text="التقرير" Value="Report">
+                                <asp:MenuItem Text="الارباح" Value="Profit"></asp:MenuItem>
+                                <asp:MenuItem Text="الاصول" Value="Capital"></asp:MenuItem>
+                                <asp:MenuItem Text="تغيير الاسعار" Value="Price Changing"></asp:MenuItem>
                             </asp:MenuItem>
                         </Items>
                         <StaticHoverStyle BackColor="#284E98" ForeColor="White" />
                         <StaticMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
                         <StaticSelectedStyle BackColor="#507CD1" />
+                        <StaticItemTemplate>
+                            <%# Eval("Text") %>
+                        </StaticItemTemplate>
                     </asp:Menu>
                 </td>
             </tr>
             <tr>
-                <td id="content-left" style="border-style: solid; border-color: buttonface;" aria-orientation="horizontal" class="auto-style9">
+                <td id="content-left" style="border-style: solid; border-color: buttonface;" aria-orientation="horizontal" class="auto-style9" CssClass="rtl-menu">
 
                     <asp:ContentPlaceHolder ID="PLACE_MASTER" runat="server">
                         <asp:Panel ID="PANEL_MASTER" runat="server">
