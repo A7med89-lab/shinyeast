@@ -9,7 +9,7 @@
         width: 57px;
     }
     .auto-style12 {
-        width: 17%;
+        width: 15%;
     }
 </style>
 </asp:Content>
@@ -18,7 +18,7 @@
     <div>
             <asp:Label ID="LBL_ID" runat="server" Text="ID"></asp:Label>
             &nbsp;&nbsp;&nbsp; <asp:TextBox ID="TXT_ID" runat="server" Height="21px" OnTextChanged="TXT_ID_TextChanged"></asp:TextBox>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<asp:Label ID="Label1" runat="server" Text="Customer"></asp:Label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<asp:Label ID="Label1" runat="server" Text="اسم العميل"></asp:Label>
             &nbsp;&nbsp;&nbsp; <asp:DropDownList ID="DRP_CST" runat="server" Height="29px" Width="126px">
             </asp:DropDownList>
             <br />
@@ -27,8 +27,8 @@
             
             
 
-            <asp:Label ID="Label2" runat="server" Text="Date"></asp:Label>
-            &nbsp;<asp:Calendar ID="Calendar2" runat="server" OnSelectionChanged="Calendar2_SelectionChanged"></asp:Calendar>
+            
+            &nbsp;<br /> <br /> <asp:Calendar ID="Calendar2" runat="server" OnSelectionChanged="Calendar2_SelectionChanged"></asp:Calendar>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 
             <br />
             <br />
@@ -36,15 +36,11 @@
                         <table class="auto-style12">
                 <tr>
                     <td class="auto-style10">
-                        <asp:Button ID="Button1" runat="server" Text="Submit" OnClick="Button1_Click" />
-                    </td>
-                    
-                    <td class="auto-style11">
-                         <asp:Button ID="Button2" runat="server" Text="Dispaly" OnClick="Button2_Click" />
+                        <asp:Button ID="Button1" runat="server" Text="حفظ" OnClick="Button1_Click" Width="96px" />
                     </td>
 
                     <td class="auto-style5">
-                         <asp:Button ID="Button3" runat="server" Text="Customers" OnClick="Button3_Click" />
+                         <asp:Button ID="Button3" runat="server" Text="شاشة العملاء" OnClick="Button3_Click" Width="110px" />
                     </td>
 
                 </tr>
@@ -63,7 +59,7 @@
                             <asp:Label ID="Label3" runat="server" Text='<%# Bind("id") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Name">
+                    <asp:TemplateField HeaderText="اسم العميل">
                         <EditItemTemplate>
                             <asp:Label ID="Label6" runat="server" Text='<%# Bind("name") %>'></asp:Label>
                         </EditItemTemplate>
@@ -71,7 +67,7 @@
                             <asp:Label ID="Label5" runat="server" Text='<%# Bind("name") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Lab Name">
+                    <asp:TemplateField HeaderText="اسم المعمل">
                         <EditItemTemplate>
                             <asp:Label ID="Label8" runat="server" Text='<%# Bind("lab_name") %>'></asp:Label>
                         </EditItemTemplate>
@@ -79,7 +75,7 @@
                             <asp:Label ID="Label7" runat="server" Text='<%# Bind("lab_name") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="From">
+                    <asp:TemplateField HeaderText="من">
                         <EditItemTemplate>
                             <asp:Label ID="Label10" runat="server" Text='<%# Bind("wh_from") %>'></asp:Label>
                         </EditItemTemplate>
@@ -87,7 +83,7 @@
                             <asp:Label ID="Label9" runat="server" Text='<%# Bind("wh_from") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="To">
+                    <asp:TemplateField HeaderText="الى">
                         <EditItemTemplate>
                             <asp:Label ID="Label12" runat="server" Text='<%# Bind("wh_to") %>'></asp:Label>
                         </EditItemTemplate>
@@ -95,7 +91,7 @@
                             <asp:Label ID="Label11" runat="server" Text='<%# Bind("wh_to") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Date">
+                    <asp:TemplateField HeaderText="التاريخ">
                         <EditItemTemplate>
                             <asp:TextBox ID="date_edite" runat="server" Text='<%# Bind("date") %>'></asp:TextBox>
                         </EditItemTemplate>
@@ -103,11 +99,11 @@
                             <asp:Label ID="date_view" runat="server" Text='<%# Bind("date") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Status">
+                    <asp:TemplateField HeaderText="الحاله">
                         <EditItemTemplate>
                             <asp:DropDownList ID="DropDownList1" runat="server">
-                                <asp:ListItem Value="0">Not Yet</asp:ListItem>
-                                <asp:ListItem Value="1">Done</asp:ListItem>
+                                <asp:ListItem Value="0">ليس بعد</asp:ListItem>
+                                <asp:ListItem Value="1">تم</asp:ListItem>
                             </asp:DropDownList>
                         </EditItemTemplate>
                         <ItemTemplate>
@@ -115,8 +111,8 @@
                         </ItemTemplate>
                     </asp:TemplateField>
 
-                    <asp:CommandField ShowEditButton="True" />
-                    <asp:CommandField ShowDeleteButton="True" />
+                    <asp:CommandField ShowEditButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
+                    <asp:CommandField ShowDeleteButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" />
 
                 </Columns>
                 

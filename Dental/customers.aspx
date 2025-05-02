@@ -16,41 +16,42 @@
             <asp:Label ID="LBL_ID" runat="server" Text="ID"></asp:Label>
             &nbsp;&nbsp &nbsp&nbsp&nbsp &nbsp &nbsp &nbsp&nbsp; &nbsp <asp:TextBox ID="TXT_ID" runat="server" Height="21px"></asp:TextBox>
 
-            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br /><br /><asp:Label ID="Label2" runat="server" Text="Name"></asp:Label>
+            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br /><br /><asp:Label ID="Label2" runat="server" Text="الاسم"></asp:Label>
             &nbsp;&nbsp &nbsp&nbsp&nbsp &nbsp&nbsp&nbsp; <asp:TextBox ID="TXT_NAME" runat="server"></asp:TextBox>
             <br />
             <br />
-            <asp:Label ID="Label12" runat="server" Text="Lab Name"></asp:Label>
-            &nbsp;&nbsp;&nbsp; <asp:TextBox ID="TXT_LAB_NAME" runat="server"></asp:TextBox>
+            <asp:Label ID="Label12" runat="server" Text="اسم المعمل"></asp:Label>
+            &nbsp;&nbsp;&nbsp; <asp:TextBox ID="TXT_LAB_NAME" runat="server" OnTextChanged="TXT_LAB_NAME_TextChanged"></asp:TextBox>
             <br />
             <br />
-            <asp:Label ID="Label8" runat="server" Text="Phone"></asp:Label>
-            &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <asp:TextBox ID="TXT_PHONE" runat="server" TextMode="MultiLine" Height="16px" Width="175px"></asp:TextBox>
+            <asp:Label ID="Label8" runat="server" Text="رقم الهاتف"></asp:Label>
+            &nbsp;&nbsp; <asp:TextBox ID="TXT_PHONE" runat="server" TextMode="MultiLine" Height="16px" Width="175px"></asp:TextBox>
             <br />
             <br />
-            <asp:Label ID="LBL_Region" runat="server" Text="Regoin"></asp:Label>
+            <asp:Label ID="LBL_Region" runat="server" Text="المنطقة"></asp:Label>
             &nbsp;&nbsp&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-            <asp:DropDownList ID="DRP_REGON" runat="server" Height="19px" Width="171px">
+            <asp:DropDownList ID="DRP_REGON" runat="server" Height="29px" Width="170px">
             </asp:DropDownList>
             <br />
             <br />
-            <asp:Label ID="Label3" runat="server" Text="Street"></asp:Label>
+            <asp:Label ID="LBL_STREET" runat="server" Text="الشارع"></asp:Label>
             &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <asp:TextBox ID="TXT_STRT" runat="server"></asp:TextBox>
             <br />
             <br />
-            <asp:Label ID="Label5" runat="server" Text="Buid NO"></asp:Label>
+            <asp:Label ID="LBL_BUILD_NO" runat="server" Text="رقم العماره"></asp:Label>
             &nbsp; &nbsp; &nbsp; <asp:TextBox ID="TXT_BULD" runat="server"></asp:TextBox>
             <br />
             <br />
-            <asp:Label ID="Label7" runat="server" Text="Dental Type"></asp:Label>
-            &nbsp;<asp:CheckBox ID="CHK_FXD" runat="server" Text="Fixed" />
-            &nbsp;<asp:CheckBox ID="CHK_DYNMIC" runat="server" Text="Dynamic" />
+            <asp:Label ID="Label7" runat="server" Text="نوع الاسنان"></asp:Label>
+            &nbsp;<asp:CheckBox ID="CHK_FXD" runat="server" Text="ثابت" />
+            &nbsp;<asp:CheckBox ID="CHK_DYNMIC" runat="server" Text="متحرك" />
 
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<asp:Label ID="Label9" runat="server" Text="Working Hours"></asp:Label>      
-            &nbsp;&nbsp;&nbsp;      
-            <asp:Label ID="Label10" runat="server" Text="From"></asp:Label>
-            &nbsp; &nbsp; &nbsp; <asp:DropDownList ID="DRP_FROM" runat="server">
+            &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<asp:Label ID="Label9" runat="server" Text="مواعيد العمل"></asp:Label>
+
+            &nbsp;&nbsp;&nbsp; &nbsp;<asp:Label ID="Label10" runat="server" Text="من"></asp:Label>
+            &nbsp;&nbsp;
+            <asp:DropDownList ID="DRP_FROM" runat="server">
                 <asp:ListItem Value="1">1 AM</asp:ListItem>
                 <asp:ListItem Value="2">2 AM</asp:ListItem>
                 <asp:ListItem Value="3">3 AM</asp:ListItem>
@@ -64,8 +65,9 @@
                 <asp:ListItem Value="11">11 AM</asp:ListItem>
                 <asp:ListItem Value="12">12 AM</asp:ListItem>
             </asp:DropDownList>
-            &nbsp; &nbsp; &nbsp; <asp:Label ID="Label11" runat="server" Text="TO"></asp:Label>
-            &nbsp; &nbsp; &nbsp; <asp:DropDownList ID="DRP_TO" runat="server">
+            &nbsp;&nbsp; &nbsp;
+            <asp:Label ID="Label11" runat="server" Text="الى"></asp:Label>
+            &nbsp; &nbsp;&nbsp;&nbsp;<asp:DropDownList ID="DRP_TO" runat="server">
                 <asp:ListItem Value="1">1 PM</asp:ListItem>
                 <asp:ListItem Value="2">2 PM</asp:ListItem>
                 <asp:ListItem Value="3">3 PM</asp:ListItem>
@@ -78,18 +80,20 @@
                 <asp:ListItem Value="10">10 PM</asp:ListItem>
                 <asp:ListItem Value="11">11 PM</asp:ListItem>
                 <asp:ListItem Value="12">12 PM</asp:ListItem>
-                </asp:DropDownList>
+            </asp:DropDownList>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
             <br />
             <br />
             <table class="auto-style11">
                 <tr>
                     <td class="auto-style10">
-                        <asp:Button ID="Button1" runat="server" Text="Submit" OnClick="Button1_Click" style="height: 26px" />
+                        <asp:Button ID="Button1" runat="server" Text="حفظ" OnClick="Button1_Click" Width="55px" />
                     </td>
                     
                     
                     <td class="auto-style5">
-                         <asp:Button ID="Button2" runat="server" Text="Appointment" OnClick="Button2_Click" />
+                         <asp:Button ID="Button2" runat="server" Text="مواعيد" OnClick="Button2_Click" Width="133px" />
                     </td>
 
                 </tr>
@@ -106,7 +110,7 @@
                             <asp:Label ID="Label13" runat="server" Text='<%# Bind("id") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Name">
+                    <asp:TemplateField HeaderText="الاسم">
                         <EditItemTemplate>
                             <asp:TextBox ID="cst_name_edite" runat="server" Text='<%# Bind("name") %>'></asp:TextBox>
                         </EditItemTemplate>
@@ -114,7 +118,7 @@
                             <asp:Label ID="cst_name_desgin" runat="server" Text='<%# Bind("name") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Lab">
+                    <asp:TemplateField HeaderText="المعمل">
                         <EditItemTemplate>
                             <asp:TextBox ID="TextBox4" runat="server" Text='<%# Bind("lab") %>'></asp:TextBox>
                         </EditItemTemplate>
@@ -122,7 +126,7 @@
                             <asp:Label ID="Label15" runat="server" Text='<%# Bind("lab") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Region">
+                    <asp:TemplateField HeaderText="المنطقة">
                         <EditItemTemplate>
                             <asp:DropDownList ID="DropDownList1" runat="server" DataSourceID="SqlDataSource2" DataTextField="name" DataValueField="id" SelectedValue='<%# Bind("region_id") %>'>
                             </asp:DropDownList>
@@ -133,7 +137,7 @@
                             <asp:Label ID="Label26" runat="server" Text='<%# Bind("region") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Street">
+                    <asp:TemplateField HeaderText="الشارع">
                         <EditItemTemplate>
                             <asp:TextBox ID="TextBox5" runat="server" Text='<%# Bind("street") %>'></asp:TextBox>
                         </EditItemTemplate>
@@ -141,7 +145,7 @@
                             <asp:Label ID="Label18" runat="server" Text='<%# Bind("street") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Build_No">
+                    <asp:TemplateField HeaderText="رقم العمارة">
                         <EditItemTemplate>
                             <asp:TextBox ID="TextBox6" runat="server" Text='<%# Bind("buid_number") %>'></asp:TextBox>
                         </EditItemTemplate>
@@ -149,7 +153,7 @@
                             <asp:Label ID="Label19" runat="server" Text='<%# Bind("buid_number") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Phone">
+                    <asp:TemplateField HeaderText="الهاتف">
                         <EditItemTemplate>
                             <asp:TextBox ID="TextBox7" runat="server" Text='<%# Bind("phone") %>'></asp:TextBox>
                         </EditItemTemplate>
@@ -157,17 +161,17 @@
                             <asp:Label ID="Label20" runat="server" Text='<%# Bind("phone") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Fixed">
+                    <asp:TemplateField HeaderText="ثابت">
                         <ItemTemplate>
                             <asp:Label ID="Label21" runat="server" Text='<%# Bind("fixed") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Dynamic">
+                    <asp:TemplateField HeaderText="متحرك">
                         <ItemTemplate>
                             <asp:Label ID="Label22" runat="server" Text='<%# Bind("dynamic") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="From">
+                    <asp:TemplateField HeaderText="من">
                         <EditItemTemplate>
                             <asp:TextBox ID="TextBox8" runat="server" Text='<%# Bind("wh_from") %>'></asp:TextBox>
                         </EditItemTemplate>
@@ -175,7 +179,7 @@
                             <asp:Label ID="Label25" runat="server" Text='<%# Bind("wh_from") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="TO">
+                    <asp:TemplateField HeaderText="الى">
                         <EditItemTemplate>
                             <asp:TextBox ID="TextBox9" runat="server" Text='<%# Bind("wh_to") %>'></asp:TextBox>
                         </EditItemTemplate>
@@ -183,8 +187,8 @@
                             <asp:Label ID="Label24" runat="server" Text='<%# Bind("wh_to") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:CommandField ShowEditButton="True" />
-                    <asp:CommandField ShowDeleteButton="True" />
+                    <asp:CommandField ShowEditButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
+                    <asp:CommandField ShowDeleteButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" />
                 </Columns>
                 <EditRowStyle BackColor="#2461BF" />
                 <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />

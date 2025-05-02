@@ -14,14 +14,14 @@
             &nbsp;&nbsp &nbsp&nbsp&nbsp &nbsp &nbsp &nbsp&nbsp; &nbsp <asp:TextBox ID="TXT_ID" runat="server"></asp:TextBox>
             <br />
             <br />
-            <asp:Label ID="Label2" runat="server" Text="Name"></asp:Label>
-            &nbsp;&nbsp &nbsp&nbsp&nbsp &nbsp&nbsp&nbsp; <asp:TextBox ID="TXT_NAME" runat="server"></asp:TextBox>
+            <asp:Label ID="Label2" runat="server" Text="الاسم"></asp:Label>
+            &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; <asp:TextBox ID="TXT_NAME" runat="server"></asp:TextBox>
         <br />
         <br />
         <table class="auto-style10">
             <tr>
                 <td>
-                    <asp:Button ID="Button1" runat="server" Text="Submit" OnClick="Button1_Click" />
+                    <asp:Button ID="Button1" runat="server" Text="حفظ" OnClick="Button1_Click" Width="72px" Height="33px" />
                 </td>
             </tr>
         </table>
@@ -39,7 +39,7 @@
                         <asp:Label ID="Label3" runat="server" Text='<%# Bind("id") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Name">
+                <asp:TemplateField HeaderText="الاسم">
                     <EditItemTemplate>
                         <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("name") %>'></asp:TextBox>
                     </EditItemTemplate>
@@ -47,8 +47,8 @@
                         <asp:Label ID="Label4" runat="server" Text='<%# Bind("name") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:CommandField ShowEditButton="True" />
-                <asp:CommandField ShowDeleteButton="True" />
+                <asp:CommandField ShowEditButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
+                <asp:CommandField ShowDeleteButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
             </Columns>
             <EditRowStyle BackColor="#2461BF" />
             <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
