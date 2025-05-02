@@ -148,7 +148,6 @@ public partial class appointments : System.Web.UI.Page
     protected void Calendar2_SelectionChanged(object sender, EventArgs e)
     {
         string date = Calendar2.SelectedDate.ToString("dd/MM/yyyy");
-        Label2.Text = date;
         if (GridView1.EditIndex != -1)
         {
             //int indx = ((GridViewRow)(sender as Control).NamingContainer).RowIndex;

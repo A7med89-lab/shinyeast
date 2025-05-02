@@ -12,7 +12,7 @@
     <div>
 
         <br />
-        <asp:Label ID="Label1" runat="server" Text="Date" > </asp:Label>
+        <asp:Label ID="Label1" runat="server" Text="التاريخ" ></asp:Label>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <asp:TextBox ID="TXT_Date" runat="server" TextMode="Date" AutoPostBack="true" OnTextChanged="TXT_Date_TextChanged"></asp:TextBox>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -25,7 +25,7 @@
         <asp:TextBox ID="TXT_ID" runat="server" OnTextChanged="TXT_ID_TextChanged" ></asp:TextBox>
         <br />
         <br />
-        <asp:Label ID="LBL_SUPP" runat="server" Text="Supplier"></asp:Label>
+        <asp:Label ID="LBL_SUPP" runat="server" Text="المورد"></asp:Label>
         &nbsp;
         <asp:DropDownList ID="DRP_SUPPLIER" runat="server" Height="21px" Width="136px" AutoPostBack="True" OnSelectedIndexChanged="DRP_SUPPLIER_SelectedIndexChanged" OnTextChanged="DRP_SUPPLIER_TextChanged">
         </asp:DropDownList>
@@ -38,7 +38,7 @@
             <tr>
                 
                 <td>
-                    <asp:Label ID="LBL_FILTER" runat="server" Text="Filter"></asp:Label> 
+                    <asp:Label ID="LBL_FILTER" runat="server" Text="بحث"></asp:Label> 
                 </td>
                 <td>
                     <asp:CheckBox ID="CHK_Supplier" runat="server" AutoPostBack="true" OnCheckedChanged="CHK_Supplier_CheckedChanged" /> 
@@ -69,7 +69,7 @@
         <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowUpdating="GridView1_RowUpdating" OnRowCancelingEdit="GridView1_RowCancelingEdit" OnRowDeleting="GridView1_RowDeleting" OnSelectedIndexChanged="GridView1_SelectedIndexChanged1">
             <AlternatingRowStyle BackColor="White" />
             <Columns>
-                <asp:TemplateField HeaderText="Product Name">
+                <asp:TemplateField HeaderText="اسم المنتج">
                     <EditItemTemplate>
                         <asp:DropDownList ID="DRP_NAME_GRD" runat="server" DataSourceID="prod" DataTextField="name" DataValueField="id">
 
@@ -82,7 +82,7 @@
                         <asp:Label ID="LBL_NAME_GRD" runat="server" Text='<%# Bind("product") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Quantity">
+                <asp:TemplateField HeaderText="العدد">
                     <EditItemTemplate>
                         <asp:TextBox ID="TXT_QTY_GRD" runat="server" OnTextChanged="TXT_QTY_GRD_TextChanged" Text='<%# Bind("quantity") %>' AutoPostBack="True" Height="16px" Width="95px" ></asp:TextBox>
                     </EditItemTemplate>
@@ -90,7 +90,7 @@
                         <asp:Label ID="LBL_QTY_GRD" runat="server" Text='<%# Bind("quantity") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Price">
+                <asp:TemplateField HeaderText="السعر">
                     <EditItemTemplate>
                         <asp:TextBox ID="TXT_PRICE_GRD" runat="server" Text='<%# Bind("price") %>' AutoPostBack="True" OnTextChanged="TXT_PRICE_GRD_TextChanged" Height="16px" Width="95px"></asp:TextBox>
                     </EditItemTemplate>
@@ -98,7 +98,7 @@
                         <asp:Label ID="LBL_PRICE_GRD" runat="server" Text='<%# Bind("price") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Total Price">
+                <asp:TemplateField HeaderText="اجمالى السعر">
                     <EditItemTemplate>
                         <asp:TextBox ID="TXT_TOTAL_PRICE_GRD" runat="server" Text='<%# Bind("total_price") %>'></asp:TextBox>
                     </EditItemTemplate>
@@ -106,7 +106,7 @@
                         <asp:Label ID="LBL_TOTAL_PRICE_GRD" runat="server" Text='<%# Bind("total_price") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Disaccount">
+                <asp:TemplateField HeaderText="الخصم %">
                     <EditItemTemplate>
                         <asp:TextBox ID="TXT_DISACC_DRG" runat="server" Text='<%# Bind("disaccount") %>' AutoPostBack="True"  Width="89px" OnTextChanged="TXT_DISACC_DRG_TextChanged"></asp:TextBox>
                     </EditItemTemplate>
@@ -114,7 +114,7 @@
                         <asp:Label ID="LBL_DISACC_DRG" runat="server" Text='<%# Bind("disaccount") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Profit">
+                <asp:TemplateField HeaderText="الربح">
                     <EditItemTemplate>
                         <asp:TextBox ID="TXT_PROFIT_DRG" runat="server" Text='<%# Bind("profit") %>'></asp:TextBox>
                     </EditItemTemplate>
@@ -122,7 +122,7 @@
                         <asp:Label ID="LBL_PROFIT_DRG" runat="server" Text='<%# Bind("profit") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="inventory">
+                <asp:TemplateField HeaderText="المخزن">
                     <EditItemTemplate>
                         <asp:DropDownList ID="DRP_INV_GRD" runat="server" DataSourceID="inv" DataTextField="name" DataValueField="id">
                         </asp:DropDownList>
@@ -132,8 +132,8 @@
                         <asp:Label ID="Label5" runat="server" Text='<%# Bind("inventory_name") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:CommandField ShowEditButton="True" />
-                <asp:CommandField ShowDeleteButton="True" />
+                <asp:CommandField ShowEditButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
+                <asp:CommandField ShowDeleteButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
             </Columns>
             <EditRowStyle BackColor="#2461BF" />
             <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />

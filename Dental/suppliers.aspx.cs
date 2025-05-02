@@ -108,4 +108,9 @@ public partial class suppliers : System.Web.UI.Page
         GridView1.EditIndex = -1;
         filldrg();
     }
+
+    protected void Button2_Click(object sender, EventArgs e)
+    {
+
+    }
 }
