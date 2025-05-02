@@ -9,11 +9,11 @@
             &nbsp;&nbsp &nbsp&nbsp&nbsp &nbsp &nbsp &nbsp&nbsp; &nbsp <asp:TextBox ID="TXT_ID" runat="server"></asp:TextBox>
             <br />
             <br />
-            <asp:Label ID="Label2" runat="server" Text="Name"></asp:Label>
+            <asp:Label ID="Label2" runat="server" Text="الاسم"></asp:Label>
             &nbsp;&nbsp &nbsp&nbsp&nbsp &nbsp&nbsp&nbsp; <asp:TextBox ID="TXT_NAME" runat="server"></asp:TextBox>
             <br />
             <br />
-            <asp:Label ID="Label5" runat="server" Text="Category"></asp:Label>
+            <asp:Label ID="Label5" runat="server" Text="تصنيف"></asp:Label>
             &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
         <asp:DropDownList ID="DRP_CATEG" runat="server" Height="26px" Width="121px">
         </asp:DropDownList>
@@ -22,7 +22,7 @@
             <table class="auto-style13">
                 <tr>
                     <td class="auto-style10">
-                        <asp:Button ID="Button1" runat="server" Text="Submit" OnClick="Button1_Click1" />
+                        <asp:Button ID="Button1" runat="server" Text="حفظ" OnClick="Button1_Click1" />
                     </td>
                 </tr>
             </table>
@@ -38,7 +38,7 @@
                         <asp:Label ID="Label3" runat="server" Text='<%# Bind("id") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Name">
+                <asp:TemplateField HeaderText="الاسم">
                     <EditItemTemplate>
                         <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("name") %>'></asp:TextBox>
                     </EditItemTemplate>
@@ -46,7 +46,7 @@
                         <asp:Label ID="Label4" runat="server" Text='<%# Bind("name") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Category">
+                <asp:TemplateField HeaderText="تصنيف">
                     <EditItemTemplate>
                         <asp:TextBox ID="TextBox3" runat="server" Text='<%# Bind("category_name") %>'></asp:TextBox>
                     </EditItemTemplate>
@@ -54,8 +54,8 @@
                         <asp:Label ID="Label6" runat="server" Text='<%# Bind("category_name") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:CommandField ShowEditButton="True" />
-                <asp:CommandField ShowDeleteButton="True" />
+                <asp:CommandField ShowEditButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
+                <asp:CommandField ShowDeleteButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
             </Columns>
             <EditRowStyle BackColor="#2461BF" />
             <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />

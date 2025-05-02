@@ -15,20 +15,20 @@
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<asp:TextBox ID="TXT_ID" runat="server"></asp:TextBox>
             <br />
             <br />
-            <asp:Label ID="Label2" runat="server" Text="Name"></asp:Label>
+            <asp:Label ID="Label2" runat="server" Text="الاسم"></asp:Label>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<asp:TextBox ID="TXT_NAME" runat="server"></asp:TextBox>
             <br />
 &nbsp;<br />
-            <asp:Label ID="Label4" runat="server" Text="Amount"></asp:Label>
+            <asp:Label ID="Label4" runat="server" Text="القيمه"></asp:Label>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <asp:Label ID="LBL_AMOUNT" runat="server" Text=""></asp:Label>
-        &nbsp; <asp:LinkButton ID="BTN_DETAILS" runat="server">Details</asp:LinkButton>
+        &nbsp; <asp:LinkButton ID="BTN_DETAILS" runat="server">الحركات</asp:LinkButton>
             <br />
             <br />
             <table class="auto-style10">
                 <tr>
                     <td>
-                        <asp:Button ID="Button1" runat="server" Text="Submit" OnClick="Button1_Click" />
+                        <asp:Button ID="Button1" runat="server" Text="حفظ" OnClick="Button1_Click" />
                     </td>
                 </tr>
         </table>
@@ -44,7 +44,7 @@
                         <asp:Label ID="LBL_ID_GRD" runat="server" Text='<%# Bind("id") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Name">
+                <asp:TemplateField HeaderText="الاسم">
                     <EditItemTemplate>
                         <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("name") %>'></asp:TextBox>
                     </EditItemTemplate>
@@ -52,7 +52,7 @@
                         <asp:Label ID="Label6" runat="server" Text='<%# Bind("name") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Amount">
+                <asp:TemplateField HeaderText="القيمة الحالية">
                     <EditItemTemplate>
                         <asp:Label ID="Label8" runat="server" Text='<%# Bind("amount") %>'></asp:Label>
                     </EditItemTemplate>
@@ -60,9 +60,9 @@
                         <asp:Label ID="Label7" runat="server" Text='<%# Bind("amount") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:CommandField ShowEditButton="True" />
-                <asp:CommandField ShowDeleteButton="True" />
-                <asp:CommandField SelectText="Details" ShowSelectButton="True" />
+                <asp:CommandField ShowEditButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
+                <asp:CommandField ShowDeleteButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
+                <asp:CommandField SelectText="الحركات" ShowSelectButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
             </Columns>
             <EditRowStyle BackColor="#2461BF" />
             <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />

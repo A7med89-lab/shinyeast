@@ -234,4 +234,9 @@ public partial class colors : System.Web.UI.Page
         fill_grd();
         max_id();
     }
+
+    protected void TXT_NAME_TextChanged(object sender, EventArgs e)
+    {
+
+    }
 }
