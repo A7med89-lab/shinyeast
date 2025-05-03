@@ -54,13 +54,16 @@
                                 <asp:MenuItem Text="المخزن" Value="Inventory"></asp:MenuItem>
                                 <asp:MenuItem NavigateUrl="~/regions.aspx" Text="المنطقه" Value="Regions"></asp:MenuItem>
                             </asp:MenuItem>
-                            <asp:MenuItem Text="مبيعات" Value="Sales">
-                                <asp:MenuItem NavigateUrl="~/sales.aspx" Text="امر بيع" Value="امر بيع"></asp:MenuItem>
-                                <asp:MenuItem Text="امر مرتجع بيع" Value="امر مرتجع بيع"></asp:MenuItem>
-                            </asp:MenuItem>
                             <asp:MenuItem Text="المشتريات" Value="Purchases">
                                 <asp:MenuItem NavigateUrl="~/purchases.aspx" Text="امر شراء" Value="امر شراء"></asp:MenuItem>
                                 <asp:MenuItem Text="امر مرتجع شراء" Value="امر مرتجع شراء"></asp:MenuItem>
+                                <asp:MenuItem Text="امر دفع كلى" Value="امر دفع كلى"></asp:MenuItem>
+                                <asp:MenuItem Text="امر دفع جزئى" Value="امر دفع جزئى"></asp:MenuItem>
+                                <asp:MenuItem Text="بحث" Value="بحث"></asp:MenuItem>
+                            </asp:MenuItem>
+                            <asp:MenuItem Text="مبيعات" Value="Sales">
+                                <asp:MenuItem NavigateUrl="~/sales.aspx" Text="امر بيع" Value="امر بيع"></asp:MenuItem>
+                                <asp:MenuItem Text="امر مرتجع بيع" Value="امر مرتجع بيع"></asp:MenuItem>
                             </asp:MenuItem>
                             <asp:MenuItem Text="المخزن" Value="Stock">
                                 <asp:MenuItem Text="امر توريد" Value="امر توريد"></asp:MenuItem>
@@ -79,6 +82,7 @@
                                 <asp:MenuItem Text="الاصول" Value="Capital"></asp:MenuItem>
                                 <asp:MenuItem Text="تغيير الاسعار" Value="Price Changing"></asp:MenuItem>
                             </asp:MenuItem>
+                            <asp:MenuItem Text="خروج" Value="خروج"></asp:MenuItem>
                         </Items>
                         <StaticHoverStyle BackColor="#284E98" ForeColor="White" />
                         <StaticMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
