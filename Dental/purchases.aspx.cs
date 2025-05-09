@@ -7,6 +7,8 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Reflection;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 
 
 public partial class purchases : System.Web.UI.Page
@@ -89,8 +91,9 @@ public partial class purchases : System.Web.UI.Page
         string cst = "select id, name from suppliers";
         db.select_combo(cst, DRP_SUPPLIER);
         db.select_combo(cst, DRP_SUPP_FILTER);
-        DRP_SUPPLIER.Items.Insert(0, "Selected Supplier");
+        DRP_SUPPLIER.Items.Insert(0, "اختيار المورد");
         DRP_SUPP_FILTER.Items.Insert(0, "Selected Supplier");
+        
     }
 
     public void fill_inv()
@@ -148,6 +151,8 @@ public partial class purchases : System.Web.UI.Page
     //    }
     //}
     database db = new database();
+    DataSet grid_ds = new DataSet();
+    DataTable grid_dt = new DataTable("purch");
 
 
 
@@ -165,31 +170,40 @@ public partial class purchases : System.Web.UI.Page
             fill_supp();
             fill_inv();
             txt_id();
-            fill_grid();
+            //fill_grid();
             //fill_cash();
             DRP_SUPPLIER.Enabled = true;
             //DRP_CASH.Enabled = false;
             TXT_Date.Enabled = false;
             TXT_ID.Enabled = false;
 
+   
+
             
             //db.ds1 = (DataSet)ViewState["ds"];
-            DataRow dr = db.ds1.Tables[0].NewRow();
-            db.ds1.Tables[0].Rows.Add(dr);
-            //dr["id"] = TXT_ID.Text;
-            //dr["date"] = TXT_Date.Text;
-            //dr["product"] = DRP_SUPPLIER.SelectedItem;
-            //dr["product_id"] = DRP_PRODUCT.SelectedValue;
-            //dr["supplier"] = DRP_SUPPLIER.SelectedItem;
-            //dr["supplier_id"] = DRP_SUPPLIER.SelectedValue;
-            dr["quantity"] = 0;
-            dr["price"] = 0;
-            dr["total_price"] = 0;
-            dr["disaccount"] = 0;
-            dr["Profit"] = 0;
-            GridView1.EditIndex = 0;
-            GridView1.DataSource = db.ds1;
+            DataRow dr = grid_dt.NewRow();
+            grid_dt.Rows.Add(dr);
+            grid_dt.Columns.Add("product_name", typeof(string));
+            grid_dt.Columns.Add("product_id", typeof(int));
+            grid_dt.Columns.Add("quantity",typeof(int));
+            grid_dt.Columns.Add("price", typeof(int));
+            grid_dt.Columns.Add("total_price", typeof(int));
+            grid_dt.Columns.Add("disaccount", typeof(int));
+            grid_dt.Columns.Add("Profit", typeof(int));
+            grid_ds.Tables.Add(grid_dt);
+            //GridView1.EditIndex = 0;
+            GridView1.DataSource = grid_ds;
             GridView1.DataBind();
+
+            //DropDownList grid_dr = new DropDownList();
+            //((DropDownList)(GridView1.Rows[0].Cells[2].FindControl("TXT_QTY_GRD")))
+            //DropDownList grid_dr = (GridView1.Rows[0].Cells[2].FindControl("TXT_QTY_GRD") as DropDownList;
+            
+            string qurey = "select id, name from products";
+            DropDownList grid_dr = GridView1.Rows[0].FindControl("DRP_NAME_GRD") as DropDownList;
+            DataSet drp_gird_ds = db.fill_drop_grid(qurey,grid_dr, "اختيار المنتج");
+            ViewState.Add("drp_grid_ds", drp_gird_ds);
+            ViewState.Add("grid_ds", grid_ds);
         }
     }
 
@@ -201,10 +215,10 @@ public partial class purchases : System.Web.UI.Page
 
     protected void DRP_SUPPLIER_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (DRP_SUPPLIER.SelectedIndex > 0)
-        //fill_product();
+        //if (DRP_SUPPLIER.SelectedIndex > 0)
+        ////fill_product();
 
-        fill_grid_new();
+        //fill_grid_new();
 
 
     }
@@ -420,41 +434,53 @@ public partial class purchases : System.Web.UI.Page
     protected void TXT_QTY_GRD_TextChanged(object sender, EventArgs e)
     {
         int rindex = GridView1.Rows.Count - 1;
-
-        db.ds1 = (DataSet)ViewState["ds"];
+        TextBox qtyTextBox = (TextBox)GridView1.Rows[rindex].Cells[1].FindControl("TXT_QTY_GRD");
+        TextBox priceTextBox = (TextBox)GridView1.Rows[rindex].Cells[2].FindControl("TXT_PRICE_GRD");
+        string qtyText = qtyTextBox.Text.Trim();
+        grid_ds = (DataSet)ViewState["grid_ds"];
         //new_record = (int) ViewState["new_record"];
 
-        if (((TextBox)(GridView1.Rows[rindex].Cells[4].FindControl("TXT_QTY_GRD"))).Text == "")
+        if (qtyTextBox != null && (string.IsNullOrEmpty(qtyText) || qtyText == "0"))
         {
-            qty_GRD = 0;
-            db.ds1.Tables[0].Rows[new_record][4] = qty_GRD;
-            
+            {
+                for (int i = 0; i <= 4; i++)
+                grid_ds.Tables[0].Rows[rindex][i] = 0;
+            }
         }
+
         else
         {
-            qty_GRD = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[2].FindControl("TXT_QTY_GRD"))).Text);
-            db.ds1.Tables[0].Rows[rindex][4] = qty_GRD;
-            ViewState["ds_new"] = db.ds1;
-        }
-
-        if (((TextBox)(GridView1.Rows[rindex].Cells[5].FindControl("TXT_PRICE_GRD"))).Text == "")
-        {
-            price_GRD = 0;
-            db.ds1.Tables[0].Rows[rindex][5] = price_GRD;
+            qty_GRD = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[1].FindControl("TXT_QTY_GRD"))).Text);
+            grid_ds.Tables[0].Rows[rindex][0] = qty_GRD;
             
         }
-        else
-        {
-            price_GRD = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[3].FindControl("TXT_PRICE_GRD"))).Text);
-            db.ds1.Tables[0].Rows[rindex][5] = price_GRD;
-            ViewState["ds_new"] = db.ds1;
-        }
-        total_price_GRD = qty_GRD * price_GRD;
-        ((TextBox)(GridView1.Rows[rindex].Cells[6].FindControl("TXT_TOTAL_PRICE_GRD"))).Text = total_price_GRD.ToString();
-        db.ds1.Tables[0].Rows[rindex][6] = total_price_GRD;
 
-        ViewState["ds"]= db.ds1;
+        //if (((TextBox)(GridView1.Rows[rindex].Cells[5].FindControl("TXT_PRICE_GRD"))).Text == "")
+        //{
+        //    price_GRD = 0;
+        //    grid_ds.Tables[0].Rows[rindex][2] = price_GRD;
 
+        //}
+        //else
+        //{
+        //    price_GRD = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[3].FindControl("TXT_PRICE_GRD"))).Text);
+        //    grid_ds.Tables[0].Rows[rindex][5] = price_GRD;
+        //    ViewState["grid_ds"] = grid_ds;
+        //}
+        //total_price_GRD = qty_GRD * price_GRD;
+        //((TextBox)(GridView1.Rows[rindex].Cells[3].FindControl("TXT_TOTAL_PRICE_GRD"))).Text = total_price_GRD.ToString();
+        //grid_ds.Tables[0].Rows[rindex][3] = total_price_GRD;
+        //DataRow dr_new = grid_ds.Tables[0].NewRow();
+        //grid_ds.Tables[0].Rows.Add(dr_new);
+
+
+
+
+        //GridView1.EditIndex = rindex + 1;
+        ViewState["grid_ds"] = grid_ds;
+        GridView1.DataSource = grid_ds;
+        GridView1.DataBind();
+        
 
     }
 
@@ -463,38 +489,38 @@ public partial class purchases : System.Web.UI.Page
         int rindex = GridView1.Rows.Count - 1;
         
         //edit in dataset
-        db.ds1 = (DataSet)ViewState["ds"];
+        //db.ds1 = (DataSet)ViewState["ds"];
 
-        if (((TextBox)(GridView1.Rows[rindex].Cells[2].FindControl("TXT_QTY_GRD"))).Text == "")
-        {
-             qty_GRD = 0;
-            db.ds1.Tables[0].Rows[rindex][4] = qty_GRD;
-            //ViewState["ds_new"] = db.ds1;
-        }
-        else
-        {
-            qty_GRD = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[2].FindControl("TXT_QTY_GRD"))).Text);
-            db.ds1.Tables[0].Rows[rindex][4] = qty_GRD;
-            //ViewState["ds_new"] = db.ds1;
-        }
+        //if (((TextBox)(GridView1.Rows[rindex].Cells[2].FindControl("TXT_QTY_GRD"))).Text == "")
+        //{
+        //     qty_GRD = 0;
+        //    db.ds1.Tables[0].Rows[rindex][4] = qty_GRD;
+        //    //ViewState["ds_new"] = db.ds1;
+        //}
+        //else
+        //{
+        //    qty_GRD = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[2].FindControl("TXT_QTY_GRD"))).Text);
+        //    db.ds1.Tables[0].Rows[rindex][4] = qty_GRD;
+        //    //ViewState["ds_new"] = db.ds1;
+        //}
 
-        if (((TextBox)(GridView1.Rows[rindex].Cells[3].FindControl("TXT_PRICE_GRD"))).Text == "")
-        {
-            price_GRD = 0;
-            db.ds1.Tables[0].Rows[rindex][5] = price_GRD;
-            //ViewState["ds_new"] = db.ds1;
-        }
-        else
-        {
-            price_GRD = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[5].FindControl("TXT_PRICE_GRD"))).Text);
-            db.ds1.Tables[0].Rows[rindex][5] = price_GRD;
-            //ViewState["ds_new"] = db.ds1;
-        }
+        //if (((TextBox)(GridView1.Rows[rindex].Cells[3].FindControl("TXT_PRICE_GRD"))).Text == "")
+        //{
+        //    price_GRD = 0;
+        //    db.ds1.Tables[0].Rows[rindex][5] = price_GRD;
+        //    //ViewState["ds_new"] = db.ds1;
+        //}
+        //else
+        //{
+        //    price_GRD = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[5].FindControl("TXT_PRICE_GRD"))).Text);
+        //    db.ds1.Tables[0].Rows[rindex][5] = price_GRD;
+        //    //ViewState["ds_new"] = db.ds1;
+        //}
 
-        total_price_GRD = qty_GRD * price_GRD;
-        ((TextBox)(GridView1.Rows[rindex].Cells[4].FindControl("TXT_TOTAL_PRICE_GRD"))).Text = total_price_GRD.ToString();
-        db.ds1.Tables[0].Rows[rindex][6] = total_price_GRD;
-        ViewState["ds"] = db.ds1;
+        //total_price_GRD = qty_GRD * price_GRD;
+        //((TextBox)(GridView1.Rows[rindex].Cells[4].FindControl("TXT_TOTAL_PRICE_GRD"))).Text = total_price_GRD.ToString();
+        //db.ds1.Tables[0].Rows[rindex][6] = total_price_GRD;
+        //ViewState["ds"] = db.ds1;
     }
     
     protected void TXT_DISACC_DRG_TextChanged(object sender, EventArgs e)
@@ -651,6 +677,12 @@ public partial class purchases : System.Web.UI.Page
 
     protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
+        
+        
+        //GridView1.EditIndex = e.RowIndex;
+
+        //GridView1.EditIndex = e.RowIndex +1 ;
+
         //    //check Update or Insert
 
         //    string chk = "select id from ";
@@ -1012,8 +1044,122 @@ public partial class purchases : System.Web.UI.Page
         //LBL_CASH_AMOUNT.Text = amount.ToString();
     }
 
+
+
+
+
+    protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        if (IsPostBack == false)
+        {
+            Response.Write("<script>alert('should Enter Product Name or Choose Category');</script>");
+            //Response.Write("should choose type");
+            return;
+        }
+        //GridView1.EditIndex = -1;
+        grid_ds = (DataSet)ViewState["grid_ds"];
+        DataRow dr_new = grid_ds.Tables[0].NewRow();
+        grid_ds.Tables[0].Rows.Add(dr_new);
+        GridView1.DataSource = grid_ds;
+        GridView1.DataBind();
+        ViewState.Add("grid_ds", grid_ds);
+
+
+    }
+
     protected void GridView1_SelectedIndexChanged1(object sender, EventArgs e)
     {
 
+    }
+
+    protected void GridView1_DataBound(object sender, EventArgs e)
+    {
+
+    }
+
+    protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+
+    }
+
+    protected void GridView1_RowUpdated(object sender, GridViewUpdatedEventArgs e)
+    {
+        int x = 0;
+        
+    }
+
+    protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+
+        DropDownList grid_dr = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD") as DropDownList;
+        string LBL_ID_GRD = grid_dr.SelectedValue; 
+        string LBL_NAME_GRD = grid_dr.SelectedItem.ToString();
+        
+       
+        
+
+        DataSet drp_grid_ds = (DataSet)ViewState["drp_grid_ds"];
+
+        grid_ds = (DataSet)ViewState["grid_ds"];
+        DataRow dr_new = grid_ds.Tables[0].NewRow();
+        grid_ds.Tables[0].Rows.Add(dr_new);
+        GridView1.DataSource = grid_ds;
+        GridView1.DataBind();
+        ViewState["grid_ds"] = grid_ds;
+
+        Label LBL_ID = GridView1.Rows[GridView1.Rows.Count - 2].FindControl("LBL_PROD_ID_GRD") as Label;
+        Label LBL_NAME = GridView1.Rows[GridView1.Rows.Count - 2].FindControl("LBL_PROD_NAME_GRD") as Label;
+        LBL_ID.Text = LBL_ID_GRD;
+        LBL_NAME.Text = LBL_NAME_GRD;
+        LBL_ID.Visible = false;
+        DropDownList grid_dr_n = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD") as DropDownList;
+        DropDownList grid_dr_p = GridView1.Rows[GridView1.Rows.Count - 2].FindControl("DRP_NAME_GRD") as DropDownList;
+        grid_dr_p.Visible = false;
+        LBL_NAME.Visible = true;
+
+
+        grid_dr_n.DataSource = drp_grid_ds.Tables[0];
+        grid_dr_n.DataBind();
+        grid_dr_n.DataTextField = drp_grid_ds.Tables[0].Columns["name"].ToString(); // text field name of table dispalyed in dropdown       
+        grid_dr_n.DataValueField = drp_grid_ds.Tables[0].Columns["id"].ToString();
+        grid_dr_n.Items.Insert(0, "اختيار المنتج");
+
+
+        //grid_dr_p.DataSource = drp_grid_ds.Tables[0];
+        //grid_dr_p.DataBind();
+        //grid_dr_p.Items.Insert(0, "اختيار المنتج");
+        //grid_dr_p.DataTextField = drp_grid_ds.Tables[0].Columns["name"].ToString(); // text field name of table dispalyed in dropdown
+        //grid_dr_p.DataValueField = drp_grid_ds.Tables[0].Columns["id"].ToString();
+
+
+        //ViewState["drp_grid_ds"] = drp_grid_ds;
+
+        //ViewState["drp_selected_value"] = grid_dr.SelectedValue;
+
+
+        //DropDownList grid_dr = GridView1.Rows[GridView1.Rows.Count-1].FindControl("DRP_NAME_GRD") as DropDownList;
+        //DataSet drp_grid_ds = (DataSet)ViewState["drp_grid_ds"];
+        //grid_dr.DataSource = drp_grid_ds.Tables[0];
+        //grid_dr.DataBind();
+        //grid_dr.Items.Insert(0, "اختيار المنتج");
+
+        //for (int index = 0 ; index < GridView1.Rows.Count ; index++)
+        //{
+        //    DropDownList grid_dr = GridView1.Rows[index].FindControl("DRP_NAME_GRD") as DropDownList;
+        //    DataSet drp_grid_ds = (DataSet)ViewState["drp_grid_ds"];
+        //    grid_dr.DataSource = drp_grid_ds.Tables[0];
+        //    grid_dr.DataBind();
+        //    grid_dr.Items.Insert(0, "اختيار المنتج");
+        //}
+
+
+        //LBL_ID.Visible = false;
+        //((DropDownList)(GridView1.Rows[0].Cells[2].FindControl("TXT_QTY_GRD"))).Items.Add("اختيار المنتج");
+    }
+
+    protected void DRP_NAME_GRD_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+        //string query = string.Format("select id from products where name = '{0}'", ((DropDownList)(GridView1.Rows[0].FindControl("DRP_NAME_GRD"))).SelectedItem.Text);
     }
 }

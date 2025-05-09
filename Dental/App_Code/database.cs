@@ -42,6 +42,41 @@ public class database
         }
     }
 
+    public DataSet fill_drop_grid (string query, DropDownList drp_casting, string first_item_str)
+    {
+        try
+        {
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["dental"].ToString();
+            if (conn.State != ConnectionState.Open)
+            {
+                conn.Open();
+            }
+
+            SqlCommand com = new SqlCommand();
+            com = conn.CreateCommand();
+            com.CommandType = CommandType.Text;
+            com.CommandText = query;
+            SqlDataAdapter da = new SqlDataAdapter(com);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            
+            drp_casting.DataTextField = ds.Tables[0].Columns["name"].ToString(); // text field name of table dispalyed in dropdown       
+            drp_casting.DataValueField = ds.Tables[0].Columns["id"].ToString();
+            drp_casting.DataSource = ds.Tables[0];
+            drp_casting.DataBind();
+            //drp_casting.Items.Add(first_item_str);
+            drp_casting.Items.Insert(0, first_item_str);
+            conn.Close();
+            return ds;
+        }
+        catch
+        {
+            Console.WriteLine("false");
+            return null;
+        }
+
+    }
     public void select_combo(string query, DropDownList cmb)
     {
         try
@@ -71,6 +106,8 @@ public class database
             Console.WriteLine("false");
         }
     }
+
+
 
     // to get any single value from database
     public string select_value(string query, string where_db, string col_db)

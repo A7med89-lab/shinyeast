@@ -56,7 +56,7 @@ public partial class suppliers : System.Web.UI.Page
 
     protected void Button1_Click(object sender, EventArgs e)
     {
-        string ins_cst = "INSERT INTO suppliers ([id], [name], [email], wh_from, wh_to) VALUES(" + TXT_ID.Text + ", '" + TXT_NAME.Text + "','" + TXT_MAIL.Text + "','" + DRP_FROM.SelectedItem + "','" + DRP_TO.SelectedItem + "')";
+        string ins_cst = "INSERT INTO suppliers ([id], [name], [email], wh_from, wh_to) VALUES(" + TXT_ID.Text + ", N'" + TXT_NAME.Text + "','" + TXT_MAIL.Text + "','" + DRP_FROM.SelectedItem + "','" + DRP_TO.SelectedItem + "')";
         db.insert(ins_cst);
 
         string ins_add = "INSERT INTO addresses ([id],supplier_id,regoin_id,street,buid_number) select  COALESCE (max(id),0)+1," + TXT_ID.Text + "," + DRP_REGON.SelectedValue + ",'" + TXT_STRT.Text + "','" + TXT_BULD.Text + "' from addresses";
