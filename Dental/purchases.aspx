@@ -87,6 +87,7 @@
                     </EditItemTemplate>
                     <ItemTemplate>
                         <br />
+
                         <asp:DropDownList ID="DRP_NAME_GRD" runat="server" DataTextField="name" DataValueField="id" AutoPostBack="True" OnSelectedIndexChanged="DRP_NAME_GRD_SelectedIndexChanged">
                         </asp:DropDownList>
                         <asp:Label ID="LBL_PROD_NAME_GRD" runat="server" Text='<%# Bind("product_name") %>'></asp:Label>
@@ -97,10 +98,11 @@
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="السعر">
                     <EditItemTemplate>
+
                         <asp:TextBox ID="TXT_PRICE_GRD_EDIT" runat="server" AutoPostBack="True" Height="16px" OnTextChanged="TXT_PRICE_GRD_TextChanged" Text='<%# Bind("price") %>' Width="95px"></asp:TextBox>
                     </EditItemTemplate>
                     <ItemTemplate>
-                        <asp:TextBox ID="TXT_PRICE_GRD" runat="server" onkeypress="allowOnlyNumbers(event)" AutoPostBack="True" Height="16px" OnTextChanged="TXT_PRICE_GRD_TextChanged" Text='<%# Bind("price") %>' Width="95px"></asp:TextBox>
+                        <asp:TextBox ID="TXT_PRICE_GRD" runat="server" onkeypress="allowOnlyNumbers(event)" AutoPostBack="True" Height="16px" OnTextChanged="TXT_PRICE_GRD_TextChanged" Text='<%# Bind("price") %>' Width="95px"></asp:TextBox>                       
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="العدد">
