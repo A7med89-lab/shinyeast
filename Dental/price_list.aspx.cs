@@ -22,11 +22,9 @@ public partial class price_list : System.Web.UI.Page
     public void fill_grid()
     {
 
-        string select = "select price_list.product_id, products.name, price_list.price  from price_list inner join products on price_list.product_id = products.id ";
+        string select = "select price_list.product_id, products.name, price_list.purchase_price, price_list.salse_price from price_list inner join products on price_list.product_id = products.id";
         db.select(select, GridView1);
         ViewState.Add("ds", db.ds1);
-
-
     }
     database db = new database();
     protected void Page_Load(object sender, EventArgs e)
@@ -36,8 +34,6 @@ public partial class price_list : System.Web.UI.Page
             fill_grid();
             fill_product();
         }
-        
-        
     }
 
     protected void BTN_Click(object sender, EventArgs e)
@@ -46,11 +42,18 @@ public partial class price_list : System.Web.UI.Page
         string product_id = db.select_value("select product_id from price_list where product_id=" + DRP_PRODUCT.SelectedValue + "", "product_id");
         if (product_id == "")
         {
+            if (TXT_PURCHASE_PRICE.Text == "" || TXT_SALES_PRICE.Text == "")
+            {
+                Response.Write("<script>alert('please enter purchase price and sales price');</script>");
+                return;
+            }
             //insert
-            string insert = "insert into price_list (product_id, price) values ("+DRP_PRODUCT.SelectedValue+","+TXT_PRICE.Text+")";
+            string insert = "insert into price_list (product_id, purchase_price, salse_price) values (" + DRP_PRODUCT.SelectedValue+","+TXT_PURCHASE_PRICE.Text+ ", "+TXT_SALES_PRICE.Text+")";
             db.insert(insert);
             fill_grid();
-            
+            TXT_PURCHASE_PRICE.Text = "";
+            TXT_SALES_PRICE.Text = "";
+            DRP_PRODUCT.SelectedIndex = 0;
         }
 
         else
@@ -79,7 +82,7 @@ public partial class price_list : System.Web.UI.Page
         //string p_id = db.select_value(select_p_id, "id");
         //int product_id = int.Parse(p_id);
         int product_id = int.Parse(((Label)(GridView1.Rows[e.RowIndex].Cells[0].FindControl("LBL_PRODUCT_ID_GRD"))).Text);
-        string update ="update price_list set price ="+ ((TextBox)(GridView1.Rows[e.RowIndex].Cells[2].FindControl("TXT_PRICE_GRD"))).Text + " where product_id="+ product_id + "";
+        string update ="update price_list set purchase_price = "+ ((TextBox)(GridView1.Rows[e.RowIndex].Cells[2].FindControl("TXT_PURCHASE_PRICE_GRD"))).Text + " , salse_price = " + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[3].FindControl("TXT_SALSE_PRICE_GRD"))).Text + "where product_id=" + product_id + "";
         db.update(update);
 
         GridView1.EditIndex = -1;
@@ -95,5 +98,15 @@ public partial class price_list : System.Web.UI.Page
     {
         GridView1.EditIndex = -1;
         fill_grid();
+    }
+
+    protected void DRP_PRODUCT_SelectedIndexChanged(object sender, EventArgs e)
+    {
+       
+    }
+
+    protected void DRP_PRODUCT_TextChanged(object sender, EventArgs e)
+    {
+        
     }
 }

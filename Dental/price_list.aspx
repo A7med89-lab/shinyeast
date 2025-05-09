@@ -8,13 +8,18 @@
 
                             <asp:Label ID="Label1" runat="server" Text="المنتج"></asp:Label>
                             &nbsp;
-                            <asp:DropDownList ID="DRP_PRODUCT" runat="server" Height="30px" Width="143px">
+                            <asp:DropDownList ID="DRP_PRODUCT" runat="server" Height="30px" Width="143px" OnSelectedIndexChanged="DRP_PRODUCT_SelectedIndexChanged" OnTextChanged="DRP_PRODUCT_TextChanged">
                             </asp:DropDownList>
                             <br />
                             <br />
                             <asp:Label ID="Label2" runat="server" Text="سعر البيع"></asp:Label>
                             &nbsp; &nbsp; &nbsp;
-                            <asp:TextBox ID="TXT_PRICE" runat="server"></asp:TextBox>
+                            <asp:TextBox ID="TXT_PURCHASE_PRICE" runat="server"></asp:TextBox>
+                            <br />
+                            <br />
+                            <asp:Label ID="Label6" runat="server" Text="سعر الشراء"></asp:Label>
+                            &nbsp;&nbsp;&nbsp;
+                            <asp:TextBox ID="TXT_SALES_PRICE" runat="server"></asp:TextBox>
                             <br />
                             <br />
                             <asp:Button ID="BTN" runat="server" Text="حفظ" OnClick="BTN_Click" Height="26px" Width="76px" />
@@ -41,10 +46,18 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="سعر البيع">
                                         <EditItemTemplate>
-                                            <asp:TextBox ID="TXT_PRICE_GRD" runat="server" Text='<%# Bind("price") %>'></asp:TextBox>
+                                            <asp:TextBox ID="TXT_PURCHASE_PRICE_GRD" runat="server" Text='<%# Bind("purchase_price") %>'></asp:TextBox>
                                         </EditItemTemplate>
                                         <ItemTemplate>
-                                            <asp:Label ID="Label5" runat="server" Text='<%# Bind("price") %>'></asp:Label>
+                                            <asp:Label ID="LBL_PURCHASE_PRICE_GRD" runat="server" Text='<%# Bind("purchase_price") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="سعر شراء">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="TXT_SALSE_PRICE_GRD" runat="server" Text='<%# Bind("salse_price") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="LBL_SALSE_PRICE_GRD" runat="server" Text='<%# Bind("salse_price") %>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:CommandField ShowDeleteButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
