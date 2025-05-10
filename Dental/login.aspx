@@ -23,7 +23,7 @@
 
             <br />
 
-            <asp:Label ID="Label1" runat="server" Text="username"></asp:Label>
+            <asp:Label ID="Label1" runat="server" Text="Username"></asp:Label>
 &nbsp;
             <asp:TextBox ID="TXT_USERNAME" runat="server"></asp:TextBox>
 &nbsp;&nbsp;&nbsp;
