@@ -6,12 +6,19 @@
 <head runat="server">
     <title></title>
     <asp:ContentPlaceHolder id="head" runat="server">
+        <div>
+            <form>
+               
+            </form>
+            
+        </div>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <link href="~/Content/bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="~/Content/site.css" rel="stylesheet" type="text/css" />
         <link href="~/Content/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        
     </asp:ContentPlaceHolder>
     <style type="text/css">
         .auto-style1 {
@@ -33,6 +40,7 @@
     <div>
         <table class="auto-style1">
             <tr>
+                
                 <td class="auto-style4">
                     <asp:Menu ID="Menu1" runat="server" BackColor="#B5C7DE" DynamicHorizontalOffset="2" Font-Names="Verdana" Font-Size="0.8em" ForeColor="#284E98" Orientation="Horizontal" StaticSubMenuIndent="10px" Visible="False">
                         <DynamicHoverStyle BackColor="#284E98" ForeColor="White" />
@@ -49,6 +57,12 @@
                                     <asp:MenuItem NavigateUrl="~/appointments.aspx" Text="الجدوله" Value="Schedules"></asp:MenuItem>
                                 </asp:MenuItem>
                                 <asp:MenuItem NavigateUrl="~/suppliers.aspx" Text="الموردين" Value="suppliers"></asp:MenuItem>
+                                <asp:MenuItem Text="الخزنة\بنك" Value="Cashs" NavigateUrl="~/cashes.aspx"></asp:MenuItem>
+                                <asp:MenuItem Text="المخازن" Value="Inventory" NavigateUrl="~/inventories.aspx"></asp:MenuItem>
+                                <asp:MenuItem Text="العنواين" Value="العنواين">
+                                    <asp:MenuItem NavigateUrl="~/cities.aspx" Text="المحافظة" Value="المحافظة"></asp:MenuItem>
+                                    <asp:MenuItem NavigateUrl="~/regions.aspx" Text="المنطقه" Value="Regions"></asp:MenuItem>
+                                </asp:MenuItem>
                                 <asp:MenuItem NavigateUrl="~/products.aspx" Text="الاصناف" Value="Prodcuts">
                                     <asp:MenuItem NavigateUrl="~/price_list.aspx" Text="قائمة الاسعار" Value="Price List"></asp:MenuItem>
                                     <asp:MenuItem NavigateUrl="~/categories.aspx" Text="تصنيف" Value="Category"></asp:MenuItem>
@@ -56,9 +70,6 @@
                                     <asp:MenuItem Text="المقاسات" Value="Sizes" NavigateUrl="~/sizes.aspx"></asp:MenuItem>
                                     <asp:MenuItem Text="الالوان" Value="Colors" NavigateUrl="~/colors.aspx"></asp:MenuItem>
                                 </asp:MenuItem>
-                                <asp:MenuItem Text="الخزنة\بنك" Value="Cashs" NavigateUrl="~/cashes.aspx"></asp:MenuItem>
-                                <asp:MenuItem Text="المخزن" Value="Inventory"></asp:MenuItem>
-                                <asp:MenuItem NavigateUrl="~/regions.aspx" Text="المنطقه" Value="Regions"></asp:MenuItem>
                                 <asp:MenuItem Text="الحسابات" Value="الحسابات">
                                     <asp:MenuItem Text="حسابات عملاء" Value="حسابات عملاء"></asp:MenuItem>
                                     <asp:MenuItem Text="حسابات موردين" Value="حسابات موردين"></asp:MenuItem>
@@ -80,17 +91,17 @@
                                 <asp:MenuItem Text="امر مرتجع بيع" Value="امر مرتجع بيع"></asp:MenuItem>
                             </asp:MenuItem>
                             <asp:MenuItem Text="المخزن" Value="Stock">
-                                <asp:MenuItem Text="امر توريد" Value="امر توريد"></asp:MenuItem>
+                                <asp:MenuItem Text="امر توريد" Value="امر توريد" NavigateUrl="~/stock_purchases.aspx"></asp:MenuItem>
                                 <asp:MenuItem Text="امر صرف" Value="امر صرف"></asp:MenuItem>
                                 <asp:MenuItem Text="امر مرتجع صرف" Value="امر مرتجع صرف"></asp:MenuItem>
                                 <asp:MenuItem Text="امر مرتجع توريد" Value="امر مرتجع توريد"></asp:MenuItem>
                                 <asp:MenuItem NavigateUrl="~/stock_in_out.aspx" Text="اوامر الصرف و التوريد" Value="IN/Out"></asp:MenuItem>
                                 <asp:MenuItem NavigateUrl="~/stock_quantity.aspx" Text="الاجماليات" Value="Total QTY"></asp:MenuItem>
                             </asp:MenuItem>
-<asp:MenuItem Text="حركات االخزنة" Value="Cash Transactions" NavigateUrl="~/cash_trans.aspx">
-    <asp:MenuItem Text="مصروفات" Value="مصروفات"></asp:MenuItem>
-    <asp:MenuItem Text="ايرادات" Value="ايرادات"></asp:MenuItem>
-</asp:MenuItem>
+                            <asp:MenuItem Text="حركات االخزنة" Value="Cash Transactions" NavigateUrl="~/cash_trans.aspx">
+                                <asp:MenuItem Text="مصروفات" Value="مصروفات"></asp:MenuItem>
+                                <asp:MenuItem Text="ايرادات" Value="ايرادات"></asp:MenuItem>
+                            </asp:MenuItem>
                             <asp:MenuItem Text="الحسابات" Value="الحسابات">
                                 <asp:MenuItem Text="عملاء" Value="عملاء"></asp:MenuItem>
                                 <asp:MenuItem Text="موردين" Value="موردين"></asp:MenuItem>
@@ -123,6 +134,7 @@
 
                 </td>
             </tr>
+               
             <tr>
                 <td class="auto-style8">Power By Ahmed Othman</td>
             </tr>

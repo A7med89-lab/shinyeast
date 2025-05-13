@@ -11,13 +11,7 @@ using System.Data.SqlClient;
 
 public partial class purchases : System.Web.UI.Page
 {
-    int new_record;
-    int qty_GRD;
-    int price_GRD;
-    int disacc_GRD;
-    int total_price_GRD;
-    int profit_GRD;
-
+   
     public void fill_grid()
     {
         string select = "select purchases.id,purchases.[date], products.name as product,suppliers. name as supplier,purchases.quantity,purchases.price,purchases.total_price, purchases.disaccount,purchases.profit, inventory.id as inventory_id, inventory.name as inventory_name from purchases inner join products on products.id=purchases.product_id inner join suppliers on suppliers.id = purchases.supplier_id inner join inventory on purchases.inventory_id = inventory.id"; 
@@ -127,6 +121,7 @@ public partial class purchases : System.Web.UI.Page
     public void start_load()
     {
         string date = DateTime.Now.ToString("yyyy-MM-dd");
+        string time = DateTime.Now.ToString("HH:mm:ss");
         TXT_Date.Text = date;
         TXT_DATE_FILTER.Text = date;
         fill_supp();
@@ -432,7 +427,7 @@ public partial class purchases : System.Web.UI.Page
         for (int i = 0; i < GridView1.Rows.Count - 1; i++)
         {
             ((DropDownList)GridView1.Rows[i].FindControl("DRP_NAME_GRD")).Visible = false;
-            ((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Visible = true;
+            ((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Visible = false;
             ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Visible = true;
         }
     }
@@ -947,6 +942,14 @@ public partial class purchases : System.Web.UI.Page
 
     protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
     {
+        // confirm calculation before save
+
+        // confirm calculation
+
+        //validate at least price and qty inserted
+
+        //validate price & qty
+
         int rowindex = Convert.ToInt32(e.CommandArgument);
         if (((DropDownList)GridView1.Rows[rowindex].FindControl("DRP_NAME_GRD")).SelectedIndex == 0)
         {
@@ -960,6 +963,27 @@ public partial class purchases : System.Web.UI.Page
             return;
         }
 
+        //validate duplication in purchases_details & purchases
+       
+        if (GridView1.Rows.Count == 1)
+        {
+            string select_id_purchase = "select id from purchases where id = " + TXT_ID.Text + "";
+            string id_purchase = db.select_value(select_id_purchase, "id");
+            if (!string.IsNullOrEmpty(id_purchase))
+            {
+            
+                Response.Write("<script>alert('رقم امر الشراء موجود مسبقا يجب تغييرة');</script>");
+                return;
+            }
+        }
+        string select_id_purchase_details = "select id from purchases_details where purchase_id = " + TXT_ID.Text + " and product_id = " + ((DropDownList)GridView1.Rows[rowindex].FindControl("DRP_NAME_GRD")).SelectedValue + "";
+        string id_purchase_details = db.select_value(select_id_purchase_details, "id");
+        if (!string.IsNullOrEmpty(id_purchase_details))
+        {
+            Response.Write("<script>alert('هذا المنتج موجود مسبقا');</script>");
+            return;
+        }
+        //vaildation
 
         DropDownList grid_dr = GridView1.Rows[rowindex].FindControl("DRP_NAME_GRD") as DropDownList;
         string LBL_ID_GRD = grid_dr.SelectedValue; 
