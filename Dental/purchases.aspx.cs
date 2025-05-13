@@ -7,8 +7,6 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Reflection;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 
 
 public partial class purchases : System.Web.UI.Page
@@ -1096,94 +1094,9 @@ public partial class purchases : System.Web.UI.Page
         start_load();   
     }
 
-    protected void GridView1_DataBound(object sender, EventArgs e)
-    {
 
-    }
+   
 
-    protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
-    {
-
-    }
-
-    protected void GridView1_RowUpdated(object sender, GridViewUpdatedEventArgs e)
-    {
-        int x = 0;
-        
-    }
-
-    protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
-    {
-
-        DropDownList grid_dr = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD") as DropDownList;
-        string LBL_ID_GRD = grid_dr.SelectedValue; 
-        string LBL_NAME_GRD = grid_dr.SelectedItem.ToString();
-        
-       
-        
-
-        DataSet drp_grid_ds = (DataSet)ViewState["drp_grid_ds"];
-
-        grid_ds = (DataSet)ViewState["grid_ds"];
-        DataRow dr_new = grid_ds.Tables[0].NewRow();
-        grid_ds.Tables[0].Rows.Add(dr_new);
-        GridView1.DataSource = grid_ds;
-        GridView1.DataBind();
-        ViewState["grid_ds"] = grid_ds;
-
-        Label LBL_ID = GridView1.Rows[GridView1.Rows.Count - 2].FindControl("LBL_PROD_ID_GRD") as Label;
-        Label LBL_NAME = GridView1.Rows[GridView1.Rows.Count - 2].FindControl("LBL_PROD_NAME_GRD") as Label;
-        LBL_ID.Text = LBL_ID_GRD;
-        LBL_NAME.Text = LBL_NAME_GRD;
-        LBL_ID.Visible = false;
-        DropDownList grid_dr_n = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD") as DropDownList;
-        DropDownList grid_dr_p = GridView1.Rows[GridView1.Rows.Count - 2].FindControl("DRP_NAME_GRD") as DropDownList;
-        grid_dr_p.Visible = false;
-        LBL_NAME.Visible = true;
-
-
-        grid_dr_n.DataSource = drp_grid_ds.Tables[0];
-        grid_dr_n.DataBind();
-        grid_dr_n.DataTextField = drp_grid_ds.Tables[0].Columns["name"].ToString(); // text field name of table dispalyed in dropdown       
-        grid_dr_n.DataValueField = drp_grid_ds.Tables[0].Columns["id"].ToString();
-        grid_dr_n.Items.Insert(0, "اختيار المنتج");
-
-
-        //grid_dr_p.DataSource = drp_grid_ds.Tables[0];
-        //grid_dr_p.DataBind();
-        //grid_dr_p.Items.Insert(0, "اختيار المنتج");
-        //grid_dr_p.DataTextField = drp_grid_ds.Tables[0].Columns["name"].ToString(); // text field name of table dispalyed in dropdown
-        //grid_dr_p.DataValueField = drp_grid_ds.Tables[0].Columns["id"].ToString();
-
-
-        //ViewState["drp_grid_ds"] = drp_grid_ds;
-
-        //ViewState["drp_selected_value"] = grid_dr.SelectedValue;
-
-
-        //DropDownList grid_dr = GridView1.Rows[GridView1.Rows.Count-1].FindControl("DRP_NAME_GRD") as DropDownList;
-        //DataSet drp_grid_ds = (DataSet)ViewState["drp_grid_ds"];
-        //grid_dr.DataSource = drp_grid_ds.Tables[0];
-        //grid_dr.DataBind();
-        //grid_dr.Items.Insert(0, "اختيار المنتج");
-
-        //for (int index = 0 ; index < GridView1.Rows.Count ; index++)
-        //{
-        //    DropDownList grid_dr = GridView1.Rows[index].FindControl("DRP_NAME_GRD") as DropDownList;
-        //    DataSet drp_grid_ds = (DataSet)ViewState["drp_grid_ds"];
-        //    grid_dr.DataSource = drp_grid_ds.Tables[0];
-        //    grid_dr.DataBind();
-        //    grid_dr.Items.Insert(0, "اختيار المنتج");
-        //}
-
-
-        //LBL_ID.Visible = false;
-        //((DropDownList)(GridView1.Rows[0].Cells[2].FindControl("TXT_QTY_GRD"))).Items.Add("اختيار المنتج");
-    }
-
-    protected void DRP_NAME_GRD_SelectedIndexChanged(object sender, EventArgs e)
-    {
-
-        //string query = string.Format("select id from products where name = '{0}'", ((DropDownList)(GridView1.Rows[0].FindControl("DRP_NAME_GRD"))).SelectedItem.Text);
-    }
+ 
+  
 }
