@@ -1,53 +1,47 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="login.aspx.cs" Inherits="login" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/dental-master.master" AutoEventWireup="true" CodeFile="login.aspx.cs" Inherits="login" %>
 
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title></title>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
-        .auto-style1 {
-            width: 22%;
+        .auto-style10 {
+            width: 66px;
         }
-        .auto-style2 {
-            width: 12px;
-        }
-        .auto-style3 {
-            width: 31px;
+        .auto-style11 {
+            width: 167px;
         }
     </style>
-</head>
-<body>
-    <form id="form1" runat="server">
-        <div>
-
+</asp:Content>
+<asp:Content ID="Content2" runat="server" contentplaceholderid="PLACE_MASTER">
+    <asp:Panel ID="PANEL_MASTER" runat="server">
+        <dev>
             <br />
-
             <asp:Label ID="Label1" runat="server" Text="Username"></asp:Label>
-&nbsp;
-            <asp:TextBox ID="TXT_USERNAME" runat="server"></asp:TextBox>
-&nbsp;&nbsp;&nbsp;
-            <asp:Label ID="Label2" runat="server" Text="Password"></asp:Label>
             &nbsp;
+            <asp:TextBox ID="TXT_USERNAME" runat="server"></asp:TextBox>
+            <br />
+ 
+            <br />
+            <asp:Label ID="Label2" runat="server" Text="Password"></asp:Label>
+            &nbsp;&nbsp;
+
             <asp:TextBox ID="TXT_PASSWORD" runat="server" TextMode="Password"></asp:TextBox>
             <br />
-            <br />
-            <table class="auto-style1">
+            
+            &nbsp;&nbsp;&nbsp;
+            
+            <table class="auto-style1" style="width: 10%">
                 <tr>
-                    <td class="auto-style2">
-                        <asp:Button ID="Button1" runat="server" Text="Login" OnClick="Button1_Click" />
+                    <td class="auto-style10">
+                        <asp:Button ID="BTN_LOGIN" runat="server" Text="Login" OnClick="BTN_LOGIN_Click"  />
                     </td>
-                    <td class="auto-style3">
-                        <asp:Button ID="Button2" runat="server" Text="Change Password" />
-                    </td>
+                    
                     <td>
-                        <asp:Button ID="Button3" runat="server" Text="Sign Up" OnClick="Button3_Click" />
+                        <asp:Button ID="Button3" runat="server" Text="Sign Up" />
                     </td>
+
                 </tr>
             </table>
             <br />
             
-        </div>
-    </form>
-</body>
-</html>
+        </dev>
+</asp:Panel>
+</asp:Content>
