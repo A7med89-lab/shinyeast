@@ -57,7 +57,7 @@ public partial class registration : System.Web.UI.Page
 
     protected void Button1_Click(object sender, EventArgs e)
     {
-        string insert = "insert into users (id, name, username, password) values ("+TXT_ID.Text+", '"+TXT_NAME.Text+"', '"+TXT_USERNAME.Text+"', '"+TXT_PASSWORD.Text+"')";
+        string insert = "insert into users (id, name, username, password) values ("+TXT_ID.Text+", '"+TXT_NAME.Text.Trim()+"', '"+TXT_USERNAME.Text.Trim()+"', '"+TXT_PASSWORD.Text+"')";
         db.insert(insert);
         clear();
         fill_grd();
