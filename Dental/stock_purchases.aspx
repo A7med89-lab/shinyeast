@@ -71,7 +71,7 @@
                     </asp:TemplateField>
                      <asp:TemplateField HeaderText="رقم المستخدم" Visible="False">
                          <ItemTemplate>
-                             <asp:Label ID="LBL_USER_NAME_ID" runat="server" Text='<%# Bind("user_id") %>'></asp:Label>
+                             <asp:Label ID="LBL_USER_ID" runat="server" Text='<%# Bind("user_id") %>'></asp:Label>
                          </ItemTemplate>
                      </asp:TemplateField>
                     <asp:CommandField ShowSelectButton="True" EditText="تعديل" SelectText="تفاصيل" />
@@ -95,14 +95,9 @@
             <asp:GridView ID="GRD_STOCK_DETAILS" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False">
                 <AlternatingRowStyle BackColor="White" />
                 <Columns>
-                    <asp:TemplateField HeaderText="رقم امر الشراء">
+                    <asp:TemplateField HeaderText="رقم الصنف">
                         <ItemTemplate>
-                            <asp:Label ID="Label8" runat="server" Text='<%# Bind("id") %>'></asp:Label>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="التاريخ">
-                        <ItemTemplate>
-                            <asp:Label ID="Label9" runat="server" Text='<%# Bind("date") %>'></asp:Label>
+                            <asp:Label ID="Label8" runat="server" Text='<%# Bind("prod_id") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="الصنف">

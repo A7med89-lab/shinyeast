@@ -42,7 +42,7 @@
             <tr>
                 
                 <td class="auto-style4">
-                    <asp:Menu ID="Menu1" runat="server" BackColor="#B5C7DE" DynamicHorizontalOffset="2" Font-Names="Verdana" Font-Size="0.8em" ForeColor="#284E98" Orientation="Horizontal" StaticSubMenuIndent="10px" Visible="False">
+                    <asp:Menu ID="Menu1" runat="server" BackColor="#B5C7DE" DynamicHorizontalOffset="2" Font-Names="Verdana" Font-Size="0.8em" ForeColor="#284E98" Orientation="Horizontal" StaticSubMenuIndent="10px">
                         <DynamicHoverStyle BackColor="#284E98" ForeColor="White" />
                         <DynamicMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
                         <DynamicMenuStyle BackColor="#B5C7DE" />
@@ -80,15 +80,20 @@
                                 </asp:MenuItem>
                             </asp:MenuItem>
                             <asp:MenuItem Text="المشتريات" Value="Purchases">
-                                <asp:MenuItem NavigateUrl="~/purchases.aspx" Text="امر شراء" Value="امر شراء"></asp:MenuItem>
+                                <asp:MenuItem NavigateUrl="~/purchases.aspx" Text="امر شراء جديد" Value="امر شراء"></asp:MenuItem>
+                                <asp:MenuItem Text="تعديل امر شراء" Value="تعديل امر شراء"></asp:MenuItem>
                                 <asp:MenuItem Text="امر مرتجع شراء" Value="امر مرتجع شراء"></asp:MenuItem>
                                 <asp:MenuItem Text="امر دفع كلى" Value="امر دفع كلى"></asp:MenuItem>
                                 <asp:MenuItem Text="امر دفع جزئى" Value="امر دفع جزئى"></asp:MenuItem>
                                 <asp:MenuItem Text="بحث" Value="بحث"></asp:MenuItem>
                             </asp:MenuItem>
                             <asp:MenuItem Text="مبيعات" Value="Sales">
-                                <asp:MenuItem NavigateUrl="~/sales.aspx" Text="امر بيع" Value="امر بيع"></asp:MenuItem>
+                                <asp:MenuItem NavigateUrl="~/sales.aspx" Text="امر بيع جديد" Value="امر بيع"></asp:MenuItem>
+                                <asp:MenuItem Text="تعديل امر بيع" Value="تعديل امر بيع"></asp:MenuItem>
                                 <asp:MenuItem Text="امر مرتجع بيع" Value="امر مرتجع بيع"></asp:MenuItem>
+                                <asp:MenuItem Text="امر تحصيل كلى" Value="امر تحصيل كلى"></asp:MenuItem>
+                                <asp:MenuItem Text="امر تحصيل جزئى" Value="امر تحصيل جزئى"></asp:MenuItem>
+                                <asp:MenuItem Text="بحث" Value="بحث"></asp:MenuItem>
                             </asp:MenuItem>
                             <asp:MenuItem Text="المخزن" Value="Stock">
                                 <asp:MenuItem Text="امر توريد" Value="امر توريد" NavigateUrl="~/stock_purchases.aspx"></asp:MenuItem>

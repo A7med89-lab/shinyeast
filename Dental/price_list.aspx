@@ -54,10 +54,10 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="سعر شراء">
                                         <EditItemTemplate>
-                                            <asp:TextBox ID="TXT_SALSE_PRICE_GRD" runat="server" Text='<%# Bind("salse_price") %>'></asp:TextBox>
+                                            <asp:TextBox ID="TXT_SALES_PRICE_GRD" runat="server" Text='<%# Bind("sales_price") %>'></asp:TextBox>
                                         </EditItemTemplate>
                                         <ItemTemplate>
-                                            <asp:Label ID="LBL_SALSE_PRICE_GRD" runat="server" Text='<%# Bind("salse_price") %>'></asp:Label>
+                                            <asp:Label ID="LBL_SALES_PRICE_GRD" runat="server" Text='<%# Bind("sales_price") %>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:CommandField ShowDeleteButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />

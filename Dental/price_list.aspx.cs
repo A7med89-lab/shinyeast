@@ -22,7 +22,7 @@ public partial class price_list : System.Web.UI.Page
     public void fill_grid()
     {
 
-        string select = "select price_list.product_id, products.name, price_list.purchase_price, price_list.salse_price from price_list inner join products on price_list.product_id = products.id";
+        string select = "select price_list.product_id, products.name, price_list.purchase_price, price_list.sales_price from price_list inner join products on price_list.product_id = products.id";
         db.select(select, GridView1);
         ViewState.Add("ds", db.ds1);
     }
@@ -48,7 +48,7 @@ public partial class price_list : System.Web.UI.Page
                 return;
             }
             //insert
-            string insert = "insert into price_list (product_id, purchase_price, salse_price) values (" + DRP_PRODUCT.SelectedValue+","+TXT_PURCHASE_PRICE.Text+ ", "+TXT_SALES_PRICE.Text+")";
+            string insert = "insert into price_list (product_id, purchase_price, sales_price) values (" + DRP_PRODUCT.SelectedValue+","+TXT_PURCHASE_PRICE.Text+ ", "+TXT_SALES_PRICE.Text+")";
             db.insert(insert);
             fill_grid();
             TXT_PURCHASE_PRICE.Text = "";
@@ -82,7 +82,7 @@ public partial class price_list : System.Web.UI.Page
         //string p_id = db.select_value(select_p_id, "id");
         //int product_id = int.Parse(p_id);
         int product_id = int.Parse(((Label)(GridView1.Rows[e.RowIndex].Cells[0].FindControl("LBL_PRODUCT_ID_GRD"))).Text);
-        string update ="update price_list set purchase_price = "+ ((TextBox)(GridView1.Rows[e.RowIndex].Cells[2].FindControl("TXT_PURCHASE_PRICE_GRD"))).Text + " , salse_price = " + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[3].FindControl("TXT_SALSE_PRICE_GRD"))).Text + "where product_id=" + product_id + "";
+        string update ="update price_list set purchase_price = "+ ((TextBox)(GridView1.Rows[e.RowIndex].Cells[2].FindControl("TXT_PURCHASE_PRICE_GRD"))).Text + " , sales_price = " + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[3].FindControl("TXT_SALES_PRICE_GRD"))).Text + "where product_id=" + product_id + "";
         db.update(update);
 
         GridView1.EditIndex = -1;
