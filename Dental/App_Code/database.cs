@@ -155,6 +155,14 @@ public class database
             if (conn.State != ConnectionState.Open)
             {
                 conn.Open();
+                if (conn.State == ConnectionState.Open)
+                {
+                    Console.WriteLine("✅ Connection is open.");
+                }
+                else
+                {
+                    Console.WriteLine("❌ Connection is not open.");
+                }
             }
 
             SqlCommand com = new SqlCommand();
@@ -241,6 +249,39 @@ public class database
         }
     }
 
+
+    public DataTable select_values (string query)
+    {
+        try
+        {
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["dental"].ToString();
+            if (conn.State != ConnectionState.Open)
+            {
+                conn.Open();
+            }
+            SqlCommand com = new SqlCommand();
+            DataTable dt = new DataTable();
+            com = conn.CreateCommand();
+            com.CommandType = CommandType.Text;
+            com.CommandText = query;
+            com.ExecuteNonQuery();
+            SqlDataAdapter da = new SqlDataAdapter(com);
+            da.Fill(dt);
+            conn.Close();
+
+            return dt;
+        }
+        catch
+        {
+            Console.WriteLine("false");
+            return null;
+        }
+            
+        
+
+
+    }
     public void Updating_grid(DataSet ds, string update, GridView gr, string[] dataset_cell, string[] grid_cell, params SqlParameter[] pars)
     {
         try

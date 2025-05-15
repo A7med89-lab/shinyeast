@@ -13,6 +13,15 @@
 <asp:Content ID="Content2" runat="server" contentplaceholderid="PLACE_MASTER">
     <asp:Panel ID="PANEL_MASTER" runat="server">
     <div>
+            <script type="text/javascript">
+                function allowOnlyNumbers(event) {
+                    var key = event.key;
+                    // Allow digits only
+                    if (!/^\d$/.test(key) && key !== 'Backspace' && key !== 'Tab') {
+                        event.preventDefault();
+                    }
+                }
+            </script>
             <asp:Label ID="LBL_ID" runat="server" Text="ID"></asp:Label>
             &nbsp;&nbsp &nbsp&nbsp&nbsp &nbsp &nbsp &nbsp&nbsp; &nbsp <asp:TextBox ID="TXT_ID" runat="server" Height="21px"></asp:TextBox>
 
@@ -25,18 +34,24 @@
             <br />
             <br />
             <asp:Label ID="Label8" runat="server" Text="رقم الهاتف"></asp:Label>
-            &nbsp;&nbsp; <asp:TextBox ID="TXT_PHONE" runat="server" TextMode="MultiLine" Height="16px" Width="175px"></asp:TextBox>
+            &nbsp;&nbsp;&nbsp;&nbsp; <asp:TextBox ID="TXT_PHONE" onkeypress="allowOnlyNumbers(event)" runat="server" TextMode="MultiLine" Height="16px" Width="175px"></asp:TextBox>
             <br />
             <br />
-            <asp:Label ID="LBL_Region" runat="server" Text="المنطقة"></asp:Label>
+            <asp:Label ID="LBL_Region" runat="server" Text="المحافظة"></asp:Label>
             &nbsp;&nbsp&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+            <asp:DropDownList ID="DRP_CITY" runat="server" Height="29px" Width="170px">
+            </asp:DropDownList>
+            <br />
+            <br />
+            <asp:Label ID="Label1" runat="server" Text="المنطقة"></asp:Label>
+            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 
             <asp:DropDownList ID="DRP_REGON" runat="server" Height="29px" Width="170px">
             </asp:DropDownList>
             <br />
             <br />
             <asp:Label ID="LBL_STREET" runat="server" Text="الشارع"></asp:Label>
             &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <asp:TextBox ID="TXT_STRT" runat="server"></asp:TextBox>
+            <asp:TextBox ID="TXT_STRT" runat="server" Width="158px"></asp:TextBox>
             <br />
             <br />
             <asp:Label ID="LBL_BUILD_NO" runat="server" Text="رقم العماره"></asp:Label>
@@ -48,7 +63,7 @@
             &nbsp;<asp:CheckBox ID="CHK_DYNMIC" runat="server" Text="متحرك" />
 
             &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<asp:Label ID="Label9" runat="server" Text="مواعيد العمل"></asp:Label>
-
+            
             &nbsp;&nbsp;&nbsp; &nbsp;<asp:Label ID="Label10" runat="server" Text="من"></asp:Label>
             &nbsp;&nbsp;
             <asp:DropDownList ID="DRP_FROM" runat="server">
@@ -124,6 +139,15 @@
                         </EditItemTemplate>
                         <ItemTemplate>
                             <asp:Label ID="Label15" runat="server" Text='<%# Bind("lab") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="المحافظة">
+                        <EditItemTemplate>
+                            <asp:DropDownList ID="DropDownList2" runat="server">
+                            </asp:DropDownList>
+                        </EditItemTemplate>
+                        <ItemTemplate>
+                            <asp:Label ID="LBL_CITY_GRD" runat="server" Text='<%# Bind("city") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="المنطقة">

@@ -16,7 +16,8 @@ public partial class customers : System.Web.UI.Page
     public void filldrg()
     {
         //string select = "select customers.id, customers.name, regions.name as region, addresses.street, addresses.buid_number, phones.phone,customers.fixed, customers.dynamic from customers  inner join addresses  on customers.id = addresses.customer_id inner join phones on customers.id = phones.customer_id inner join regions on addresses.regoin_id = regions.id";
-        string select = "select customers.id, customers.name,labs.name as lab ,regions.name as region, regions.id as region_id,addresses.street, addresses.buid_number, phones.phone,customers.fixed, customers.dynamic, customers.wh_from,customers.wh_to from customers  inner join addresses  on customers.id = addresses.customer_id inner join labs on customers.id = labs.customer_id inner join phones on customers.id = phones.customer_id inner join regions on addresses.regoin_id = regions.id ";
+        //string select = "select customers.id, customers.name,labs.name as lab ,regions.name as region, regions.id as region_id,addresses.street, addresses.buid_number, phones.phone,customers.fixed, customers.dynamic, customers.wh_from,customers.wh_to from customers  inner join addresses  on addresses.id = customers.address_id inner join labs on customers.id = labs.customer_id inner join phones on customers.id = phones.customer_id inner join regions on addresses.regoin_id = regions.id";
+        string select = "select customers.id, customers.name,labs.name as lab ,cities.name as city , regions.name as region, regions.id as region_id,addresses.street, addresses.buid_number, phones.phone,customers.fixed, customers.dynamic, customers.wh_from,customers.wh_to from customers inner join addresses  on addresses.id = customers.address_id inner join labs on customers.id = labs.customer_id inner join phones on customers.id = phones.customer_id inner join regions on addresses.regoin_id = regions.id inner join cities on addresses.city_id = cities.id";
         //test //
         //string select = "select customers.id, customers.name,labs.name as lab , addresses.street, addresses.buid_number, phones.phone,customers.fixed, customers.dynamic, customers.wh_from,customers.wh_to from customers  inner join addresses  on customers.id = addresses.customer_id inner join labs on customers.id = labs.customer_id inner join phones on customers.id = phones.customer_id inner join regions on addresses.regoin_id = regions.id ";
         // test //
@@ -60,6 +61,10 @@ public partial class customers : System.Web.UI.Page
             DRP_REGON.Items.Clear();
             string query = "select * from regions";
             db.select_combo(query, DRP_REGON);
+            
+            string query_city = "select * from cities";
+            db.select_combo(query_city, DRP_CITY);
+            
             //DRP_REGON.SelectedItem.Text=" ";
         }
 
@@ -74,14 +79,19 @@ public partial class customers : System.Web.UI.Page
 
     protected void Button1_Click(object sender, EventArgs e)
     {
-        string ins_cst = "INSERT INTO customers ([id], [name], [address_id],[phone_id], [fixed], [dynamic], wh_from, wh_to) VALUES(" + TXT_ID.Text + ", '" + TXT_NAME.Text + "', " + TXT_ID.Text + "," + TXT_ID.Text + ",'" + CHK_FXD.Checked + "','" + CHK_DYNMIC.Checked + "','" + DRP_FROM.SelectedItem + "', '" + DRP_TO.SelectedItem + "')";
+
+        string ins_add = "INSERT INTO addresses ([id],regoin_id,street,buid_number,city_id) select  COALESCE (max(id),0)+1," + DRP_REGON.SelectedValue + ", N'" + TXT_STRT.Text + "','" + TXT_BULD.Text + "', " + DRP_CITY.SelectedValue + " from addresses";
+        //string ins_add = "INSERT INTO addresses ([id],regoin_id,street,buid_number,city_id) VALUES (max(id),0)+1," + DRP_REGON.SelectedValue + ", '" + TXT_STRT.Text + "','" + TXT_BULD.Text + "', " + DRP_CITY.SelectedValue + ") ";
+        db.insert(ins_add);
+        int add_id = int.Parse(db.select_value("select max(id) as id from addresses", "id"));
+
+        string ins_cst = "INSERT INTO customers ([id], [name], [address_id],[phone_id], [fixed], [dynamic], wh_from, wh_to) VALUES (" + TXT_ID.Text + ", N'" + TXT_NAME.Text + "', " + add_id + "," + TXT_ID.Text + ",'" + CHK_FXD.Checked + "','" + CHK_DYNMIC.Checked + "','" + DRP_FROM.SelectedItem + "', '" + DRP_TO.SelectedItem + "')";
         db.insert(ins_cst);
 
-        string ins_labs = "INSERT INTO labs ([id],name,customer_id) select  COALESCE (max(id),0)+1,'" + TXT_LAB_NAME.Text + "'," + TXT_ID.Text + " from labs";
+        string ins_labs = "INSERT INTO labs ([id],name,customer_id) select  COALESCE (max(id),0)+1, N'" + TXT_LAB_NAME.Text + "'," + TXT_ID.Text + " from labs";
         db.insert(ins_labs);
         //string ins_add = "INSERT INTO addresses ([id]) select  max(id) +1 from addresses";
-        string ins_add = "INSERT INTO addresses ([id],customer_id,regoin_id,street,buid_number) select  COALESCE (max(id),0)+1," + TXT_ID.Text + "," + DRP_REGON.SelectedValue + ",'" + TXT_STRT.Text + "','" + TXT_BULD.Text + "' from addresses";
-        db.insert(ins_add);
+        
         //string update_add = "UPDATE addresses SET customer_id = '" + TXT_ID.Text + "' ,regoin_id = "+ DRP_REGON.SelectedValue +" WHERE id = (select  max(id) from addresses)";
         //db.update(update_add);
         //string ins_phone = "INSERT INTO addresses ([id]) select  max(id) +1 from phones";
@@ -100,8 +110,10 @@ public partial class customers : System.Web.UI.Page
         CHK_DYNMIC.Checked = false;
         CHK_FXD.Checked = false;
         //string select = "select customers.id, customers.name, regions.name as region, addresses.street, addresses.buid_number, phones.phone,customers.fixed, customers.dynamic from customers  inner join addresses  on customers.id = addresses.customer_id inner join phones on customers.id = phones.customer_id inner join regions on addresses.regoin_id = regions.id";
-        string select = "select customers.id, customers.name,labs.name as lab ,regions.name as region, addresses.street, addresses.buid_number, phones.phone,customers.fixed, customers.dynamic, customers.wh_from,customers.wh_to from customers  inner join addresses  on customers.id = addresses.customer_id inner join labs on customers.id = labs.customer_id inner join phones on customers.id = phones.customer_id inner join regions on addresses.regoin_id = regions.id ";
-        db.select(select, GridView1);
+
+        //string select = "select customers.id, customers.name,labs.name as lab ,regions.name as region, addresses.street, addresses.buid_number, phones.phone,customers.fixed, customers.dynamic, customers.wh_from,customers.wh_to from customers  inner join addresses  on customers.id = addresses.customer_id inner join labs on customers.id = labs.customer_id inner join phones on customers.id = phones.customer_id inner join regions on addresses.regoin_id = regions.id ";
+        //db.select(select, GridView1);
+        filldrg();
         string id = "select max(id)+1 as id from customers";
         db.select_id(id, TXT_ID);
     }

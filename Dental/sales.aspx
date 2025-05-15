@@ -9,10 +9,12 @@
 </asp:Content>
 <asp:Content ID="Content2" runat="server" contentplaceholderid="PLACE_MASTER">
     <asp:Panel ID="PANEL_MASTER" runat="server">
-        <dev>
-            <asp:Label ID="Label1" runat="server" Text="تاريخ" ></asp:Label>
+    <div>
+
+        <br />
+        <asp:Label ID="Label1" runat="server" Text="التاريخ" ></asp:Label>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <asp:TextBox ID="TXT_Date" runat="server" TextMode="Date" AutoPostBack="true"></asp:TextBox>
+        <asp:TextBox ID="TXT_Date" runat="server" TextMode="Date" AutoPostBack="true" OnTextChanged="TXT_Date_TextChanged"></asp:TextBox>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -20,32 +22,19 @@
         <br />
         <asp:Label ID="Label2" runat="server" Text="ID"></asp:Label>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
-        <asp:TextBox ID="TXT_ID" runat="server" ></asp:TextBox>
+        <asp:TextBox ID="TXT_ID" runat="server" OnTextChanged="TXT_ID_TextChanged" ></asp:TextBox>
         <br />
         <br />
-        <asp:Label ID="Label3" runat="server" Text="العميل"></asp:Label>
+        <asp:Label ID="LBL_SUPP" runat="server" Text="المورد"></asp:Label>
         &nbsp;
-        <asp:DropDownList ID="DRP_CUSTOMER" runat="server" Height="21px" Width="136px" AutoPostBack="True" OnSelectedIndexChanged="DRP_CUSTOMER_SelectedIndexChanged">
+        <asp:DropDownList ID="DRP_SUPPLIER" runat="server" Height="21px" Width="136px" AutoPostBack="True" OnSelectedIndexChanged="DRP_SUPPLIER_SelectedIndexChanged" OnTextChanged="DRP_SUPPLIER_TextChanged">
         </asp:DropDownList>
+        &nbsp;
         <br />
         <br />
-        <asp:Label ID="Label4" runat="server" Text="المنتج"></asp:Label>
-        &nbsp;&nbsp;&nbsp;
-        <asp:DropDownList ID="DRP_PRODUCT" runat="server" AutoPostBack="true" Height="17px" Width="139px" OnSelectedIndexChanged="DRP_PRODUCT_SelectedIndexChanged">
-        </asp:DropDownList>
+&nbsp;
+        <asp:Button ID="BTN_ADD_ORDER" runat="server" Text="اضافة امر اخر" Width="85px" OnClick="BTN_ADD_ORDER_Click" />
         <br />
-        <br />
-        <table class="auto-style10">
-            <tr>
-                
-                <td>
-                    <asp:Button ID="BTN_NEW" runat="server" Text="جديد" Width="117px" OnClick="BTN_NEW_Click" />
-                </td>
-                
-
-            </tr>
-        </table>
-
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
         <table class="auto-style10">
             <tr>
@@ -54,109 +43,101 @@
                     <asp:Label ID="LBL_FILTER" runat="server" Text="بحث"></asp:Label> 
                 </td>
                 <td>
-                    <asp:CheckBox ID="CHK_Customer" runat="server" AutoPostBack="true" /> 
+                    <asp:CheckBox ID="CHK_Supplier" runat="server" AutoPostBack="true" OnCheckedChanged="CHK_Supplier_CheckedChanged" /> 
                 </td>
                 
                 <td>
-                    <asp:DropDownList ID="DRP_CUSTOMER_FILTER" runat="server" AutoPostBack="true"></asp:DropDownList>
+                    <asp:DropDownList ID="DRP_SUPP_FILTER" runat="server" OnSelectedIndexChanged="DRP_SUPP_FILTER_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                 </td>
                 <td>
-                    <asp:CheckBox ID="CHK_Date" runat="server" AutoPostBack="true" /> 
+                    <asp:CheckBox ID="CHK_Date" runat="server" AutoPostBack="true" OnCheckedChanged="CHK_Date_CheckedChanged" /> 
                 </td>
                 <td>
-                    <asp:TextBox ID="TXT_DATE_FILTER" runat="server" AutoPostBack="True" TextMode="Date"></asp:TextBox>
+                    <asp:TextBox ID="TXT_DATE_FILTER" runat="server" AutoPostBack="True" OnTextChanged="TXT_DATE_FILTER_TextChanged" TextMode="Date"></asp:TextBox>
                 </td>
-                
+                <td>
+                    <asp:CheckBox ID="CHK_INVENTORY" runat="server" OnCheckedChanged="CHK_INVENTORY_CheckedChanged" /> 
+                </td>
+                <td>
+                    <asp:DropDownList ID="DRP_INV_FILTER" runat="server" AutoPostBack="true"> </asp:DropDownList>
+                </td>
+                <td>
+                    <asp:Button ID="BTN_REFRESH" runat="server" Text="Refresh" Width="117px" OnClick="BTN_REFRESH_Click" />
+                </td>
             </tr>
         </table>
         
         <br />
-       <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowUpdating="GridView1_RowUpdating" OnRowCancelingEdit="GridView1_RowCancelingEdit" OnRowDeleting="GridView1_RowDeleting">
+        <script type="text/javascript">
+            function allowOnlyNumbers(event) {
+                var key = event.key;
+                // Allow digits only
+                if (!/^\d$/.test(key) && key !== 'Backspace' && key !== 'Tab') {
+                    event.preventDefault();
+                }
+            }
+        </script>
+        <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowUpdating="GridView1_RowUpdating" OnRowCancelingEdit="GridView1_RowCancelingEdit" OnRowDeleting="GridView1_RowDeleting" OnRowEditing="GridView1_RowEditing" OnDataBound="GridView1_DataBound" OnRowDataBound="GridView1_RowDataBound" OnSelectedIndexChanged="GridView1_SelectedIndexChanged" ShowFooter="True" OnRowCommand="GridView1_RowCommand">
             <AlternatingRowStyle BackColor="White" />
             <Columns>
-                <asp:TemplateField HeaderText="ID">
+                <asp:TemplateField HeaderText="اسم المنتج">
                     <EditItemTemplate>
-                        <asp:TextBox ID="TXT_ID_GRD" runat="server" Text='<%# Bind("id") %>' Height="16px" Width="95px"></asp:TextBox>
+                        <asp:DropDownList ID="DRP_NAME_GRD_EDIT" runat="server" DataSourceID="prod" DataTextField="name" DataValueField="id">
+                        </asp:DropDownList>
                     </EditItemTemplate>
                     <ItemTemplate>
-                        <asp:Label ID="LBL_ID_GRD" runat="server" Text='<%# Bind("id") %>'></asp:Label>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="تاريخ">
-                    <EditItemTemplate>
-                        <asp:TextBox ID="TXT_DATE_GRD" runat="server" Text='<%# Bind("date") %>' TextMode="Date"></asp:TextBox>
-                    </EditItemTemplate>
-                    <ItemTemplate>
-                        <asp:Label ID="LBL_DATE_GRD" runat="server" Text='<%# Bind("date") %>'></asp:Label>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="الاسم">
-                    <EditItemTemplate>
-                        <asp:TextBox ID="TXT_NAME_GRD" runat="server" Text='<%# Bind("product") %>'></asp:TextBox>
-                    </EditItemTemplate>
-                    <ItemTemplate>
-                        <asp:Label ID="LBL_NAME_GRD" runat="server" Text='<%# Bind("product") %>'></asp:Label>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="العميل">
-                    <EditItemTemplate>
-                        <asp:TextBox ID="TXT_CUST_NAME_GRD" runat="server" Text='<%# Bind("customer") %>' ></asp:TextBox>
-                    </EditItemTemplate>
-                    <ItemTemplate>
-                        <asp:Label ID="LBL_CUST_NAME_GRD" runat="server" Text='<%# Bind("customer") %>'></asp:Label>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="الكمية">
-                    <EditItemTemplate>
-                        <asp:TextBox ID="TXT_QTY_GRD" runat="server" Text='<%# Bind("quantity") %>' AutoPostBack="True" Height="16px" Width="95px" OnTextChanged="TXT_QTY_GRD_TextChanged"  ></asp:TextBox>
-                    </EditItemTemplate>
-                    <ItemTemplate>
-                        <asp:Label ID="LBL_QTY_GRD" runat="server" Text='<%# Bind("quantity") %>'></asp:Label>
+                        <br />
+
+                        <asp:DropDownList ID="DRP_NAME_GRD" runat="server" DataTextField="name" DataValueField="id" AutoPostBack="True" OnSelectedIndexChanged="DRP_NAME_GRD_SelectedIndexChanged">
+                        </asp:DropDownList>
+                        <asp:Label ID="LBL_PROD_NAME_GRD" runat="server" Text='<%# Bind("product_name") %>'></asp:Label>
+                        <br />
+                        <asp:Label ID="LBL_PROD_ID_GRD" runat="server" Text='<%# Bind("product_id") %>'></asp:Label>
+                        <br />
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="السعر">
                     <EditItemTemplate>
-                        <asp:TextBox ID="TXT_PRICE_GRD" runat="server" Text='<%# Bind("price") %>' AutoPostBack="True" OnTextChanged="TXT_PRICE_GRD_TextChanged" Height="16px" Width="95px"></asp:TextBox>
+
+                        <asp:TextBox ID="TXT_PRICE_GRD_EDIT" runat="server" AutoPostBack="True" Height="16px" OnTextChanged="TXT_PRICE_GRD_TextChanged" Text='<%# Bind("price") %>' Width="95px"></asp:TextBox>
                     </EditItemTemplate>
                     <ItemTemplate>
-                        <asp:Label ID="LBL_PRICE_GRD" runat="server" Text='<%# Bind("price") %>'></asp:Label>
+                        <asp:TextBox ID="TXT_PRICE_GRD" runat="server" onkeypress="allowOnlyNumbers(event)" AutoPostBack="True" Height="16px" OnTextChanged="TXT_PRICE_GRD_TextChanged" Text='<%# Bind("price") %>' Width="95px"></asp:TextBox>                       
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="العدد">
+                    <EditItemTemplate>
+                        <asp:TextBox ID="TXT_QTY_GRD_EDIT" runat="server" OnTextChanged="TXT_QTY_GRD_TextChanged" Text='<%# Bind("quantity") %>' AutoPostBack="True" Height="16px" Width="95px" ></asp:TextBox>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:TextBox ID="TXT_QTY_GRD" runat="server" onkeypress="allowOnlyNumbers(event)" OnTextChanged="TXT_QTY_GRD_TextChanged" Text='<%# Bind("quantity") %>' AutoPostBack="True" Height="16px" Width="95px" ></asp:TextBox>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="اجمالى السعر">
                     <EditItemTemplate>
-                        <asp:TextBox ID="TXT_TOTAL_PRICE_GRD" runat="server" Text='<%# Bind("total_price") %>'></asp:TextBox>
+                        <asp:TextBox ID="TXT_TOTAL_PRICE_GRD_EDIT" runat="server" Text='<%# Bind("total_price") %>' Enabled="False"></asp:TextBox>
                     </EditItemTemplate>
+                    <FooterTemplate>
+                        <asp:Label ID="LBL_TOTAL_PROFIT_GRD" runat="server" Text="Label"></asp:Label>
+                    </FooterTemplate>
                     <ItemTemplate>
-                        <asp:Label ID="LBL_TOTAL_PRICE_GRD" runat="server" Text='<%# Bind("total_price") %>'></asp:Label>
+                        <asp:TextBox ID="TXT_TOTAL_PRICE_GRD" runat="server" Text='<%# Bind("total_price") %>' Enabled="False" ></asp:TextBox>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="الخصم %">
+                    <ItemTemplate>
+                        <asp:TextBox ID="TXT_DISACC_GRD" runat="server" onkeypress="allowOnlyNumbers(event)" Text='<%# Bind("disaccount") %>' AutoPostBack="True"  Width="89px" OnTextChanged="TXT_DISACC_DRD_TextChanged"></asp:TextBox>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="الربح">
                     <EditItemTemplate>
-                        <asp:TextBox ID="TXT_PROFIT_DRG" runat="server" Text='<%# Bind("profit") %>'></asp:TextBox>
+                        <asp:TextBox ID="TXT_PROFIT_DRG_EDIT" runat="server" Enabled="False" Text='<%# Bind("profit") %>'></asp:TextBox>
                     </EditItemTemplate>
                     <ItemTemplate>
-                        <asp:Label ID="LBL_PROFIT_DRG" runat="server" Text='<%# Bind("profit") %>'></asp:Label>
+                        <asp:TextBox ID="TXT_PROFIT_DRG" runat="server" Enabled="False" Text='<%# Bind("profit") %>'></asp:TextBox>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="نسبة الربح %">
-                    <EditItemTemplate>
-                        <asp:TextBox ID="TXT_PERCENT_DRG" runat="server" AutoPostBack="True" Text='<%# Bind("profit_percent") %>' Width="89px"></asp:TextBox>
-                    </EditItemTemplate>
-                    <ItemTemplate>
-                        <asp:Label ID="LBL_PERCENT_DRG" runat="server" Text='<%# Bind("profit_percent") %>'></asp:Label>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="المخزن">
-                    <EditItemTemplate>
-                        <asp:DropDownList ID="DRP_INV_GRD" runat="server" DataSourceID="inv" DataTextField="name" DataValueField="id">
-                        </asp:DropDownList>
-                        <asp:SqlDataSource ID="inv" runat="server" ConnectionString="<%$ ConnectionStrings:DentalConnectionString %>" SelectCommand="SELECT [id], [name] FROM [inventory]"></asp:SqlDataSource>
-                    </EditItemTemplate>
-                    <ItemTemplate>
-                        <asp:Label ID="Label5" runat="server" Text='<%# Bind("inventory_name") %>'></asp:Label>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:CommandField ShowEditButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
+                <asp:CommandField CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="حفظ" NewText="حفظ" ShowCancelButton="False" ShowInsertButton="True" />
                 <asp:CommandField ShowDeleteButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
             </Columns>
             <EditRowStyle BackColor="#2461BF" />
@@ -169,14 +150,12 @@
             <SortedAscendingHeaderStyle BackColor="#6D95E1" />
             <SortedDescendingCellStyle BackColor="#E9EBEF" />
             <SortedDescendingHeaderStyle BackColor="#4870BE" />
-           
         </asp:GridView>
-        
         <br />
-        </dev>
-    </asp:Panel>
+        <br />
+
+    </div>
+</asp:Panel>
 </asp:Content>
-
-
 
 

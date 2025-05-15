@@ -7,95 +7,109 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Net;
+
 
 public partial class sales : System.Web.UI.Page
 {
-    int new_record;
-    int qty_GRD;
-    decimal price_GRD;
-    int disacc_GRD;
-    decimal total_price_GRD;
-    decimal profit_GRD;
-    decimal percent_GRD;
-    decimal sales_price;
-    decimal sales_value;
-    decimal pur_price;
-    decimal pur_value;
-    decimal profit;
-    decimal profit_percent;
-    database db = new database();
-
+   
     public void fill_grid()
     {
-        string select = "select sales.id,sales.[date], products.name as product,customers.name as customer,sales.quantity,sales.price,sales.total_price, sales.profit_percent,sales.profit,sales.inventory_id,inventory.name as inventory_name from sales inner join products on sales.product_id = products.id inner join customers on customers.id = sales.customer_id inner join inventory on sales.inventory_id = inventory.id";
+        string select = "select sales.id,sales.[date], products.name as product,customers. name as supplier,sales.quantity,sales.price,sales.total_price, sales.disaccount,sales.profit, inventory.id as inventory_id, inventory.name as inventory_name from sales inner join products on products.id=sales.product_id inner join customers on customers.id = sales.supplier_id inner join inventory on sales.inventory_id = inventory.id"; 
         db.select(select, GridView1);
         ViewState.Add("ds", db.ds1);
     }
 
-    
     public void fill_grid_new()
     {
-        string select_new = "select sales.id,sales.[date], products.name as product,customers.name as customer,sales.quantity,sales.price,sales.total_price, sales.profit_percent,sales.profit,sales.inventory_id,inventory.name as inventory_name from sales inner join products on sales.product_id = products.id inner join customers on customers.id = sales.customer_id inner join inventory on sales.inventory_id = inventory.id where sales.customer_id = " + DRP_CUSTOMER.SelectedValue + " and[date] = '" + TXT_Date.Text + "'";
+        //string select = "select * from sales where id = "+TXT_ID.Text+" ";
+        //string select_new = "select sales.id, products.name from sales inner join products on products.id=sales.product_id where sales.supplier_id = "+DRP_SUPPLIER.SelectedValue+" and [date]="+TXT_ID.Text+"";
+        //string select_new = "select sales.id,sales.[date], products.name as product,customers. name as supplier,sales.quantity,sales.price,sales.total_price, sales.disaccount,sales.profit,sales.supplier_id, sales.product_id from sales inner join products on products.id=sales.product_id inner join customers on customers.id = sales.supplier_id where sales.supplier_id = " + DRP_SUPPLIER.SelectedValue + " and [date]='" + TXT_Date.Text + "'";
+        string select_new = "select sales.id,sales.[date], products.name as product,customers. name as supplier,sales.quantity,sales.price,sales.total_price, sales.disaccount,sales.profit, inventory.id as inventory_id, inventory.name as inventory_name from sales inner join products on products.id=sales.product_id inner join customers on customers.id = sales.supplier_id inner join inventory on sales.inventory_id = inventory.id where sales.supplier_id = " + DRP_SUPPLIER.SelectedValue + " and [date]='" + TXT_Date.Text + "'";
         db.select(select_new, GridView1);
         ViewState.Add("ds_new", db.ds1);
     }
 
-    /*
     public void fill_grid_filter(string criteria)
     {
         string select_new;
         switch (criteria)
         {
             case "supp":
-                select_new = "select purchases.id,purchases.[date], products.name as product,suppliers. name as supplier,purchases.quantity,purchases.price,purchases.total_price, purchases.total_price, purchases.profit_percent,purchases.profit, inventory.id as inventory_id, inventory.name as inventory_name from purchases inner join products on products.id=purchases.product_id inner join suppliers on suppliers.id = purchases.supplier_id inner join inventory on purchases.inventory_id = inventory.id where purchases.supplier_id = " + DRP_SUPP_FILTER.SelectedValue + "";
+                select_new = "select sales.id,sales.[date], products.name as product,customers. name as supplier,sales.quantity,sales.price,sales.total_price, sales.total_price, sales.disaccount,sales.profit, inventory.id as inventory_id, inventory.name as inventory_name from sales inner join products on products.id=sales.product_id inner join customers on customers.id = sales.supplier_id inner join inventory on sales.inventory_id = inventory.id where sales.supplier_id = " + DRP_SUPP_FILTER.SelectedValue + "";
                 db.select(select_new, GridView1);
                 ViewState.Add("ds_filter", db.ds1);
                 break;
             case "inv":
-                select_new = "select purchases.id,purchases.[date], products.name as product,suppliers. name as supplier,purchases.quantity,purchases.price,purchases.total_price, purchases.total_price, purchases.profit_percent,purchases.profit, inventory.id as inventory_id, inventory.name as inventory_name from purchases inner join products on products.id=purchases.product_id inner join suppliers on suppliers.id = purchases.supplier_id inner join inventory on purchases.inventory_id = inventory.id where purchases.inventory_id = " + DRP_INV_FILTER.SelectedValue + "";
+                select_new = "select sales.id,sales.[date], products.name as product,customers. name as supplier,sales.quantity,sales.price,sales.total_price, sales.total_price, sales.disaccount,sales.profit, inventory.id as inventory_id, inventory.name as inventory_name from sales inner join products on products.id=sales.product_id inner join customers on customers.id = sales.supplier_id inner join inventory on sales.inventory_id = inventory.id where sales.inventory_id = " + DRP_INV_FILTER.SelectedValue + "";
                 db.select(select_new, GridView1);
                 ViewState.Add("ds_filter", db.ds1);
                 break;
             case "date":
-                select_new = "select purchases.id,purchases.[date], products.name as product,suppliers. name as supplier,purchases.quantity,purchases.price,purchases.total_price, purchases.total_price, purchases.profit_percent,purchases.profit,purchases.supplier_id, purchases.product_id from purchases inner join products on products.id=purchases.product_id inner join suppliers on suppliers.id = purchases.supplier_id where [date]='" + TXT_DATE_FILTER.Text + "'";
+                select_new = "select sales.id,sales.[date], products.name as product,customers. name as supplier,sales.quantity,sales.price,sales.total_price, sales.total_price, sales.disaccount,sales.profit,sales.supplier_id, sales.product_id from sales inner join products on products.id=sales.product_id inner join customers on customers.id = sales.supplier_id where [date]='" + TXT_DATE_FILTER.Text + "'";
                 db.select(select_new, GridView1);
                 ViewState.Add("ds_filter", db.ds1);
                 break;
             case "supp_date":
-                select_new = "select purchases.id,purchases.[date], products.name as product,suppliers. name as supplier,purchases.quantity,purchases.price,purchases.total_price, purchases.total_price, purchases.profit_percent,purchases.profit, inventory.id as inventory_id, inventory.name as inventory_name from purchases inner join products on products.id=purchases.product_id inner join suppliers on suppliers.id = purchases.supplier_id inner join inventory on purchases.inventory_id = inventory.id where purchases.supplier_id = " + DRP_SUPP_FILTER.SelectedValue + " and [date]='" + TXT_DATE_FILTER.Text + "'";
+                select_new = "select sales.id,sales.[date], products.name as product,customers. name as supplier,sales.quantity,sales.price,sales.total_price, sales.total_price, sales.disaccount,sales.profit, inventory.id as inventory_id, inventory.name as inventory_name from sales inner join products on products.id=sales.product_id inner join customers on customers.id = sales.supplier_id inner join inventory on sales.inventory_id = inventory.id where sales.supplier_id = " + DRP_SUPP_FILTER.SelectedValue + " and [date]='" + TXT_DATE_FILTER.Text + "'";
                 db.select(select_new, GridView1);
                 ViewState.Add("ds_filter", db.ds1);
                 break;
             case "all":
-                select_new = "select purchases.id,purchases.[date], products.name as product,suppliers. name as supplier,purchases.quantity,purchases.price,purchases.total_price, purchases.total_price, purchases.profit_percent,purchases.profit, inventory.id as inventory_id, inventory.name as inventory_name from purchases inner join products on products.id=purchases.product_id inner join suppliers on suppliers.id = purchases.supplier_id inner join inventory on purchases.inventory_id = inventory.id where purchases.supplier_id = " + DRP_SUPP_FILTER.SelectedValue + " and [date]='" + TXT_DATE_FILTER.Text + "' and purchases.inventory_id = " + DRP_INV_FILTER.SelectedValue + "";
+                select_new = "select sales.id,sales.[date], products.name as product,customers. name as supplier,sales.quantity,sales.price,sales.total_price, sales.total_price, sales.disaccount,sales.profit, inventory.id as inventory_id, inventory.name as inventory_name from sales inner join products on products.id=sales.product_id inner join customers on customers.id = sales.supplier_id inner join inventory on sales.inventory_id = inventory.id where sales.supplier_id = " + DRP_SUPP_FILTER.SelectedValue + " and [date]='" + TXT_DATE_FILTER.Text + "' and sales.inventory_id = " + DRP_INV_FILTER.SelectedValue + "";
                 db.select(select_new, GridView1);
                 ViewState.Add("ds_filter", db.ds1);
                 break;
         }
-
+        
+        //string select = "select * from sales where id = "+TXT_ID.Text+" ";
+        //string select_new = "select sales.id, products.name from sales inner join products on products.id=sales.product_id where sales.supplier_id = "+DRP_SUPPLIER.SelectedValue+" and [date]="+TXT_ID.Text+"";
         
     }
-    */
 
-    public void fill_cst()
+    
+    public void txt_id()
+    {
+        string id = "select max(id)+1 as id from sales";
+        db.select_id(id, TXT_ID);
+        if (TXT_ID.Text == "")
+        {
+            TXT_ID.Text = 1.ToString();
+        }
+
+    }
+
+    public void fill_cust()
     {
         string cst = "select id, name from customers";
-        db.select_combo(cst, DRP_CUSTOMER);
-        db.select_combo(cst, DRP_CUSTOMER_FILTER);
-        DRP_CUSTOMER.Items.Insert(0, "Selected Customer");
-        DRP_CUSTOMER_FILTER.Items.Insert(0, "Selected Customer");
+        db.select_combo(cst, DRP_SUPPLIER);
+        db.select_combo(cst, DRP_SUPP_FILTER);
+        DRP_SUPPLIER.Items.Insert(0, "اختيار العميل");
+        DRP_SUPP_FILTER.Items.Insert(0, "Selected Customer");
+        
     }
 
-
-
-    public void fill_product()
+    public void fill_inv()
     {
-        string prod = "select id, name from products";
-        db.select_combo(prod, DRP_PRODUCT);
-        DRP_PRODUCT.Items.Insert(0, "Selected Product");
+        string cst = "select id, name from inventory";
+        db.select_combo(cst, DRP_INV_FILTER);
+        DRP_INV_FILTER.Items.Insert(0, "Selected Inventory");
     }
 
+    //public void fill_product()
+    //{
+    //    string prod = "select id, name from products";
+    //    db.select_combo(prod, DRP_PRODUCT);
+    //    DRP_PRODUCT.Items.Insert(0, "Selected Product");
+    //}
 
+    //public void fill_cash()
+    //{
+    //    string cash = "select id, name from cashes";
+    //    db.select_combo(cash, DRP_CASH);
+    //    DRP_CASH.Items.Insert(0, "Selected Cash");
+
+    //}
     public void clear_txt(params TextBox[] txts)
     {
         for (int i = 0; i < txts.Length; i++)
@@ -105,23 +119,421 @@ public partial class sales : System.Web.UI.Page
         }
     }
 
+    public void start_load()
+    {
+        string date = DateTime.Now.ToString("yyyy-MM-dd");
+        string time = DateTime.Now.ToString("HH:mm:ss");
+        TXT_Date.Text = date;
+        TXT_DATE_FILTER.Text = date;
+        fill_cust();
+        txt_id();
+        DRP_SUPPLIER.Enabled = true;
+        TXT_Date.Enabled = false;
+
+        DataRow dr = grid_dt.NewRow();
+        grid_dt.Rows.Add(dr);
+        grid_dt.Columns.Add("product_name", typeof(string));
+        grid_dt.Columns.Add("product_id", typeof(int));
+        grid_dt.Columns.Add("price", typeof(int));
+        grid_dt.Columns.Add("quantity", typeof(int));
+        grid_dt.Columns.Add("total_price", typeof(int));
+        grid_dt.Columns.Add("disaccount", typeof(int));
+        grid_dt.Columns.Add("Profit", typeof(int));
+        grid_ds.Tables.Add(grid_dt);
+        GridView1.DataSource = grid_ds;
+        GridView1.DataBind();
+
+
+        string qurey = "select id, name from products";
+        DropDownList drp_prod_name_grid = GridView1.Rows[0].FindControl("DRP_NAME_GRD") as DropDownList;
+        DataSet drp_prod_name_grd_ds = db.fill_drop_grid(qurey, drp_prod_name_grid, "اختيار المنتج");
+        ViewState.Add("drp_prod_name_grd_ds", drp_prod_name_grd_ds);
+        ViewState.Add("grid_ds", grid_ds);
+        int drp_prod_name_index_grd = drp_prod_name_grid.SelectedIndex;
+        ViewState.Add("drp_prod_name_index_grd", drp_prod_name_index_grd);
+        delete_flag = false;
+        ViewState.Add("delete_flag", delete_flag);
+    }
+
+    //bool validation_cash(int total_price)
+    //{
+    //    // validate deduplicate username
+    //    // should enter amount
+    //    // can't withdraw IFF amount >= Curr Amount
+    //    int amount;
+    //    string curr = db.select_value("select curr_amount from cash_trans where id = (select max (id) from cash_trans where cash_id=" + DRP_CASH.SelectedValue + ")", "curr_amount");
+    //    if (curr == "")
+    //    {
+    //        amount = 0;
+    //    }
+    //    else
+    //    {
+    //        amount = int.Parse(curr);
+    //    }
+    //    if ( total_price > amount)
+    //    {
+    //        return false;
+    //    }
+    //    else
+    //    {
+    //        return true;
+    //    }
+    //}
+    database db = new database();
+    DataSet grid_ds = new DataSet();
+    DataTable grid_dt = new DataTable("purch");
+    bool delete_flag = false;
+    
+
+
+
 
     protected void Page_Load(object sender, EventArgs e)
     {
         if (IsPostBack == false)
         {
-            string date = DateTime.Now.ToString("yyyy-MM-dd");
-            TXT_Date.Text = date;
-            TXT_DATE_FILTER.Text = date;
-            fill_cst();
-            //fill_product();
-            fill_grid();
-            DRP_PRODUCT.Enabled = false;
-            DRP_CUSTOMER.Enabled = false;
-            TXT_Date.Enabled = false;
-            TXT_ID.Enabled = false;
+            start_load();            
+        }
+        
+    }
+
+   
+    protected void TextBox2_TextChanged(object sender, EventArgs e)
+    {
+
+    }
+
+    protected void DRP_SUPPLIER_SelectedIndexChanged(object sender, EventArgs e)
+
+    {       
+
+    }
+
+    protected void DRP_SUPPLIER_TextChanged(object sender, EventArgs e)
+    {
+        
+    }
+
+    protected void TXT_Date_TextChanged(object sender, EventArgs e)
+    {
+        /*
+        db.ds1 = (DataSet)ViewState["ds"];
+        if (GridView1.Rows.Count > 0)
+        {
+            for (int i = 0; i < GridView1.Rows.Count; i++)
+            {
+                //GridView1.DeleteRow(i);
+                db.ds1.Tables[0].Rows[i].Delete();
+            }
+
+            GridView1.DataSource = db.ds1;
+            GridView1.DataBind();
+        }
+        fill_grid_new();
+        */
+
+        //DRP_SUPPLIER.SelectedIndex = 0;
+        //DRP_PRODUCT.SelectedIndex = 0;
+
+
+
+    }
+
+    protected void TXT_Date_Load(object sender, EventArgs e)
+    {
+        
+    }
+
+    protected void TXT_QTY_GRD_Init(object sender, EventArgs e)
+    {
+       
+    }
+
+    protected void TXT_QTY_GRD_Unload(object sender, EventArgs e)
+    {
+        
+    }
+
+   
+
+    protected void TXT_QTY_GRD_Load(object sender, EventArgs e)
+    {
+        
+    }
+
+
+
+    protected void TXT_QTY_GRD_TextChanged(object sender, EventArgs e)
+    {
+        int rindex = GridView1.Rows.Count - 1;
+
+        grid_ds = (DataSet)ViewState["grid_ds"];
+        string qty = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_QTY_GRD")).Text.Trim();
+        string price = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_PRICE_GRD")).Text.Trim();
+        string disacc = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_DISACC_GRD")).Text.Trim();
+        int total_price_grd = 0, profit_grd_discc = 0;
+        int drp_prod_name_index_grd = (int)ViewState["drp_prod_name_index_grd"];
+        DataSet drp_prod_name_grd_ds = ViewState["drp_prod_name_grd_ds"] as DataSet;
+        int[] prod_id = new int[GridView1.Rows.Count - 1];
+        string[] prod_name = new string[GridView1.Rows.Count - 1];
+
+        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
+        {
+            prod_id[i] = int.Parse(((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Text);
+            prod_name[i] = ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Text;
 
         }
+
+        if (price != null && string.IsNullOrWhiteSpace(price.ToString()))
+        {
+            grid_ds.Tables[0].Rows[grid_ds.Tables[0].Rows.Count - 1][2] = 0;
+            price = 0.ToString();
+        }
+        else
+        {
+            grid_ds.Tables[0].Rows[grid_ds.Tables[0].Rows.Count - 1][2] = price;
+        }
+
+        if (qty != null && (string.IsNullOrEmpty(qty) || qty == "0"))
+        {
+            {
+                for (int i = 3; i <= 6; i++)
+                grid_ds.Tables[0].Rows[rindex][i] = 0;
+            }
+        }
+
+        else
+        {
+            grid_ds.Tables[0].Rows[rindex][3] = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[3].FindControl("TXT_QTY_GRD"))).Text);
+            total_price_grd = int.Parse(price) * int.Parse(qty);
+            grid_ds.Tables[0].Rows[rindex][4] = total_price_grd;
+            {
+                for (int i = 5; i <= 6; i++)
+                    grid_ds.Tables[0].Rows[rindex][i] = 0;
+            }
+
+        }
+
+        if (!(disacc != null && (string.IsNullOrEmpty(disacc) || disacc == "0")))
+        {
+            profit_grd_discc = total_price_grd * int.Parse(disacc) / 100;
+            grid_ds.Tables[0].Rows[rindex][6] = profit_grd_discc;
+        }
+
+        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
+        {
+            grid_ds.Tables[0].Rows[i][0] = prod_name[i];
+            grid_ds.Tables[0].Rows[i][1] = prod_id[i];
+        }
+        ViewState["grid_ds"] = grid_ds;
+        GridView1.DataSource = grid_ds;
+        GridView1.DataBind();
+
+        //fill_drp_prod_name_grd;
+        DropDownList dr_prod_name_grid = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD") as DropDownList;
+        dr_prod_name_grid.DataSource = drp_prod_name_grd_ds.Tables[0];
+        dr_prod_name_grid.DataTextField = drp_prod_name_grd_ds.Tables[0].Columns["name"].ToString();
+        dr_prod_name_grid.DataValueField = drp_prod_name_grd_ds.Tables[0].Columns["id"].ToString();
+        dr_prod_name_grid.DataBind();
+        dr_prod_name_grid.Items.Insert(0, "اختيار المنتج");
+        
+        dr_prod_name_grid.SelectedIndex = drp_prod_name_index_grd;
+
+        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
+        {
+            ((DropDownList)GridView1.Rows[i].FindControl("DRP_NAME_GRD")).Visible = false;
+            ((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Visible = false;
+            ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Visible = true;
+        }
+
+    }
+
+    protected void TXT_PRICE_GRD_TextChanged(object sender, EventArgs e)
+    {
+        
+    }
+    
+    protected void TXT_DISACC_DRD_TextChanged(object sender, EventArgs e)
+    {
+        int rindex = GridView1.Rows.Count - 1;
+        grid_ds = (DataSet)ViewState["grid_ds"];
+        int drp_prod_name_index_grd = (int)ViewState["drp_prod_name_index_grd"];
+        DataSet drp_prod_name_grd_ds = ViewState["drp_prod_name_grd_ds"] as DataSet;
+        var price_cell_ds = grid_ds.Tables[0].Rows[grid_ds.Tables[0].Rows.Count - 1][2];
+
+        int[] prod_id = new int[GridView1.Rows.Count - 1];
+        string[] prod_name = new string[GridView1.Rows.Count - 1];
+
+
+        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
+        {
+            prod_id[i] = int.Parse(((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Text);
+            prod_name[i] = ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Text;
+
+        }
+
+        if (price_cell_ds != DBNull.Value && string.IsNullOrWhiteSpace(price_cell_ds.ToString()))
+        {
+            grid_ds.Tables[0].Rows[grid_ds.Tables[0].Rows.Count - 1][2] = ((TextBox)GridView1.Rows[rindex].Cells[2].FindControl("TXT_PRICE_GRD")).Text;
+        }
+        
+        string qty = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_QTY_GRD")).Text.Trim();
+        string price = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_PRICE_GRD")).Text.Trim();
+        string disacc = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_DISACC_GRD")).Text.Trim();
+        int total_price_grd = 0, profit_grd_discc = 0;
+
+        //new_record = (int) ViewState["new_record"];
+
+        if (qty != null && (string.IsNullOrEmpty(qty) || qty == "0"))
+        {
+            {
+                for (int i = 3; i <= 6; i++)
+                    grid_ds.Tables[0].Rows[rindex][i] = 0;
+            }
+        }
+
+        else
+        {
+            grid_ds.Tables[0].Rows[rindex][3] = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[3].FindControl("TXT_QTY_GRD"))).Text);
+            total_price_grd = int.Parse(price) * int.Parse(qty);
+            grid_ds.Tables[0].Rows[rindex][4] = total_price_grd;
+            if (!(disacc != null && (string.IsNullOrEmpty(disacc) || disacc == "0")))
+            {
+                for (int i = 5; i <= 6; i++)
+                    grid_ds.Tables[0].Rows[rindex][i] = 0;
+            }
+
+        }
+
+        if (!(disacc != null && (string.IsNullOrEmpty(disacc) || disacc == "0")))
+        {
+            profit_grd_discc = total_price_grd * int.Parse(disacc) / 100;
+            grid_ds.Tables[0].Rows[rindex][6] = profit_grd_discc;
+            grid_ds.Tables[0].Rows[rindex][5] = disacc;
+        }
+
+        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
+        {
+            grid_ds.Tables[0].Rows[i][0] = prod_name[i];
+            grid_ds.Tables[0].Rows[i][1] = prod_id[i];
+        }
+
+        ViewState["grid_ds"] = grid_ds;
+        GridView1.DataSource = grid_ds;
+        GridView1.DataBind();
+
+        //fill_drp_prod_name_grd;
+        DropDownList dr_prod_name_grid = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD") as DropDownList;
+        dr_prod_name_grid.DataSource = drp_prod_name_grd_ds.Tables[0];
+        dr_prod_name_grid.DataTextField = drp_prod_name_grd_ds.Tables[0].Columns["name"].ToString();
+        dr_prod_name_grid.DataValueField = drp_prod_name_grd_ds.Tables[0].Columns["id"].ToString();
+        dr_prod_name_grid.DataBind();
+        dr_prod_name_grid.Items.Insert(0, "اختيار المنتج");
+
+        dr_prod_name_grid.SelectedIndex = drp_prod_name_index_grd;
+
+        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
+        {
+            ((DropDownList)GridView1.Rows[i].FindControl("DRP_NAME_GRD")).Visible = false;
+            ((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Visible = false;
+            ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Visible = true;
+        }
+    }
+
+    protected void TXT_ID_TextChanged(object sender, EventArgs e)
+    {
+
+    }
+
+    protected void TXT_DATE_FILTER_TextChanged(object sender, EventArgs e)
+    {
+        
+        
+
+    }
+
+    protected void DRP_SUPP_FILTER_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (CHK_Supplier.Checked == true && CHK_Date.Checked == true && CHK_INVENTORY.Checked == true)
+        {
+            db.ds1 = (DataSet)ViewState["ds"];
+            if (GridView1.Rows.Count > 0)
+            {
+                for (int i = 0; i < GridView1.Rows.Count; i++)
+                {
+                    //GridView1.DeleteRow(i);
+                    db.ds1.Tables[0].Rows[i].Delete();
+                }
+
+                GridView1.DataSource = db.ds1;
+                GridView1.DataBind();
+            }
+            fill_grid_filter("all");
+
+        }
+        if (CHK_Supplier.Checked == true && CHK_Date.Checked == true)
+        {
+            db.ds1 = (DataSet)ViewState["ds"];
+            if (GridView1.Rows.Count > 0)
+            {
+                for (int i = 0; i < GridView1.Rows.Count; i++)
+                {
+                    //GridView1.DeleteRow(i);
+                    db.ds1.Tables[0].Rows[i].Delete();
+                }
+
+                GridView1.DataSource = db.ds1;
+                GridView1.DataBind();
+            }
+            fill_grid_filter("supp_date");
+
+        }
+
+        if (CHK_Supplier.Checked == true && CHK_Date.Checked == false)
+        {
+            db.ds1 = (DataSet)ViewState["ds"];
+            if (GridView1.Rows.Count > 0)
+            {
+                for (int i = 0; i < GridView1.Rows.Count; i++)
+                {
+                    //GridView1.DeleteRow(i);
+                    db.ds1.Tables[0].Rows[i].Delete();
+                }
+
+                GridView1.DataSource = db.ds1;
+                GridView1.DataBind();
+            }
+            fill_grid_filter("supp");
+
+        }
+
+        if (CHK_Supplier.Checked == false && CHK_Date.Checked == true)
+        {
+            db.ds1 = (DataSet)ViewState["ds"];
+            if (GridView1.Rows.Count > 0)
+            {
+                for (int i = 0; i < GridView1.Rows.Count; i++)
+                {
+                    //GridView1.DeleteRow(i);
+                    db.ds1.Tables[0].Rows[i].Delete();
+                }
+
+                GridView1.DataSource = db.ds1;
+                GridView1.DataBind();
+            }
+            fill_grid_filter("date");
+
+        }
+    }
+
+    protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    {
+               
+    }
+
+    protected void GridView1_RowDeleted(object sender, GridViewDeletedEventArgs e)
+    {
+       
     }
 
     protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
@@ -131,398 +543,366 @@ public partial class sales : System.Web.UI.Page
 
     protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
     {
-        //get customer id
-        string cust_id = db.select_value("select id from customers where name = '" + ((Label)(GridView1.Rows[e.RowIndex].Cells[3].FindControl("LBL_CUST_NAME_GRD"))).Text + "'", "id");
-        int id_cust = int.Parse(cust_id);
-
-        //get product id
-        string product_id = db.select_value("select id from products where name = '" + ((Label)(GridView1.Rows[e.RowIndex].Cells[2].FindControl("LBL_NAME_GRD"))).Text + "'", "id");
-        int id_product = int.Parse(product_id);
-
-        string delete_row = "delete from sales where id= " + ((Label)(GridView1.Rows[e.RowIndex].Cells[0].FindControl("LBL_ID_GRD"))).Text + " and [date]='" + ((Label)(GridView1.Rows[e.RowIndex].Cells[1].FindControl("LBL_DATE_GRD"))).Text + "'and customer_id=" + id_cust + " and product_id=" + id_product + "";
-        db.delete(delete_row);
-
-        if (DRP_CUSTOMER.SelectedIndex != 0)
+        if (GridView1.Rows.Count == 1)
         {
+            Response.Write("<script>alert('لا يوجد اصناف لامر الشراء');</script>");
+            return;
 
-            fill_grid_new();
         }
 
-        else
+        string prod_id_grd = ((Label)GridView1.Rows[e.RowIndex].FindControl("LBL_PROD_ID_GRD")).Text;
+        if (string.IsNullOrEmpty(prod_id_grd))
         {
-
-            fill_grid();
+            Response.Write("<script>alert('لا يمكن مسح يجب الحفظ اولا');</script>");
+            return;
         }
+
+        DataSet grid_ds = (DataSet)ViewState["grid_ds"];
+        DataSet drp_prod_name_grd_ds = (DataSet)ViewState["drp_prod_name_grd_ds"];
+        //int[] prod_id = new int[GridView1.Rows.Count - 1];
+        //string[] prod_name = new string[GridView1.Rows.Count - 1];
+
+
+        //for (int i = 0; i < GridView1.Rows.Count - 1; i++)
+        //{
+        //    prod_id[i] = int.Parse(((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Text);
+        //    prod_name[i] = ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Text;
+
+        //}
+
+        string sales_details_get = db.select_value("select * from sales_details where purchase_id = " + TXT_ID.Text + "", "id");
+        int sales_details_id = int.Parse(sales_details_get);
+
+        if (sales_details_id != -1)
+        {
+            string delete_row = "delete from sales_details where product_id = " + ((Label)(GridView1.Rows[e.RowIndex].Cells[2].FindControl("LBL_PROD_ID_GRD"))).Text + " and purchase_id = " + TXT_ID.Text + "";
+            db.delete(delete_row);
+            //fill_grid();
+        }
+
+        grid_ds.Tables[0].Rows[e.RowIndex].Delete();
+        GridView1.DataSource = grid_ds;
+        //for (int i = 0; i < GridView1.Rows.Count - 1; i++)
+        //{
+        //    grid_ds.Tables[0].Rows[i][0] = prod_name[i];
+        //    grid_ds.Tables[0].Rows[i][1] = prod_id[i];
+        //}
+        GridView1.DataBind();
+        ViewState.Add("grid_ds", grid_ds);
+
+        DropDownList grid_dr_n = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD") as DropDownList;
+        grid_dr_n.DataSource = drp_prod_name_grd_ds.Tables[0];
+        grid_dr_n.DataBind();
+        grid_dr_n.DataTextField = drp_prod_name_grd_ds.Tables[0].Columns["name"].ToString(); // text field name of table dispalyed in dropdown       
+        grid_dr_n.DataValueField = drp_prod_name_grd_ds.Tables[0].Columns["id"].ToString();
+        grid_dr_n.Items.Insert(0, "اختيار المنتج");
+
+        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
+        {
+            ((DropDownList)GridView1.Rows[i].FindControl("DRP_NAME_GRD")).Visible = false;
+            ((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Visible = false;
+            ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Visible = true;
+        }
+
+        delete_flag= true;
+        ViewState["delete_flag"] = delete_flag;
+
+
+
+
     }
 
-    protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    protected void BTN_REFRESH_Click(object sender, EventArgs e)
     {
-        //check Update or Insert
-
-        string chk = "select id from ";
-
-        //update:
-
-
-
-        //Insert:        
-
-        //product id
-
-        string select_p_id = "select id from products where name='" + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[2].FindControl("TXT_NAME_GRD"))).Text + "'";
-        string p_id = db.select_value(select_p_id, "id");
-        int product_id = int.Parse(p_id);
-
-        
-        //max_id
-        //string select_id = "select id from purchases where date='"+TXT_Date.Text+"' and supplier_id="+((TextBox)(GridView1.Rows[e.RowIndex].Cells[1].FindControl("TXT_ID_GRD"))).Text+"";
-        string select_id = "select id from sales where date='" + TXT_Date.Text + "' and customer_id=" + DRP_CUSTOMER.SelectedValue + "";
-        string id = db.select_value(select_id, "id");
-        //int id_pur = int.Parse(id);
-        int max_id = 0;
-        if (id == "")
-        {
-            // insert sales
-            //max_id = 1;
-            string max_p_id = "INSERT INTO sales (id, date, customer_id, product_id,inventory_id,quantity,price, total_price, profit_percent, profit) select COALESCE (max(id),0)+1 ,'" + TXT_Date.Text + "'," + DRP_CUSTOMER.SelectedValue + "," + product_id + "," + ((DropDownList)(GridView1.Rows[e.RowIndex].Cells[9].FindControl("DRP_INV_GRD"))).SelectedValue + "," + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[4].FindControl("TXT_QTY_GRD"))).Text + "," + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[5].FindControl("TXT_PRICE_GRD"))).Text + "," + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[6].FindControl("TXT_TOTAL_PRICE_GRD"))).Text + "," + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[7].FindControl("TXT_PERCENT_DRG"))).Text + "," + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[8].FindControl("TXT_PROFIT_DRG"))).Text + " from sales";
-            db.insert(max_p_id);
-
-            // insert stock in/out:
-            //get sales id
-            string get_sales_id = "select id from sales where [date]='" + TXT_Date.Text + "' and customer_id=" + DRP_CUSTOMER.SelectedValue + " and product_id=" + product_id + "";
-            string sales_id = db.select_value(get_sales_id, "id");
-            int id_sales = int.Parse(sales_id);
-
-            // insert stock in/out
-            string stock = "INSERT INTO stock (id, date, product_id, quantity, inventory_id,customer_id,sales_id,[out]) select COALESCE (max(id),0)+1 ,'" + TXT_Date.Text + "'," + product_id + " ," + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[4].FindControl("TXT_QTY_GRD"))).Text + "," + ((DropDownList)(GridView1.Rows[e.RowIndex].Cells[9].FindControl("DRP_INV_GRD"))).SelectedValue + "," + DRP_CUSTOMER.SelectedValue + "," + id_sales + ",'" + 1 + "' from stock";
-            db.insert(stock);
-
-            //insert stock qty total_in total_out:
-            //get current total_in
-            string get_total_out = "select total_out from stock_quantity where product_id = " + product_id + "";
-            string total_out = db.select_value(get_total_out, "total_out"); int out_total=0;
-            if (total_out == "")
-            {
-                out_total = 0;
-            }
-            else
-            {
-                out_total = int.Parse(total_out);
-            }
-
-            //update total_out
-            int sum_total = out_total + int.Parse(((TextBox)(GridView1.Rows[e.RowIndex].Cells[4].FindControl("TXT_QTY_GRD"))).Text);
-            string update_total_in = "UPDATE stock_quantity SET total_out = " + sum_total + " where product_id=" + product_id + "";
-            db.update(update_total_in);
-
-            //update_stock_qty_net_in:
-            //get totla_in_out
-            //in
-            string in_stock = "select total_in from stock_quantity where product_id = " + product_id + "";
-            string net_in = db.select_value(in_stock, "total_in");
-            int stock_net_in = int.Parse(net_in);
-            //out
-            string out_stock = "select total_out from stock_quantity where product_id = " + product_id + "";
-            string out_in = db.select_value(out_stock, "total_out");
-            int stock_out_in = int.Parse(out_in);
-
-            //get current total_net_in
-            string get_total_net_in = "select total_net_in from stock_quantity where product_id = " + product_id + "";
-            string total_net_in = db.select_value(get_total_net_in, "total_net_in");
-            int net_in_total = int.Parse(total_net_in);
-
-            //int qty_net_in = stock_net_in - stock_out_in;
-            int qty_net_in = net_in_total - int.Parse(((TextBox)(GridView1.Rows[e.RowIndex].Cells[4].FindControl("TXT_QTY_GRD"))).Text);
-            string update_net_in = "UPDATE stock_quantity SET total_net_in = " + qty_net_in + " where product_id=" + product_id + "";
-            db.update(update_net_in);
-
-        }
-        else
-        {
-            // insert sales
-            max_id = int.Parse(id);
-            string insert = "INSERT INTO sales (id, date, customer_id, product_id,inventory_id,quantity,price, total_price, profit_percent, profit) VALUES (" + max_id + ",'" + TXT_Date.Text + "'," + DRP_CUSTOMER.SelectedValue + "," + product_id + "," + ((DropDownList)(GridView1.Rows[e.RowIndex].Cells[9].FindControl("DRP_INV_GRD"))).SelectedValue + "," + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[4].FindControl("TXT_QTY_GRD"))).Text + "," + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[5].FindControl("TXT_PRICE_GRD"))).Text + "," + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[6].FindControl("TXT_TOTAL_PRICE_GRD"))).Text + "," + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[7].FindControl("TXT_PERCENT_DRG"))).Text + "," + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[8].FindControl("TXT_PROFIT_DRG"))).Text + ")";
-            db.insert(insert);
-
-            // insert stock in/out:
-            //get sales id
-            string get_sales_id = "select id from sales where [date]='" + TXT_Date.Text + "' and customer_id=" + DRP_CUSTOMER.SelectedValue + " and product_id=" + product_id + "";
-            string sales_id = db.select_value(get_sales_id, "id");
-            int id_sales = int.Parse(sales_id);
-
-            // insert stock in/out
-            string stock = "INSERT INTO stock (id, date, product_id, quantity, inventory_id,customer_id,sales_id,[out]) select COALESCE (max(id),0)+1 ,'" + TXT_Date.Text + "'," + product_id + " ," + ((TextBox)(GridView1.Rows[e.RowIndex].Cells[4].FindControl("TXT_QTY_GRD"))).Text + "," + ((DropDownList)(GridView1.Rows[e.RowIndex].Cells[9].FindControl("DRP_INV_GRD"))).SelectedValue + "," + DRP_CUSTOMER.SelectedValue + "," + id_sales + ",'" + 1 + "' from stock";
-            db.insert(stock);
-
-            //insert stock qty total_in total_out:
-            //get current total_in
-            string get_total_out = "select total_out from stock_quantity where product_id = " + product_id + "";
-            string total_out = db.select_value(get_total_out, "total_out"); int out_total = 0;
-            if (total_out == "")
-            {
-                out_total = 0;
-            }
-            else
-            {
-                out_total = int.Parse(total_out);
-            }
-
-            int sum_total = out_total + int.Parse(((TextBox)(GridView1.Rows[e.RowIndex].Cells[4].FindControl("TXT_QTY_GRD"))).Text);
-            string update_total_in = "UPDATE stock_quantity SET total_out = " + sum_total + " where product_id=" + product_id + "";
-            db.update(update_total_in);
-
-            //update_stock_qty_net_in
-            //get_total_in_out
-            //in
-            string in_stock = "select total_in from stock_quantity where product_id = " + product_id + "";
-            string net_in = db.select_value(in_stock, "total_in");
-            int stock_net_in = int.Parse(net_in);
-            //out
-            string out_stock = "select total_out from stock_quantity where product_id = " + product_id + "";
-            string out_in = db.select_value(out_stock, "total_out");
-            int stock_out_in = int.Parse(out_in);
-
-            //get current total_net_in
-            string get_total_net_in = "select total_net_in from stock_quantity where product_id = " + product_id + "";
-            string total_net_in = db.select_value(get_total_net_in, "total_net_in");
-            int net_in_total = int.Parse(total_net_in);
-
-            //int qty_net_in = stock_net_in - stock_out_in;
-            int qty_net_in = net_in_total - int.Parse(((TextBox)(GridView1.Rows[e.RowIndex].Cells[4].FindControl("TXT_QTY_GRD"))).Text);
-            string update_net_in = "UPDATE stock_quantity SET total_net_in = " + qty_net_in + " where product_id=" + product_id + "";
-            db.update(update_net_in);
-        }
-
-        GridView1.EditIndex = -1;
-
-        fill_grid_new();
-
 
     }
 
-    
+    protected void CHK_Supplier_CheckedChanged(object sender, EventArgs e)
+    {
+        DRP_SUPP_FILTER.SelectedIndex = 0;
+        DRP_INV_FILTER.SelectedIndex = 0;
+    }
+
+    protected void CHK_Date_CheckedChanged(object sender, EventArgs e)
+    {
+        DRP_SUPP_FILTER.SelectedIndex = 0;
+        DRP_INV_FILTER.SelectedIndex = 0;
+
+    }
 
     protected void CHK_INVENTORY_CheckedChanged(object sender, EventArgs e)
     {
+        DRP_SUPP_FILTER.SelectedIndex = 0;
+        DRP_INV_FILTER.SelectedIndex = 0;
 
     }
 
-    protected void BTN_NEW_Click(object sender, EventArgs e)
+
+
+    protected void DRP_CASH_SelectedIndexChanged(object sender, EventArgs e)
     {
-        new_record = 0;
-        ViewState["new_record"] = 0;
-        ViewState.Add("new_record", new_record);
-        DRP_PRODUCT.Enabled = true;
-        DRP_CUSTOMER.Enabled = true;
-        TXT_Date.Enabled = true;
-        db.ds1 = (DataSet)ViewState["ds"];
-        if (GridView1.Rows.Count > 0)
+        //int amount;
+        //string curr = db.select_value("select curr_amount from cash_trans where id = (select max (id) from cash_trans where cash_id=" + DRP_CASH.SelectedValue + ")", "curr_amount");
+        //if (curr == "")
+        //{
+        //    amount = 0;
+        //}
+        //else
+        //{
+        //    amount = int.Parse(curr);
+        //}
+        //LBL_CASH_AMOUNT.Text = amount.ToString();
+    }
+
+
+
+
+
+    protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        
+      
+
+        if (IsPostBack == false)
         {
-            for (int i = 0; i < db.ds1.Tables[0].Rows.Count; i++)
-            {
-                //GridView1.DeleteRow(i);
-                db.ds1.Tables[0].Rows[i].Delete();
+            Response.Write("<script>alert('should Enter Product Name or Choose Category');</script>");
+            //Response.Write("should choose type");
+            return;
+        }
+        //GridView1.EditIndex = -1;
+        grid_ds = (DataSet)ViewState["grid_ds"];
+        DataRow dr_new = grid_ds.Tables[0].NewRow();
+        grid_ds.Tables[0].Rows.Add(dr_new);
+        GridView1.DataSource = grid_ds;
+        GridView1.DataBind();
+        ViewState.Add("grid_ds", grid_ds);
+
+
+    }
+  
+
+    protected void GridView1_DataBound(object sender, EventArgs e)
+    {
+
+    }
+
+    protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+
+    }
+
+    protected void GridView1_RowUpdated(object sender, GridViewUpdatedEventArgs e)
+    {
+        
+        
+    }
+
+    protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+
+        if (e.CommandName == "New")
+        {
+            // confirm calculation before save
+
+            // confirm calculation
+
+            //validate at least price and qty inserted
+
+            //validate price & qty
+
+            //get user data from cookies
+            HttpCookie users = Request.Cookies["users"];
+            int user_id = 0;
+            if (users != null) {
+                user_id = int.Parse(Request.Cookies["users"]["user_id"].ToString());
             }
-            GridView1.DataSource = db.ds1;
-            GridView1.DataBind();
 
-        }
-    }
+            int rowindex = Convert.ToInt32(e.CommandArgument);
 
-    protected void DRP_PRODUCT_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        //new_record
+            if (((DropDownList)GridView1.Rows[rowindex].FindControl("DRP_NAME_GRD")).SelectedIndex == 0)
+            {
+                Response.Write("<script>alert('يجب اختيار المنتج اولا');</script>");
+                return;
+            }
 
-        if (GridView1.Rows.Count <= 0)
-        {
-            ViewState["new_record"] = new_record;
-        }
-        else
-        {
-            ViewState["new_record"] = GridView1.Rows.Count;
-        }
+            if (DRP_SUPPLIER.SelectedIndex == 0)
+            {
+                Response.Write("<script>alert('يجب اختيار العميل ');</script>");
+                return;
+            }
 
-        
-        new_record = (int)ViewState["new_record"];
-
-        GridView1.EditIndex = new_record;
-        db.ds1 = (DataSet)ViewState["ds_new"];
-
-        GridView1.DataSource = db.ds1;
-        GridView1.DataBind();
-        db.ds1 = (DataSet)ViewState["ds_new"];
-        
-        DataRow dr = db.ds1.Tables[0].NewRow();
-        //dr["id"] = TXT_ID.Text;
-        dr["date"] = TXT_Date.Text;
-        dr["product"] = DRP_PRODUCT.SelectedItem;
-        //dr["product_id"] = DRP_PRODUCT.SelectedValue;
-        dr["customer"] = DRP_CUSTOMER.SelectedItem;
-        //dr["supplier_id"] = DRP_SUPPLIER.SelectedValue;
-        dr["quantity"] = 0;
-        dr["price"] = 0;
-        dr["total_price"] = 0;        
-        dr["Profit"] = 0;
-        dr["profit_percent"] = 0;
-
-        db.ds1.Tables[0].Rows.Add(dr); 
-        GridView1.DataSource = db.ds1;
-        GridView1.DataBind();
-        new_record += 1;
-        ViewState["new_record"] = new_record;
-        ViewState["ds_new"] = db.ds1;
-        DRP_PRODUCT.SelectedIndex = 0;
-        
-
-    }
-
-    protected void DRP_CUSTOMER_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        if (DRP_CUSTOMER.SelectedIndex > 0)
-            fill_product();
-
-        fill_grid_new();
-
-    }
-
-    protected void TXT_QTY_GRD_TextChanged(object sender, EventArgs e)
-    {
-        int rindex = GridView1.Rows.Count - 1;
-
-        //get product_id
-        string select_p_id = "select id from products where name='" + ((TextBox)(GridView1.Rows[rindex].Cells[2].FindControl("TXT_NAME_GRD"))).Text + "'";
-        string p_id = db.select_value(select_p_id, "id");
-        int product_id = int.Parse(p_id);
-
-        //get price from pricelist
-        string select_pur_price = "select price from price_list where product_id = " + product_id + "";
-        string pur_p = db.select_value(select_pur_price, "price");
-        pur_price = int.Parse(pur_p);
-
-        // calculate profit
-        pur_value = 0;
-        pur_value = pur_price * int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[4].FindControl("TXT_QTY_GRD"))).Text);
-        sales_price = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[5].FindControl("TXT_PRICE_GRD"))).Text);
-        sales_value = sales_price * int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[4].FindControl("TXT_QTY_GRD"))).Text);
-        profit = sales_value - pur_value;
-        profit_percent = (profit / pur_value) * 100;
-
-
-        //edit in dataset
-        db.ds1 = (DataSet)ViewState["ds_new"];
-
-        if (((TextBox)(GridView1.Rows[rindex].Cells[4].FindControl("TXT_QTY_GRD"))).Text == "")
-        {
-            qty_GRD = 0;
-            db.ds1.Tables[0].Rows[rindex][4] = qty_GRD;
-            //ViewState["ds_new"] = db.ds1;
-        }
-        else
-        {
-            qty_GRD = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[4].FindControl("TXT_QTY_GRD"))).Text);
-            db.ds1.Tables[0].Rows[rindex][4] = qty_GRD;
-            //ViewState["ds_new"] = db.ds1;
-        }
-
-        if (((TextBox)(GridView1.Rows[rindex].Cells[5].FindControl("TXT_PRICE_GRD"))).Text == "")
-        {
-            price_GRD = 0;
-            db.ds1.Tables[0].Rows[rindex][5] = price_GRD;
-            //ViewState["ds_new"] = db.ds1;
-        }
-        else
-        {
-            price_GRD = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[5].FindControl("TXT_PRICE_GRD"))).Text);
-            db.ds1.Tables[0].Rows[rindex][5] = price_GRD;
-            //ViewState["ds_new"] = db.ds1;
-        }
-
-        total_price_GRD = qty_GRD * price_GRD;
-        ((TextBox)(GridView1.Rows[rindex].Cells[6].FindControl("TXT_TOTAL_PRICE_GRD"))).Text = total_price_GRD.ToString();
-        db.ds1.Tables[0].Rows[rindex][6] = total_price_GRD;
-        ViewState["ds_new"] = db.ds1;
-
-        //profit
-        profit_GRD = profit;
-        ((TextBox)(GridView1.Rows[rindex].Cells[8].FindControl("TXT_PROFIT_DRG"))).Text = profit_GRD.ToString();
-        db.ds1.Tables[0].Rows[rindex][8] = profit_GRD;
-        ViewState["ds_new"] = db.ds1;
-
-        //profit prece
-        percent_GRD = profit_percent;
-        ((TextBox)(GridView1.Rows[rindex].Cells[7].FindControl("TXT_PERCENT_DRG"))).Text = percent_GRD.ToString();
-        db.ds1.Tables[0].Rows[rindex][7] = percent_GRD;
-        ViewState["ds_new"] = db.ds1;
-    }
-
-    protected void TXT_PRICE_GRD_TextChanged(object sender, EventArgs e)
-    {
-        int rindex = GridView1.Rows.Count - 1;
-
-        //get product_id
-        string select_p_id = "select id from products where name='" + ((TextBox)(GridView1.Rows[rindex].Cells[2].FindControl("TXT_NAME_GRD"))).Text + "'";
-        string p_id = db.select_value(select_p_id, "id");
-        int product_id = int.Parse(p_id);
-
-        //get price from pricelist
-        string select_pur_price = "select price from price_list where product_id = "+ product_id + "";
-        string pur_p = db.select_value(select_pur_price, "price");
-        pur_price = int.Parse(pur_p);
-
-        // calculate profit
-        pur_value =0 ;
-        pur_value = pur_price * int.Parse (((TextBox)(GridView1.Rows[rindex].Cells[4].FindControl("TXT_QTY_GRD"))).Text);
-        sales_price = int.Parse (((TextBox)(GridView1.Rows[rindex].Cells[5].FindControl("TXT_PRICE_GRD"))).Text);
-        sales_value = sales_price * int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[4].FindControl("TXT_QTY_GRD"))).Text);
-        profit = sales_value - pur_value;
-        profit_percent = (profit / pur_value) *100;
-
+            //validate duplication in sales_details & sales
        
-        //edit in dataset
-        db.ds1 = (DataSet)ViewState["ds_new"];
+            if (GridView1.Rows.Count == 1)
+            {
+                bool delete_flag = (bool)(ViewState["delete_flag"]);
+                if (delete_flag == false)
+                {
+                    string select_id_purchase = "select id from sales where id = " + TXT_ID.Text + "";
+                    string id_purchase = db.select_value(select_id_purchase, "id");
+                    if (!string.IsNullOrEmpty(id_purchase))
+                    {
 
-        if (((TextBox)(GridView1.Rows[rindex].Cells[4].FindControl("TXT_QTY_GRD"))).Text == "")
+                        Response.Write("<script>alert('رقم امر البيع موجود مسبقا يجب تغييرة');</script>");
+                        return;
+                    }
+                }
+
+                
+            }
+            string prod_id_grd = ((Label)GridView1.Rows[rowindex].FindControl("LBL_PROD_ID_GRD")).Text;
+            if(string.IsNullOrEmpty(prod_id_grd))
+            {
+                prod_id_grd = ((DropDownList)GridView1.Rows[rowindex].FindControl("DRP_NAME_GRD")).SelectedValue;
+            }
+            string select_id_purchase_details = "select id from sales_details where purchase_id = " + TXT_ID.Text + " and product_id = " + int.Parse(prod_id_grd) + "";
+            string id_purchase_details = db.select_value(select_id_purchase_details, "id");
+            if (!string.IsNullOrEmpty(id_purchase_details))
+            {
+                Response.Write("<script>alert('هذا المنتج موجود مسبقا');</script>");
+                return;
+            }
+
+            //define global variable
+
+            DropDownList grid_dr = GridView1.Rows[rowindex].FindControl("DRP_NAME_GRD") as DropDownList;
+            string LBL_ID_GRD = grid_dr.SelectedValue; 
+            string LBL_NAME_GRD = grid_dr.SelectedItem.ToString();
+            DropDownList[] grid_prod_name_dr = new DropDownList[GridView1.Rows.Count - 1];
+            DataSet drp_prod_name_grd_ds = (DataSet)ViewState["drp_prod_name_grd_ds"];
+            int [] prod_id = new int[GridView1.Rows.Count ];
+            string [] prod_name = new string[GridView1.Rows.Count];
+            grid_ds = (DataSet)ViewState["grid_ds"];   
+
+        
+            Label LBL_ID = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("LBL_PROD_ID_GRD") as Label;
+            Label LBL_NAME = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("LBL_PROD_NAME_GRD") as Label;
+            LBL_ID.Text = LBL_ID_GRD;
+            LBL_NAME.Text = LBL_NAME_GRD;
+                              
+            for (int i = 0; i < GridView1.Rows.Count ; i++)
+            {
+                prod_id[i] = int.Parse(((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Text);
+                prod_name[i] = ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Text;
+
+            }
+
+            DataRow dr_new = grid_ds.Tables[0].NewRow();
+            grid_ds.Tables[0].Rows.Add(dr_new);
+            for (int i = 0; i < GridView1.Rows.Count; i++)
+            {
+                grid_ds.Tables[0].Rows[i][0] = prod_name[i];
+                grid_ds.Tables[0].Rows[i][1] = prod_id[i];
+            }
+            GridView1.DataSource = grid_ds;
+            GridView1.DataBind();
+            ViewState["grid_ds"] = grid_ds;
+
+            DropDownList grid_dr_n = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD") as DropDownList;
+            grid_dr_n.DataSource = drp_prod_name_grd_ds.Tables[0];
+            grid_dr_n.DataBind();
+            grid_dr_n.DataTextField = drp_prod_name_grd_ds.Tables[0].Columns["name"].ToString(); // text field name of table dispalyed in dropdown       
+            grid_dr_n.DataValueField = drp_prod_name_grd_ds.Tables[0].Columns["id"].ToString();
+            grid_dr_n.Items.Insert(0, "اختيار المنتج");
+
+
+            for (int i = 0; i < GridView1.Rows.Count - 1; i++)
+            {
+                ((DropDownList)GridView1.Rows[i].FindControl("DRP_NAME_GRD")).Visible = false;
+                ((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Visible = false;
+                ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Visible = true;
+            }
+
+            //database section
+            string select_id = "select id from sales where id = " + TXT_ID.Text + "";
+            string id = db.select_value(select_id, "id");
+            if (string.IsNullOrEmpty(id))
+            {
+                string insert_purchase = "INSERT INTO sales (id, date, customer_id,user_id, status) " +
+                " VALUES ( " +
+                "" + TXT_ID.Text + "," +
+                "'" + TXT_Date.Text + "'," +
+                "" + DRP_SUPPLIER.SelectedValue + " ," +
+                "" + user_id + " ," +
+                "" + 0
+                + ")";
+                db.insert(insert_purchase);
+            }
+
+            string insert_prod_details = "INSERT INTO sales_details (sales_id, product_id, price, quantity, total_price, disaccount, profit ) " +
+                " VALUES (" +
+                "" + TXT_ID.Text + "," +
+                "" + LBL_ID_GRD + "," +
+                "" + grid_ds.Tables[0].Rows[rowindex][2] + " ," +
+                "" + grid_ds.Tables[0].Rows[rowindex][3] + "," +
+                "" + grid_ds.Tables[0].Rows[rowindex][4] + "," +
+                "" + grid_ds.Tables[0].Rows[rowindex][5] + "," +
+                "" + grid_ds.Tables[0].Rows[rowindex][6] + ")";
+            db.insert(insert_prod_details);
+
+            int drp_prod_name_index_grd = (int)(ViewState["drp_prod_name_index_grd"]);
+            drp_prod_name_index_grd = 0;
+            ViewState["drp_prod_name_index_grd"] = drp_prod_name_index_grd; 
+        }
+    }
+
+    protected void DRP_NAME_GRD_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+        string query = string.Format("select sales_price from price_list where product_id = '{0}'", ((DropDownList)(GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD"))).SelectedValue);
+        string purchase_price = db.select_value(query, "sales_price");
+        if (string.IsNullOrEmpty(purchase_price))
         {
-            qty_GRD = 0;
-            db.ds1.Tables[0].Rows[rindex][4] = qty_GRD;
-            //ViewState["ds_new"] = db.ds1;
+            ((TextBox)(GridView1.Rows[GridView1.Rows.Count - 1].FindControl("TXT_PRICE_GRD"))).Text = 0.ToString();
         }
         else
         {
-            qty_GRD = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[4].FindControl("TXT_QTY_GRD"))).Text);
-            db.ds1.Tables[0].Rows[rindex][4] = qty_GRD;
-            //ViewState["ds_new"] = db.ds1;
+            
+            ((TextBox)(GridView1.Rows[GridView1.Rows.Count - 1].FindControl("TXT_PRICE_GRD"))).Text = purchase_price.ToString();
+            
         }
+        int drp_index = ((DropDownList)(GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD"))).SelectedIndex;
 
-        if (((TextBox)(GridView1.Rows[rindex].Cells[5].FindControl("TXT_PRICE_GRD"))).Text == "")
-        {
-            price_GRD = 0;
-            db.ds1.Tables[0].Rows[rindex][5] = price_GRD;
-            //ViewState["ds_new"] = db.ds1;
-        }
-        else
-        { 
-            price_GRD = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[5].FindControl("TXT_PRICE_GRD"))).Text);
-            db.ds1.Tables[0].Rows[rindex][5] = price_GRD;
-            //ViewState["ds_new"] = db.ds1;
-        }
+        ViewState.Add("drp_prod_name_index_grd", drp_index);
 
-        total_price_GRD = qty_GRD * price_GRD;
-        ((TextBox)(GridView1.Rows[rindex].Cells[6].FindControl("TXT_TOTAL_PRICE_GRD"))).Text = total_price_GRD.ToString();
-        db.ds1.Tables[0].Rows[rindex][6] = total_price_GRD;
-        ViewState["ds_new"] = db.ds1;
 
-        //profit
-        profit_GRD = profit;
-        ((TextBox)(GridView1.Rows[rindex].Cells[8].FindControl("TXT_PROFIT_DRG"))).Text = profit_GRD.ToString();
-        db.ds1.Tables[0].Rows[rindex][8] = profit_GRD;
-        ViewState["ds_new"] = db.ds1;
 
-        //profit prece
-        percent_GRD = profit_percent;
-        ((TextBox)(GridView1.Rows[rindex].Cells[7].FindControl("TXT_PERCENT_DRG"))).Text = percent_GRD.ToString();
-        db.ds1.Tables[0].Rows[rindex][7] = percent_GRD;
-        ViewState["ds_new"] = db.ds1;
+        //((TextBox)(GridView1.Rows[GridView1.Rows.Count - 1].FindControl("TXT_TOTAL_PRICE_GRD"))).Text = purchase_price.ToString();
+        //((TextBox)(GridView1.Rows[GridView1.Rows.Count - 1].FindControl("TXT_DISACC_DRG"))).Text = "0";
+        //((TextBox)(GridView1.Rows[GridView1.Rows.Count - 1].FindControl("TXT_PROFIT_DRG"))).Text = "0";
+        //((TextBox)(GridView1.Rows[GridView1.Rows.Count - 1].FindControl("TXT_PRICE_GRD"))).Text = purchase_price.ToString();
+        //string query = string.Format("select purchase_price from price_list where product_id = '{0}'", ((DropDownList)(GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD"))).SelectedValue);
+        //int purchase_price = int.Parse(db.select_value(query, "purchase_price"));
+        //DataSet grid_ds = ViewState["grid_ds"] as DataSet;
+        //grid_ds.Tables[0].Rows[grid_ds.Tables[0].Rows.Count - 1][2] = purchase_price;
+        //GridView1.DataSource = grid_ds;
+        //GridView1.DataBind();
+    }
+
+
+
+
+
+    protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+       
+        
 
     }
+
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    protected void BTN_ADD_ORDER_Click(object sender, EventArgs e)
+    {
+        start_load();   
+    }
+
+
+   
+
+ 
+  
 }

@@ -74,7 +74,7 @@ public partial class cashes : System.Web.UI.Page
 
     protected void Button1_Click(object sender, EventArgs e)
     {
-        string insert = "insert into cashes (id, name) values (" + TXT_ID.Text + ", '" + TXT_NAME.Text +"')";
+        string insert = "insert into cashes (id, name) values (" + TXT_ID.Text + ", N'" + TXT_NAME.Text +"')";
         db.insert(insert);
         clear();
         fill_grd();

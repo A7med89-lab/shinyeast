@@ -14,6 +14,8 @@ public partial class login : System.Web.UI.Page
     database db = new database();
     protected void Page_Load(object sender, EventArgs e)
     {
+        Menu menu = Master.FindControl("Menu1") as Menu;
+        menu.Visible = false;
 
     }
 

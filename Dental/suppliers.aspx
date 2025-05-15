@@ -44,12 +44,21 @@
                      </td>
                 <tr>
                     <td class="auto-style10">
-                            <asp:Label ID="Label14" runat="server" Text="المنطقة"></asp:Label>
+                            <asp:Label ID="Label14" runat="server" Text="المحافظة"></asp:Label>
                     </td>
                     <td class="auto-style12">
-                           <asp:DropDownList ID="DRP_REGON" runat="server" Height="29px" Width="165px"> </asp:DropDownList>
+                           <asp:DropDownList ID="DRP_CITY" runat="server" Height="29px" Width="165px"> </asp:DropDownList>
                     </td>
-                 </tr>
+                </tr>
+
+                <tr>
+                    <td class="auto-style10">
+                            <asp:Label ID="Label2" runat="server" Text="المنطقة"></asp:Label>
+                    </td>
+                    <td class="auto-style12">
+                            <asp:DropDownList ID="DRP_REGON" runat="server" Height="29px" Width="165px"> </asp:DropDownList>
+                    </td>
+                    </tr>
                  <tr>
                      <td class="auto-style10">
                          <asp:Label ID="Label3" runat="server" Text="الشارع"></asp:Label>
@@ -144,6 +153,11 @@
                         </EditItemTemplate>
                         <ItemTemplate>
                             <asp:Label ID="Label15" runat="server" Text='<%# Bind("name") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="المحافظة">
+                        <ItemTemplate>
+                            <asp:Label ID="Label23" runat="server" Text='<%# Bind("city") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="المنطقة">
