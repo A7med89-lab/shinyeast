@@ -7,6 +7,7 @@ using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Web.UI.WebControls;
+using System.ComponentModel.DataAnnotations;
 
 /// <summary>
 /// Summary description for Class1
@@ -234,7 +235,7 @@ public class database
             com.CommandType = CommandType.Text;
             com.CommandText = query;
             com.ExecuteNonQuery();
-            SqlDataAdapter da = new SqlDataAdapter(com);
+            SqlDataAdapter da = new SqlDataAdapter(com);                      
             //da.Fill(dt);
             //gr.DataSource = dt;
             //gr.DataBind();
@@ -249,8 +250,44 @@ public class database
         }
     }
 
+    public string select(string query, GridView gr, string col_db)
+    {
 
-    public DataTable select_values (string query)
+        // this func use for single value only that get from query 
+        try
+        {
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["dental"].ToString();
+            if (conn.State != ConnectionState.Open)
+            {
+                conn.Open();
+            }
+
+            SqlCommand com = new SqlCommand();
+            DataTable dt = new DataTable();
+            ds1 = new DataSet();
+            com = conn.CreateCommand();
+            com.CommandType = CommandType.Text;
+            com.CommandText = query;
+            com.ExecuteNonQuery();
+            SqlDataAdapter da = new SqlDataAdapter(com);                                                  
+            da.Fill(ds1);
+            string value = (string)ds1.Tables[0].Rows[0][col_db].ToString();
+            gr.DataSource = ds1.Tables[0];
+            gr.DataBind();
+            conn.Close();
+            return value;
+            
+        }
+        catch
+        {
+            Console.WriteLine("false");
+            return null;
+        }
+    }
+
+
+    public DataTable select_values (string query, string datatable_name=null)
     {
         try
         {
@@ -268,6 +305,11 @@ public class database
             com.ExecuteNonQuery();
             SqlDataAdapter da = new SqlDataAdapter(com);
             da.Fill(dt);
+            if (datatable_name !=null)
+            {
+                dt.TableName = datatable_name;
+            }
+            
             conn.Close();
 
             return dt;
@@ -332,6 +374,55 @@ public class database
             Console.WriteLine("false");
         } 
     }
+
+
+    public void Updating_grid(DataSet ds, string update, GridView gr)
+    {
+        try
+        {
+
+            // update dataset
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["dental"].ToString();
+            if (conn.State != ConnectionState.Open)
+            {
+                conn.Open();
+            }
+
+            SqlCommand com = new SqlCommand();
+            com.Connection = conn;
+            SqlDataAdapter da = new SqlDataAdapter(com);            
+            
+            //update database
+            if (conn.State != ConnectionState.Open)
+            {
+                conn.Open();
+            }
+            com = new SqlCommand();
+            com.Connection = conn;
+            com.CommandType = CommandType.Text;
+            com.CommandText = update;
+            com.ExecuteNonQuery();
+            Console.WriteLine("Done");
+            conn.Close();
+
+            gr.DataSource = ds.Tables[0];
+            gr.DataBind();
+            conn.Close();
+
+
+
+            //da.UpdateCommand = com;
+            //da.Update(ds);
+            //conn.Close();
+        }
+        catch
+        {
+            Console.WriteLine("false");
+        }
+    }
+
+
 
 
 
@@ -544,6 +635,201 @@ public class database
 
 
     }
+
+    public void update_dataset_to_database(string database_table_name, string where_conditions)
+    {
+
+        SqlConnection conn = new SqlConnection();
+        conn.ConnectionString = ConfigurationManager.ConnectionStrings["dental"].ToString();
+        if (conn.State != ConnectionState.Open)
+        {
+            conn.Open();
+        }
+        try
+        {
+            SqlCommand com = new SqlCommand();
+            com.Connection = conn;
+            string q = "select * from " + database_table_name;
+            com.CommandText = q;
+            SqlDataAdapter da = new SqlDataAdapter(com);
+            da.Fill(ds1, database_table_name);
+
+            // Step 1: Build commands (can be auto-generated)
+            //SqlCommandBuilder builder = new SqlCommandBuilder(da);
+
+            //ds.Tables[dataset_table_name].Rows[row_index].Delete();
+            //ds.Tables[dataset_table_name].Rows[0].Delete();            
+
+            DataRow[] rowsToDelete = ds1.Tables[database_table_name].Select(where_conditions);
+
+            foreach (DataRow row in rowsToDelete)
+            {
+                row.Delete(); // Marks the row for deletion
+            }
+
+
+            //da.DeleteCommand = com;
+            da.Update(ds1, database_table_name);
+            conn.Close();
+
+        } catch (Exception x) {
+            Console.WriteLine(x);
+
+        }
+    }
+
+
+    public void delete_datatable(DataTable dt, string where_conditions)
+    {
+
+        //SqlConnection conn = new SqlConnection();
+        //conn.ConnectionString = ConfigurationManager.ConnectionStrings["dental"].ToString();
+        //if (conn.State != ConnectionState.Open)
+        //{
+        //    conn.Open();
+        //}
+        try
+        {
+            //SqlCommand com = new SqlCommand();
+            //com.Connection = conn;
+            
+            //SqlDataAdapter da = new SqlDataAdapter(com);
+            //da.Fill(ds, datatable_name);
+
+            // Step 1: Build commands (can be auto-generated)
+            //SqlCommandBuilder builder = new SqlCommandBuilder(da);
+
+            //ds.Tables[dataset_table_name].Rows[row_index].Delete();
+            //ds.Tables[dataset_table_name].Rows[0].Delete();            
+
+            DataRow[] rowsToDelete = dt.Select(where_conditions);
+
+            foreach (DataRow row in rowsToDelete)
+            {
+                row.Delete(); // Marks the row for deletion
+            }
+
+
+            //da.DeleteCommand = com;
+            //da.Update(ds1, database_table_name);
+            dt.AcceptChanges(); // Commit the changes to the DataTable
+
+            conn.Close();
+
+        }
+        catch (Exception x)
+        {
+            Console.WriteLine(x);
+
+        }
+    }
+
+    public DataTable add_new_datatable(string name)
+    {
+        SqlConnection conn = new SqlConnection();
+        conn.ConnectionString = ConfigurationManager.ConnectionStrings["dental"].ToString();
+        if (conn.State != ConnectionState.Open)
+        {
+            conn.Open();
+        }
+        try
+        {
+            DataTable dt = new DataTable(name);
+            return dt;
+
+        }
+        catch (Exception x)
+        {
+            Console.WriteLine(x);
+            return null; // or handle the exception as needed
+        }
+    }
+
+    public DataTable add_new_datatable(string name, Dictionary<string, Type> DataColumns)
+    {
+        SqlConnection conn = new SqlConnection();
+        conn.ConnectionString = ConfigurationManager.ConnectionStrings["dental"].ToString();
+        if (conn.State != ConnectionState.Open)
+        {
+            conn.Open();
+        }
+        try
+        {
+            DataTable dt = new DataTable(name);
+            // Optionally, you can define columns here if needed
+            foreach (var column in DataColumns)
+            {
+                dt.Columns.Add(column.Key, column.Value);               
+            }
+            return dt;
+
+        }
+        catch (Exception x)
+        {
+            Console.WriteLine(x);
+            return null; // or handle the exception as needed
+        }
+    }
+
+    public DataTable add_new_columns(DataTable dt, Dictionary<string, Type> DataColumns)
+    {
+        SqlConnection conn = new SqlConnection();
+        conn.ConnectionString = ConfigurationManager.ConnectionStrings["dental"].ToString();
+        if (conn.State != ConnectionState.Open)
+        {
+            conn.Open();
+        }
+        try
+        {
+            
+            foreach (var column in DataColumns)
+            {
+                dt.Columns.Add(column.Key, column.Value);
+            }
+            return dt;
+
+        }
+        catch (Exception x)
+        {
+            Console.WriteLine(x);
+            return null; // or handle the exception as needed
+        }
+    }
+    public DataTable add_new_datarow(DataTable datatable_obj)
+    {
+       
+        try
+        {
+            DataRow dr = datatable_obj.NewRow();
+            datatable_obj.Rows.Add(dr);
+            return datatable_obj; // Return the modified DataTable
+        }
+        catch (Exception x)
+        {
+            Console.WriteLine(x);
+            return null; // or handle the exception as needed
+        }
+    }
+
+    public DataSet add_datatable_to_dataset(DataSet dataset_obj , DataTable datatable_obj, string datatable_name = null)
+    {
+       
+        try
+        {
+            dataset_obj.Tables.Add(datatable_obj);
+            if (datatable_name != null)
+            {
+                datatable_obj.TableName = datatable_name;
+            }
+            return dataset_obj;
+        }
+        catch (Exception x)
+        {
+            Console.WriteLine(x);
+            return null; // or handle the exception as needed
+        }
+    }
+
     public string con;
 
     public void Connection(string con)

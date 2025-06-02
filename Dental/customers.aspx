@@ -143,8 +143,9 @@
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="المحافظة">
                         <EditItemTemplate>
-                            <asp:DropDownList ID="DropDownList2" runat="server">
+                            <asp:DropDownList ID="DropDownList2" runat="server" DataSourceID="city" DataTextField="name" DataValueField="id">
                             </asp:DropDownList>
+                            <asp:SqlDataSource ID="city" runat="server" ConnectionString="<%$ ConnectionStrings:dental %>" SelectCommand="SELECT [id], [name] FROM [cities]"></asp:SqlDataSource>
                         </EditItemTemplate>
                         <ItemTemplate>
                             <asp:Label ID="LBL_CITY_GRD" runat="server" Text='<%# Bind("city") %>'></asp:Label>
@@ -154,8 +155,8 @@
                         <EditItemTemplate>
                             <asp:DropDownList ID="DropDownList1" runat="server" DataSourceID="SqlDataSource2" DataTextField="name" DataValueField="id" SelectedValue='<%# Bind("region_id") %>'>
                             </asp:DropDownList>
-                            <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:DentalConnectionString %>" SelectCommand="SELECT [id], [name] FROM [regions]"></asp:SqlDataSource>
-                            <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:DentalConnectionString %>" SelectCommand="SELECT [name] FROM [regions]"></asp:SqlDataSource>
+                            <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:dental %>" SelectCommand="SELECT [id], [name] FROM [regions]"></asp:SqlDataSource>
+                            <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:dental %>" SelectCommand="SELECT [name] FROM [regions]"></asp:SqlDataSource>
                         </EditItemTemplate>
                         <ItemTemplate>
                             <asp:Label ID="Label26" runat="server" Text='<%# Bind("region") %>'></asp:Label>

@@ -480,9 +480,11 @@ public partial class products : System.Web.UI.Page
         //string name = "N" + TXT_NAME.Text.Trim();
 
             
-        string ins_products = "INSERT INTO products ([id],name,category_id,fixed,removable,made_in) values (" + TXT_ID.Text + ",N'" + TXT_NAME.Text + "', " + DRP_CATEGORY.SelectedValue + ",'" + fixd() + "','" + removable() + "','" + TXT_MADE_IN.Text + "')";
+        string ins_products = "INSERT INTO products ([id],name,category_id,fixed,removable,made_in, date, time) values (" + TXT_ID.Text + ",N'" + TXT_NAME.Text + "', " + DRP_CATEGORY.SelectedValue + ",'" + fixd() + "','" + removable() + "','" + TXT_MADE_IN.Text + "', '" + DateTime.Now.ToString("yyyy-MM-dd") + "', '" + DateTime.Now.ToString("HH:mm:ss") + "')";
         db.insert(ins_products);
 
+        string ins_price_list = "INSERT INTO price_list (product_id, date, time) values (" + TXT_ID.Text + ", '" + DateTime.Now.ToString("yyyy-MM-dd") + "', '" + DateTime.Now.ToString("HH:mm:ss") + "')";
+        db.insert(ins_price_list);
 
         //string get_type_id = "select * from types where name='" + DRP_TYPE.SelectedItem + "'";
         //string type_id = db.select_value(get_type_id, "id");
@@ -557,6 +559,8 @@ public partial class products : System.Web.UI.Page
         }
         //string ins_phone = "INSERT INTO phones ([id],supplier_id,phone) select  COALESCE (max(id),0)+1," + TXT_ID.Text + ",'" + TXT_PHONE.Text + "' from phones";
         //db.insert(ins_phone);
+
+
 
         clear_txt(TXT_ID, TXT_NAME);
         clear_drp(DRP_TYPE, DRP_SIZE, DRP_COLOR);

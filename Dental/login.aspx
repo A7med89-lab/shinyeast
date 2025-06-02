@@ -28,16 +28,11 @@
             
             &nbsp;&nbsp;&nbsp;
             
-            <table class="auto-style1" style="width: 10%">
+            <table class="auto-style1" style="width: 6%">
                 <tr>
                     <td class="auto-style10">
-                        <asp:Button ID="BTN_LOGIN" runat="server" Text="Login" OnClick="BTN_LOGIN_Click"  />
-                    </td>
-                    
-                    <td>
-                        <asp:Button ID="Button3" runat="server" Text="Sign Up" />
-                    </td>
-
+                        <asp:Button ID="BTN_LOGIN" runat="server" Text="Login" OnClick="BTN_LOGIN_Click" Width="92px"  />
+                    </td>                                        
                 </tr>
             </table>
             <br />
