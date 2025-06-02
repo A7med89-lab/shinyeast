@@ -75,13 +75,14 @@
                                     <asp:MenuItem Text="حسابات موردين" Value="حسابات موردين"></asp:MenuItem>
                                     <asp:MenuItem Text="حسابات الشركة" Value="حسابات الشركة"></asp:MenuItem>
                                 </asp:MenuItem>
+                                <asp:MenuItem NavigateUrl="~/product_costs.aspx" Text="تكلفة المنتج" Value="تكلفة المنتج"></asp:MenuItem>
                                 <asp:MenuItem NavigateUrl="~/registration.aspx" Text="المستخدمين" Value="المستخدمين">
                                     <asp:MenuItem Text="الصلاحيات" Value="الصلاحيات"></asp:MenuItem>
                                 </asp:MenuItem>
                             </asp:MenuItem>
                             <asp:MenuItem Text="المشتريات" Value="Purchases">
                                 <asp:MenuItem NavigateUrl="~/purchases.aspx" Text="امر شراء جديد" Value="امر شراء"></asp:MenuItem>
-                                <asp:MenuItem Text="تعديل امر شراء" Value="تعديل امر شراء"></asp:MenuItem>
+                                <asp:MenuItem Text="تعديل امر شراء" Value="تعديل امر شراء" NavigateUrl="~/purchases_edit_delete.aspx"></asp:MenuItem>
                                 <asp:MenuItem Text="امر مرتجع شراء" Value="امر مرتجع شراء"></asp:MenuItem>
                                 <asp:MenuItem Text="امر دفع كلى" Value="امر دفع كلى"></asp:MenuItem>
                                 <asp:MenuItem Text="امر دفع جزئى" Value="امر دفع جزئى"></asp:MenuItem>

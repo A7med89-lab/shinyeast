@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -40,6 +41,16 @@ public partial class inventories : System.Web.UI.Page
         db.select_combo(query, DRP_CITY);
     }
 
+    public void clear()
+    {
+        TXT_NAME.Text = "";
+        TXT_BUILD_NO.Text = "";
+        TXT_NOTES.Text = "";
+        TXT_STREET.Text = "";
+        DRP_CITY.SelectedIndex = 0;
+        DRP_REGON.SelectedIndex = 0;
+
+    }
 
     public void clear_txt(params TextBox[] txts)
     {
@@ -79,5 +90,15 @@ public partial class inventories : System.Web.UI.Page
         clear_txt(TXT_NAME, TXT_BUILD_NO, TXT_NOTES, TXT_STREET);
        
         
+    }
+
+    protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        filldrg();
+        db.ds1 = (DataSet)ViewState["ds"];
+        db.deleting_grid(db.ds1, "inventories", GridView1, e.RowIndex);
+        filldrg();
+        txt_id();
+        clear();
     }
 }

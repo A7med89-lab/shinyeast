@@ -35,37 +35,7 @@
 &nbsp;
         <asp:Button ID="BTN_ADD_ORDER" runat="server" Text="اضافة امر اخر" Width="85px" OnClick="BTN_ADD_ORDER_Click" />
         <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        <table class="auto-style10">
-            <tr>
-                
-                <td>
-                    <asp:Label ID="LBL_FILTER" runat="server" Text="بحث"></asp:Label> 
-                </td>
-                <td>
-                    <asp:CheckBox ID="CHK_Supplier" runat="server" AutoPostBack="true" OnCheckedChanged="CHK_Supplier_CheckedChanged" /> 
-                </td>
-                
-                <td>
-                    <asp:DropDownList ID="DRP_SUPP_FILTER" runat="server" OnSelectedIndexChanged="DRP_SUPP_FILTER_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-                </td>
-                <td>
-                    <asp:CheckBox ID="CHK_Date" runat="server" AutoPostBack="true" OnCheckedChanged="CHK_Date_CheckedChanged" /> 
-                </td>
-                <td>
-                    <asp:TextBox ID="TXT_DATE_FILTER" runat="server" AutoPostBack="True" OnTextChanged="TXT_DATE_FILTER_TextChanged" TextMode="Date"></asp:TextBox>
-                </td>
-                <td>
-                    <asp:CheckBox ID="CHK_INVENTORY" runat="server" OnCheckedChanged="CHK_INVENTORY_CheckedChanged" /> 
-                </td>
-                <td>
-                    <asp:DropDownList ID="DRP_INV_FILTER" runat="server" AutoPostBack="true"> </asp:DropDownList>
-                </td>
-                <td>
-                    <asp:Button ID="BTN_REFRESH" runat="server" Text="Refresh" Width="117px" OnClick="BTN_REFRESH_Click" />
-                </td>
-            </tr>
-        </table>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;         
         
         <br />
         <script type="text/javascript">
@@ -116,17 +86,29 @@
                 <asp:TemplateField HeaderText="اجمالى السعر">
                     <EditItemTemplate>
                         <asp:TextBox ID="TXT_TOTAL_PRICE_GRD_EDIT" runat="server" Text='<%# Bind("total_price") %>' Enabled="False"></asp:TextBox>
-                    </EditItemTemplate>
-                    <FooterTemplate>
-                        <asp:Label ID="LBL_TOTAL_PROFIT_GRD" runat="server" Text="Label"></asp:Label>
-                    </FooterTemplate>
+                    </EditItemTemplate>                    
                     <ItemTemplate>
                         <asp:TextBox ID="TXT_TOTAL_PRICE_GRD" runat="server" Text='<%# Bind("total_price") %>' Enabled="False" ></asp:TextBox>
                     </ItemTemplate>
                 </asp:TemplateField>
+                <asp:TemplateField HeaderText="الضريبة %">
+                    <ItemTemplate>
+                        <asp:TextBox ID="TXT_TAX_GRD" runat="server" onkeypress="allowOnlyNumbers(event)" Text='<%# Bind("tax") %>' AutoPostBack="True" OnTextChanged="TXT_TAX_GRD_TextChanged"></asp:TextBox>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="الاجمالى بعد الضريبة">
+                    <ItemTemplate>
+                        <asp:TextBox ID="TXT_TOTAL_AFTER_TAX" runat="server" Enabled="False"  Text='<%# Bind("total_after_tax") %>'></asp:TextBox>
+                    </ItemTemplate>
+                </asp:TemplateField>
                 <asp:TemplateField HeaderText="الخصم %">
                     <ItemTemplate>
-                        <asp:TextBox ID="TXT_DISACC_GRD" runat="server" onkeypress="allowOnlyNumbers(event)" Text='<%# Bind("disaccount") %>' AutoPostBack="True"  Width="89px" OnTextChanged="TXT_DISACC_DRD_TextChanged"></asp:TextBox>
+                        <asp:TextBox ID="TXT_DISC_GRD" runat="server" onkeypress="allowOnlyNumbers(event)" Text='<%# Bind("discount") %>' AutoPostBack="True"  Width="89px" OnTextChanged="TXT_DISC_GRD_TextChanged"></asp:TextBox>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="الاجمالى بعد الخصم">
+                    <ItemTemplate>
+                        <asp:TextBox ID="TXT_TOTAL_AFTER_DISC" runat="server" Enabled="False" Text='<%# Bind("total_after_discount") %>'></asp:TextBox>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="الربح">

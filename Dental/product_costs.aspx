@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dental-master.master" AutoEventWireup="true" CodeFile="regions.aspx.cs" Inherits="regions" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dental-master.master" AutoEventWireup="true" CodeFile="product_costs.aspx.cs" Inherits="product_costs" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
@@ -14,12 +14,25 @@
 <asp:Content ID="Content2" runat="server" contentplaceholderid="PLACE_MASTER">
     <asp:Panel ID="PANEL_MASTER" runat="server" Width="1142px">
     <div class="auto-style14">
+        <script type="text/javascript">
+            function allowOnlyNumbers(event) {
+                var key = event.key;
+                // Allow digits only
+                if (!/^\d$/.test(key) && key !== 'Backspace' && key !== 'Tab') {
+                    event.preventDefault();
+                }
+            }
+        </script>
             <asp:Label ID="Label1" runat="server" Text="ID"></asp:Label>
             &nbsp;&nbsp &nbsp&nbsp&nbsp &nbsp &nbsp &nbsp&nbsp; &nbsp <asp:TextBox ID="TXT_ID" runat="server"></asp:TextBox>
             <br />
             <br />
             <asp:Label ID="Label2" runat="server" Text="الاسم"></asp:Label>
             &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <asp:TextBox ID="TXT_NAME" runat="server"></asp:TextBox>
+            <br />
+            <br />
+            <asp:Label ID="Label4" runat="server" Text="القيمة"></asp:Label>
+            &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <asp:TextBox ID="TXT_AMOUNT" onkeypress="allowOnlyNumbers(event)" runat="server"></asp:TextBox>
             <br />
             <br />
             <asp:Label ID="Label3" runat="server" Text="تفاصيل"></asp:Label>
@@ -54,12 +67,20 @@
                             <asp:Label ID="LBL_NAME_GRD" runat="server" Text='<%# Bind("name") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="التفاصيل">
+                    <asp:TemplateField HeaderText="القيمة">
                         <EditItemTemplate>
-                            <asp:TextBox ID="TXT_DESC_GRD" runat="server" Text='<%# Bind("description") %>'></asp:TextBox>
+                            <asp:TextBox ID="TXT_AMOUNT_GRD" runat="server" Text='<%# Bind("amount") %>'></asp:TextBox>
                         </EditItemTemplate>
                         <ItemTemplate>
-                            <asp:Label ID="LBL_DESC_GRD" runat="server" Text='<%# Bind("description") %>'></asp:Label>
+                            <asp:Label ID="LBL_AMOUNT_GRD" runat="server" Text='<%# Bind("amount") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="التفاصيل">
+                        <EditItemTemplate>
+                            <asp:TextBox ID="TXT_DESC_GRD" runat="server" Text='<%# Bind("desc") %>'></asp:TextBox>
+                        </EditItemTemplate>
+                        <ItemTemplate>
+                            <asp:Label ID="LBL_DESC_GRD" runat="server" Text='<%# Bind("desc") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:CommandField ShowEditButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />

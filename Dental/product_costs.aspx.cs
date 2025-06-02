@@ -10,11 +10,11 @@ using System.Data;
 using System.Configuration;
 using System.Reflection;
 
-public partial class regions : System.Web.UI.Page
+public partial class product_costs : System.Web.UI.Page
 {
     public void fill_grd()
     {
-        string select = "select * from regions";
+        string select = "select * from product_costs";
         db.select(select, GridView1);
         ViewState.Add("ds", db.ds1);
     }
@@ -22,7 +22,7 @@ public partial class regions : System.Web.UI.Page
     public bool validation()
     {
         string name = TXT_NAME.Text;
-        string  id_check = db.select_value("select name from regions where name = N'"+ name.Trim() +"'", "name");
+        string  id_check = db.select_value("select name from product_costs where name = N'" + name.Trim() +"'", "name");
         if (id_check == "")
         {
             return false;
@@ -35,7 +35,7 @@ public partial class regions : System.Web.UI.Page
 
     public void max_id ()
     {
-        string query = "select  max (id)+1 as id from regions";
+        string query = "select  max (id)+1 as id from product_costs";
         db.select_id(query, TXT_ID);
 
         if (TXT_ID.Text == "")
@@ -67,7 +67,7 @@ public partial class regions : System.Web.UI.Page
         bool vali = validation();
         if (validation() == false)
         {
-            string insert = "INSERT INTO regions ([id], [name], [description]) VALUES(" + TXT_ID.Text + ", N'" + TXT_NAME.Text + "', N'" + TXT_DESC.Text + "')";
+            string insert = "INSERT INTO product_costs ([id], [name], amount, [desc]) VALUES(" + TXT_ID.Text + ", N'" + TXT_NAME.Text + "', " + TXT_AMOUNT.Text + " , N'" + TXT_DESC.Text + "')";
             db.insert(insert);
         }
 
@@ -86,7 +86,7 @@ public partial class regions : System.Web.UI.Page
     {
         fill_grd();
         db.ds1 = (DataSet)ViewState["ds"];
-        db.deleting_grid(db.ds1, "regions", GridView1, e.RowIndex);
+        db.deleting_grid(db.ds1, "product_costs", GridView1, e.RowIndex);
         fill_grd();
         max_id();
         clear();
@@ -117,7 +117,7 @@ public partial class regions : System.Web.UI.Page
     {
         
         //db.ds1 = (DataSet)ViewState["ds"];
-        string update = "update regions set name = N'"+ ((TextBox)(GridView1.Rows[e.RowIndex].FindControl("TXT_NAME_GRD"))).Text + "' , description = N'"+ ((TextBox)(GridView1.Rows[e.RowIndex].FindControl("TXT_DESC_GRD"))).Text + "' where id = "+ int.Parse(((Label)(GridView1.Rows[e.RowIndex].FindControl("LBL_ID_EDIT_GRD"))).Text) + " ";
+        string update = "update product_costs set name = N'" + ((TextBox)(GridView1.Rows[e.RowIndex].FindControl("TXT_NAME_GRD"))).Text + "' , amount = " + ((TextBox)(GridView1.Rows[e.RowIndex].FindControl("TXT_AMOUNT_GRD"))).Text + ",  [desc] = N'" + ((TextBox)(GridView1.Rows[e.RowIndex].FindControl("TXT_DESC_GRD"))).Text + "' where id = "+ int.Parse(((Label)(GridView1.Rows[e.RowIndex].FindControl("LBL_ID_EDIT_GRD"))).Text) + " ";
         db.update(update);
         GridView1.EditIndex = -1;
         fill_grd();

@@ -25,7 +25,7 @@
         <asp:TextBox ID="TXT_ID" runat="server" OnTextChanged="TXT_ID_TextChanged" ></asp:TextBox>
         <br />
         <br />
-        <asp:Label ID="LBL_SUPP" runat="server" Text="المورد"></asp:Label>
+        <asp:Label ID="LBL_SUPP" runat="server" Text="العميل"></asp:Label>
         &nbsp;
         <asp:DropDownList ID="DRP_SUPPLIER" runat="server" Height="21px" Width="136px" AutoPostBack="True" OnSelectedIndexChanged="DRP_SUPPLIER_SelectedIndexChanged" OnTextChanged="DRP_SUPPLIER_TextChanged">
         </asp:DropDownList>
@@ -113,7 +113,7 @@
                         <asp:TextBox ID="TXT_QTY_GRD" runat="server" onkeypress="allowOnlyNumbers(event)" OnTextChanged="TXT_QTY_GRD_TextChanged" Text='<%# Bind("quantity") %>' AutoPostBack="True" Height="16px" Width="95px" ></asp:TextBox>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="اجمالى السعر">
+                <asp:TemplateField HeaderText="الاجمالى">
                     <EditItemTemplate>
                         <asp:TextBox ID="TXT_TOTAL_PRICE_GRD_EDIT" runat="server" Text='<%# Bind("total_price") %>' Enabled="False"></asp:TextBox>
                     </EditItemTemplate>
@@ -124,19 +124,37 @@
                         <asp:TextBox ID="TXT_TOTAL_PRICE_GRD" runat="server" Text='<%# Bind("total_price") %>' Enabled="False" ></asp:TextBox>
                     </ItemTemplate>
                 </asp:TemplateField>
+                <asp:TemplateField HeaderText="الارباح">
+                    <ItemTemplate>
+                        <asp:TextBox ID="TXT_PROFIT_GRD" runat="server" Enabled="False" Text='<%# Bind("profit") %>'></asp:TextBox>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="نسبة الارباح %">
+                    <ItemTemplate>
+                        <asp:TextBox ID="TXT_PROFIT_PERCENTAGE_GRD" runat="server" Enabled="False" Text='<%# Bind("profit_percent") %>'></asp:TextBox>
+                    </ItemTemplate>
+                </asp:TemplateField>
                 <asp:TemplateField HeaderText="الخصم %">
                     <ItemTemplate>
                         <asp:TextBox ID="TXT_DISACC_GRD" runat="server" onkeypress="allowOnlyNumbers(event)" Text='<%# Bind("disaccount") %>' AutoPostBack="True"  Width="89px" OnTextChanged="TXT_DISACC_DRD_TextChanged"></asp:TextBox>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="الربح">
-                    <EditItemTemplate>
-                        <asp:TextBox ID="TXT_PROFIT_DRG_EDIT" runat="server" Enabled="False" Text='<%# Bind("profit") %>'></asp:TextBox>
-                    </EditItemTemplate>
+                <asp:TemplateField HeaderText="الاجمالى يعد الخصم">
                     <ItemTemplate>
-                        <asp:TextBox ID="TXT_PROFIT_DRG" runat="server" Enabled="False" Text='<%# Bind("profit") %>'></asp:TextBox>
+                        <asp:TextBox ID="TXT_NET_TOTAL_GRD" runat="server" Enabled="False" Text='<%# Bind("net_total_price") %>'></asp:TextBox>
                     </ItemTemplate>
                 </asp:TemplateField>
+                <asp:TemplateField HeaderText="الارباح بعد الخصم">                    
+                    <ItemTemplate>
+                        <asp:TextBox ID="TXT_NET_PROFIT_DRG" runat="server" Enabled="False" Text='<%# Bind("net_profit") %>'></asp:TextBox>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="نسبة الارباح بعد الخصم %">
+                    <ItemTemplate>
+                        <asp:TextBox ID="TXT_NET_PROFIT_PERCENTAGE_GRD" runat="server" Enabled="False" Text='<%# Bind("net_profit_percent") %>'></asp:TextBox>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
                 <asp:CommandField CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="حفظ" NewText="حفظ" ShowCancelButton="False" ShowInsertButton="True" />
                 <asp:CommandField ShowDeleteButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
             </Columns>
