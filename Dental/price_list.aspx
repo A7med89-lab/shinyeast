@@ -6,23 +6,12 @@
     <asp:Panel ID="PANEL_MASTER" runat="server">
         <div>
 
-                            <asp:Label ID="Label1" runat="server" Text="المنتج"></asp:Label>
                             &nbsp;
-                            <asp:DropDownList ID="DRP_PRODUCT" runat="server" Height="30px" Width="143px" OnSelectedIndexChanged="DRP_PRODUCT_SelectedIndexChanged" OnTextChanged="DRP_PRODUCT_TextChanged">
-                            </asp:DropDownList>
                             <br />
                             <br />
-                            <asp:Label ID="Label2" runat="server" Text="سعر البيع"></asp:Label>
+                            <asp:Label ID="Label2" runat="server" Text="التاريخ"></asp:Label>
                             &nbsp; &nbsp; &nbsp;
-                            <asp:TextBox ID="TXT_PURCHASE_PRICE" runat="server"></asp:TextBox>
-                            <br />
-                            <br />
-                            <asp:Label ID="Label6" runat="server" Text="سعر الشراء"></asp:Label>
-                            &nbsp;&nbsp;&nbsp;
-                            <asp:TextBox ID="TXT_SALES_PRICE" runat="server"></asp:TextBox>
-                            <br />
-                            <br />
-                            <asp:Button ID="BTN" runat="server" Text="حفظ" OnClick="BTN_Click" Height="26px" Width="76px" />
+                            <asp:TextBox ID="TXT_Date" runat="server"></asp:TextBox>
                             <br />
                             <br />
                             <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowDeleting="GridView1_RowDeleting" OnRowCancelingEdit="GridView1_RowCancelingEdit" OnRowEditing="GridView1_RowEditing" OnRowUpdating="GridView1_RowUpdating">
@@ -46,21 +35,21 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="سعر البيع">
                                         <EditItemTemplate>
-                                            <asp:TextBox ID="TXT_PURCHASE_PRICE_GRD" runat="server" Text='<%# Bind("purchase_price") %>'></asp:TextBox>
-                                        </EditItemTemplate>
-                                        <ItemTemplate>
-                                            <asp:Label ID="LBL_PURCHASE_PRICE_GRD" runat="server" Text='<%# Bind("purchase_price") %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="سعر شراء">
-                                        <EditItemTemplate>
                                             <asp:TextBox ID="TXT_SALES_PRICE_GRD" runat="server" Text='<%# Bind("sales_price") %>'></asp:TextBox>
                                         </EditItemTemplate>
                                         <ItemTemplate>
                                             <asp:Label ID="LBL_SALES_PRICE_GRD" runat="server" Text='<%# Bind("sales_price") %>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                    <asp:CommandField ShowDeleteButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
+                                    <asp:TemplateField HeaderText="سعر شراء">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="TXT_PURCHASE_PRICE_GRD" runat="server" Text='<%# Bind("purchase_price") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="LBL_PURCHASE_PRICE_GRD" runat="server" Text='<%# Bind("purchase_price") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:CommandField CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
                                     <asp:CommandField ShowEditButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
                                 </Columns>
                                 <EditRowStyle BackColor="#2461BF" />
