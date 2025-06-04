@@ -162,14 +162,32 @@ public partial class stock_purchases : System.Web.UI.Page
                     db.update(update_stock_total_quantity);
 
                 }
-     
+
+                string get_prurchase_details = "select * from purchases_details where purchase_id = " + id + "";
+                DataTable purchase_details_check = db.select_values(get_prurchase_details);
+                if (purchase_details_check.Rows.Count > 0)
+                {
+                    string update_cost = "update purchases_details set cost = (select sum(product_cost_amount) from purchase_product_cost where product_id =  " + prod_id[i] + " and purchase_id = " + id + " ) where product_id = " + prod_id[i] + " and purchase_id = " + id + "";
+                    db.update(update_cost);
+                    string get_prod_cost = "select sum(product_cost_amount) as product_cost_amount from purchase_product_cost where product_id = " + prod_id[i] + " and purchase_id = " + id + "";
+                    int prod_cost = int.Parse(db.select_value(get_prod_cost, "product_cost_amount"));
+                    int qty_prod_purchase = int.Parse(db.select_value(select, "qty"));
+                    int total_cost = prod_cost * qty_prod_purchase;
+                    string update_total_cost = "update purchases_details set total_cost = " + total_cost + " where product_id = " + prod_id[i] + " and purchase_id = " + id + "";
+                    db.update(update_total_cost);
+                }
+                
+
+
+
+
             }
             start_load();
         }
 
         if (e.CommandName == "Delete")
         {
-            string update_purchase = "update purchases set status = '" + 1 + "', action = '" + 1 + "' where id = " + id + "";
+            string update_purchase = "update purchases set status = '" + 0 + "', action = '" + 1 + "' where id = " + id + "";
             db.update(update_purchase);
             start_load();
 
