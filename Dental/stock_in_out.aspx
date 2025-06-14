@@ -74,6 +74,7 @@
                     <asp:Label ID="Labe20" runat="server" Text='<%# Bind("status") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
+            <asp:CommandField SelectText="التفاصيل" ShowSelectButton="True" />
         </Columns>
         <EditRowStyle BackColor="#2461BF" />
         <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
@@ -85,6 +86,38 @@
         <SortedAscendingHeaderStyle BackColor="#6D95E1" />
         <SortedDescendingCellStyle BackColor="#E9EBEF" />
         <SortedDescendingHeaderStyle BackColor="#4870BE" />
+    </asp:GridView>
+    <br />
+    <asp:Label ID="Label9" runat="server" Text="التفاصيل"></asp:Label>
+    <br />
+    <br />
+    <asp:GridView ID="GridView1" runat="server" CellPadding="3" OnSelectedIndexChanged="sales_grid_SelectedIndexChanged" AutoGenerateColumns="False" BackColor="#DEBA84" BorderColor="#DEBA84" BorderStyle="None" BorderWidth="1px" CellSpacing="2">
+        <Columns>
+            <asp:TemplateField HeaderText="رقم الصنف">
+                <ItemTemplate>
+                    <asp:Label ID="Label3" runat="server" Text='<%# Bind("id") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="اسم الصنف">
+                 <ItemTemplate>
+                    <asp:Label ID="Label4" runat="server" Text='<%# Bind("date") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="سعر النتج">
+                <ItemTemplate>
+                    <asp:Label ID="Label5" runat="server" Text='<%# Bind("time") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
+        </Columns>
+        <FooterStyle BackColor="#F7DFB5" ForeColor="#8C4510" />
+        <HeaderStyle BackColor="#A55129" Font-Bold="True" ForeColor="White" />
+        <PagerStyle ForeColor="#8C4510" HorizontalAlign="Center" />
+        <RowStyle BackColor="#FFF7E7" ForeColor="#8C4510" />
+        <SelectedRowStyle BackColor="#738A9C" Font-Bold="True" ForeColor="White" />
+        <SortedAscendingCellStyle BackColor="#FFF1D4" />
+        <SortedAscendingHeaderStyle BackColor="#B95C30" />
+        <SortedDescendingCellStyle BackColor="#F1E5CE" />
+        <SortedDescendingHeaderStyle BackColor="#93451F" />
     </asp:GridView>
     <br />
     <br />

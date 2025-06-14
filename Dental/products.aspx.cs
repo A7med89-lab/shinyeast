@@ -14,9 +14,18 @@ public partial class products : System.Web.UI.Page
         //string select_1 = "select products.id, products.name, products.fixed, products.dynamic, types.name as type, sizes.name as size, colors.name as color , products.made_in from products inner join types on products.id = types.product_id left join sizes on products.id = sizes.product_id left join colors on products.id = colors.product_id";
         //string select_2 = "select products.id, products.name, types.name as type, sizes.name as size, colors.name as color , products.fixed, products.dynamic, products.made_in from products inner join types on products.type_id = types.id left join sizes on products.size_id = sizes.id left join colors on products.color_id = colors.id";
         //string select_3 = "select products.id, products.name, types.name as type, sizes.name as size, colors.name as color , products.fixed, products.removable, products.made_in from products inner join types on products.type_id = types.id left join sizes on products.size_id = sizes.id And products.type_id = sizes.type_id left join colors on products.color_id = colors.id and products.size_id = colors.size_id and products.type_id = colors.type_id";
-        string select_3 = "select products.id as ID , products.name as الاسم ,categories.name as التصنيف,types.name as النوع, sizes.name as الحجم, colors.name as اللون , products.fixed as ثابت, products.removable as متحرك, products.made_in as [صنع فى] from products inner join categories on products.category_id = categories.id left join types on products.type_id = types.id left join sizes on products.size_id = sizes.id and products.type_id = sizes.type_id left join colors on products.color_id = colors.id and products.size_id = colors.size_id and products.type_id = colors.type_id";
+        //string select_3 = "select products.id as ID , products.name as الاسم ,categories.name as التصنيف,types.name as النوع, sizes.name as الحجم, colors.name as اللون , products.fixed as ثابت, products.removable as متحرك, products.made_in as [صنع فى] from products inner join categories on products.category_id = categories.id left join types on products.type_id = types.id left join sizes on products.size_id = sizes.id and products.type_id = sizes.type_id left join colors on products.color_id = colors.id and products.size_id = colors.size_id and products.type_id = colors.type_id";
+        string select_3 = "select products.id as id , products.name as name ,categories.name as cat, types.name as prod_type, sizes.name as size, colors.name as color , products.fixed as fix, products.removable as remov, products.made_in as made from products inner join categories on products.category_id = categories.id left join types on products.type_id = types.id left join sizes on products.size_id = sizes.id and products.type_id = sizes.type_id left join colors on products.color_id = colors.id and products.size_id = colors.size_id and products.type_id = colors.type_id";
         db.select(select_3, GridView1);
         ViewState.Add("ds", db.ds1);
+    }
+
+    public void fill_grid_qty(int product_id)
+    {
+        
+        string select = "select product_quantities.total_in, product_quantities.total_out, product_quantities.total_net_in, stock_prices.sales_stock_price from product_quantities left join stock_prices on product_quantities.product_id = stock_prices.product_id where product_quantities.product_id = "+ product_id + "";
+        db.select(select, GridView2);
+        ViewState.Add("ds_prod_qty", db.ds1);
     }
 
     public void txt_id()
@@ -442,6 +451,21 @@ public partial class products : System.Web.UI.Page
         }
     }
 
+    public void hide_product_cost_grid(bool hide = true)
+    {
+        if (hide == false)
+        {
+            GridView2.Visible = true;
+            LBL_PROD_NAME.Visible = true;
+        }
+        else
+        {
+            GridView2.Visible = false;
+            LBL_PROD_NAME.Visible = false;
+        }
+
+    }
+
     database db = new database();
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -453,6 +477,8 @@ public partial class products : System.Web.UI.Page
             fill_size();
             fill_color();
             fill_grid();
+            hide_product_cost_grid(true);
+
         }
     }
 
@@ -1060,5 +1086,23 @@ public partial class products : System.Web.UI.Page
     protected void LINK_SIZE_EDITE_DELETE_Click(object sender, EventArgs e)
     {
         Response.Redirect("sizes.aspx");
+    }
+
+    protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        
+
+        if (e.CommandName == "Select")
+        {
+            int index = Convert.ToInt32(e.CommandArgument);
+            int prod_id = int.Parse(((Label)(GridView1.Rows[index].FindControl("LBL_PROD_ID_GRD"))).Text);
+            string prod_name = ((Label)(GridView1.Rows[index].FindControl("LBL_PROD_NAME_GRD"))).Text;
+            
+            fill_grid_qty(prod_id);
+            hide_product_cost_grid(false);
+        }
+
+
+
     }
 }

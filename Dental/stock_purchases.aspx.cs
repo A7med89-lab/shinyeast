@@ -188,23 +188,11 @@ public partial class stock_purchases : System.Web.UI.Page
         if (e.CommandName == "New")
         {
 
-            //string insert_stock_order = "INSERT INTO stock_orders (id, date, time, total_quantity, inventory_id, supplier_id, purchase_id, user_id, status, [in]) " +
-            //" VALUES (" +
-            //"" + TXT_ID.Text + "," +
-            //"'" + TXT_Date.Text + "'," +
-            //"'" + time + "'," +
-            //"" + sum_qty + " ," +
-            //"" + inv_id + "," +
-            //"" + supplier_id + "," +
-            //"" + id + "," +
-            //"" + user_id + ", " +
-            //""+ 1 + ", " +
-            //""+ 1 +")";
-            //db.insert(insert_stock_order);
-
+            // update stock order
             string update_stock_order_status = "update stock_orders set status = '" + 1 + "' where id = " + TXT_ID.Text + " and purchase_id = " + id + " ";
             db.update(update_stock_order_status);
 
+            // update purchase
             string update_purchase = "update purchases set status = '" + 1 + "', action = '" + 1 + "' where id = " + id + "";
             db.update(update_purchase);
 
@@ -232,8 +220,8 @@ public partial class stock_purchases : System.Web.UI.Page
                 string update_product_price = "update stock_order_details set product_price = " + product_price_result + " from stock_order_details join stock_orders on stock_order_details.stock_order_id = stock_orders.id where stock_order_details.product_id = " + prod_id[i] + " and stock_orders.purchase_id = " + id + " and stock_orders.id = " + TXT_ID.Text + "";
                 db.update(update_product_price);
 
-                //update stock_total_quantity
-                string check_prod_total_qty = "select * from stock_total_quantity where product_id = " + prod_id[i] + "";
+                //update or insert product_quantities
+                string check_prod_total_qty = "select * from product_quantities where product_id = " + prod_id[i] + "";
                 string select_prod_id_total_qty = db.select_value(check_prod_total_qty, "product_id");
                 string select_prod_qty_total_qty_in = db.select_value(check_prod_total_qty, "total_in");
                 if (string.IsNullOrEmpty(select_prod_qty_total_qty_in))
@@ -244,7 +232,7 @@ public partial class stock_purchases : System.Web.UI.Page
                 string update_stock_total_quantity="";
                 if (string.IsNullOrEmpty(select_prod_id_total_qty))
                 {
-                    string insert_stock_total_quantity = "insert into stock_total_quantity (product_id , total_in, total_net_in) VALUES (" + prod_id[i] + ","+ prod_qty[i] + ", "+ prod_qty[i] +")";
+                    string insert_stock_total_quantity = "insert into product_quantities (product_id , total_in, total_net_in) VALUES (" + prod_id[i] + ","+ prod_qty[i] + ", "+ prod_qty[i] +")";
                     db.insert(insert_stock_total_quantity);
 
                 }
@@ -254,22 +242,60 @@ public partial class stock_purchases : System.Web.UI.Page
                     if (select_prod_qty_total_qty_out != 0)
                     {   
                         int total_net_in = int.Parse(select_prod_qty_total_qty_in) - select_prod_qty_total_qty_out;
-                        update_stock_total_quantity = "update stock_total_quantity set total_in = " + total_in + ", total_net_in = " + total_net_in + " where product_id = " + prod_id[i] + "";
+                        update_stock_total_quantity = "update product_quantities set total_in = " + total_in + ", total_net_in = " + total_net_in + " where product_id = " + prod_id[i] + "";
                         //db.update(update_stock_total_quantity);
                     }
                     else
                     {                                                
-                        update_stock_total_quantity = "update stock_total_quantity set total_in = " + total_in + " , total_net_in = " + total_in + " where product_id = " + prod_id[i] + "";                       
+                        update_stock_total_quantity = "update product_quantities set total_in = " + total_in + " , total_net_in = " + total_in + " where product_id = " + prod_id[i] + "";                       
                     }
 
                     db.update(update_stock_total_quantity);
 
                 }
 
-                //insert_update sales_stock price
-                string sum_product_price = "select sum(product_price) as sum_product_price from stock_order_details";
+                //update or insert stock_total_quantity
+                string check_prod_inv_stock_qty = "select * from stock_total_quantities where product_id = " + prod_id[i] + " and inventory_id = "+inv_id+"";
+                string select_prod_id_stock_qty = db.select_value(check_prod_inv_stock_qty, "product_id");
+                string select_inv_id_stock_qty = db.select_value(check_prod_inv_stock_qty, "inventory_id");
+                string select_stock_total_in = db.select_value(check_prod_inv_stock_qty, "total_in");
+
+                if (string.IsNullOrEmpty(select_stock_total_in))
+                {
+                    select_stock_total_in = "0";
+                }
+                int stoc_total_in = int.Parse(select_stock_total_in) + prod_qty[i];
+                string update_stock_total_qty = "";
+                if (string.IsNullOrEmpty(select_inv_id_stock_qty))
+                {
+                    string insert_stock_total_quantity = "insert into stock_total_quantities (inventory_id, product_id , total_in, total_net_in) VALUES (" + inv_id + ", " + prod_id[i] + "," + prod_qty[i] + ", " + prod_qty[i] + ")";
+                    db.insert(insert_stock_total_quantity);
+
+                }
+                else
+                {
+                    int select_prod_qty_total_qty_out = int.Parse(db.select_value(check_prod_inv_stock_qty, "total_out"));
+                    if (select_prod_qty_total_qty_out != 0)
+                    {
+                        int total_net_in = int.Parse(select_stock_total_in) - select_prod_qty_total_qty_out;
+                        update_stock_total_qty = "update stock_total_quantities set total_in = " + total_in + ", total_net_in = " + total_net_in + " where product_id = " + prod_id[i] + " and inventory_id = " + inv_id + "";
+                        //db.update(update_stock_total_quantity);
+                    }
+                    else
+                    {
+
+                        update_stock_total_qty = "update stock_total_quantities set total_in = " + stoc_total_in + " , total_net_in = " + stoc_total_in + " where product_id = " + prod_id[i] + " and inventory_id = " + inv_id + "";
+                    }
+
+                    db.update(update_stock_total_qty);
+
+                }
+
+
+                //insert or update sales_stock price in stock price
+                string sum_product_price = "select sum(product_price) as sum_product_price from stock_order_details where product_id = "+prod_id[i]+"";
                 decimal get_sum_product_price = decimal.Parse(db.select_value(sum_product_price, "sum_product_price"));
-                string select_total_net_in = "select total_net_in from stock_total_quantity where product_id = "+prod_id[i]+"";
+                string select_total_net_in = "select total_net_in from product_quantities where product_id = " + prod_id[i]+"";
                 int get_total_net_in = int.Parse(db.select_value(select_total_net_in, "total_net_in"));
                 decimal salse_product_price = get_sum_product_price / get_total_net_in;
 
@@ -286,13 +312,7 @@ public partial class stock_purchases : System.Web.UI.Page
                     string insert_stock_price = "insert into stock_prices (product_id, sales_stock_price) VALUES (" + prod_id[i] + ", " + salse_product_price + ") ";
                     db.insert(insert_stock_price);
                 }
-
-
-
-
-
-
-
+                
             }
             start_load();
         }

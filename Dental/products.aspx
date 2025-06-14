@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/dental-master.master" AutoEventWireup="true" CodeFile="products.aspx.cs" Inherits="products" %>
+﻿<%@ Page Title="" Language="C#"  MaintainScrollPositionOnPostBack="true" MasterPageFile="~/dental-master.master" AutoEventWireup="true" CodeFile="products.aspx.cs" Inherits="products" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
@@ -106,11 +106,92 @@
             </table>
             <br />
 
-            <asp:GridView ID="GridView1" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowDeleting="GridView1_RowDeleting">
+            <asp:GridView ID="GridView1" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowDeleting="GridView1_RowDeleting" AutoGenerateColumns="False" OnRowCommand="GridView1_RowCommand">
                 <AlternatingRowStyle BackColor="White" />
                 <Columns>
-                    <asp:CommandField ShowDeleteButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
-                    <asp:CommandField ShowEditButton="True" CancelText="الغاء" DeleteText="مسح" EditText="تعديل" UpdateText="تعديل" />
+                    <asp:TemplateField HeaderText="رقم الصنف">
+                        <ItemTemplate>
+                            <asp:Label ID="LBL_PROD_ID_GRD" runat="server" Text='<%# Bind("id") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="اسم الصنف">
+                        <ItemTemplate>
+                            <asp:Label ID="LBL_PROD_NAME_GRD" runat="server" Text='<%# Bind("name") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="التصنيف">
+                        <ItemTemplate>
+                            <asp:Label ID="LBL_PROD_CATEGORY_GRD" runat="server" Text='<%# Bind("cat") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="النوع">
+                        <ItemTemplate>
+                            <asp:Label ID="LBL_PROD_TYPE_GRD" runat="server" Text='<%# Bind("prod_type") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="الحجم">
+                        <ItemTemplate>
+                            <asp:Label ID="LBL_PROD_SIZE_GRD" runat="server" Text='<%# Bind("size") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="اللون">
+                        <ItemTemplate>
+                            <asp:Label ID="LBL_PROD_COLOR_GRD" runat="server" Text='<%# Bind("COLOR") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="ثابت">
+                        <ItemTemplate>
+                            <asp:Label ID="LBL_PROD_FIXED_GRD" runat="server" Text='<%# Bind("fix") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="متحرك">
+                        <ItemTemplate>
+                            <asp:Label ID="LBL_PROD_REMOVEABLE_GRD" runat="server" Text='<%# Bind("remov") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="صنع فى">
+                        <ItemTemplate>
+                            <asp:Label ID="LBL_PROD_MADE_GRD" runat="server" Text='<%# Bind("made") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:CommandField CancelText="الغاء" DeleteText="مسح" EditText="تعديل" ShowDeleteButton="True" UpdateText="تعديل" />
+                    <asp:CommandField CancelText="الغاء" DeleteText="مسح" EditText="تعديل" ShowEditButton="True" UpdateText="تعديل" />
+                    <asp:CommandField SelectText="التفاصيل" ShowSelectButton="True" />
+                </Columns>
+                <EditRowStyle BackColor="#2461BF" />
+                <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+                <RowStyle BackColor="#EFF3FB" />
+                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
+                <SortedAscendingCellStyle BackColor="#F5F7FB" />
+                <SortedAscendingHeaderStyle BackColor="#6D95E1" />
+                <SortedDescendingCellStyle BackColor="#E9EBEF" />
+                <SortedDescendingHeaderStyle BackColor="#4870BE" />
+            </asp:GridView>
+           
+            <br />
+             <asp:Label ID="LBL_PROD_NAME" runat="server" Text="اسم الصنف"></asp:Label>
+            <br />
+            <asp:GridView ID="GridView2" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowDeleting="GridView1_RowDeleting" AutoGenerateColumns="False">
+                <AlternatingRowStyle BackColor="White" />
+                <Columns>
+                    <asp:TemplateField HeaderText="اجمالى الوارد">
+                        <ItemTemplate>
+                            <asp:Label ID="Label13" runat="server" Text='<%# Bind("total_in") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="اجمالى الصرف">
+                        <ItemTemplate>
+                            <asp:Label ID="Label14" runat="server" Text='<%# Bind("total_out") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="الكمية الحاليه">
+                        <ItemTemplate>
+                            <asp:Label ID="Label15" runat="server" Text='<%# Bind("total_net_in") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:CommandField SelectText="المخازن" ShowSelectButton="True" />
                 </Columns>
                 <EditRowStyle BackColor="#2461BF" />
                 <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
