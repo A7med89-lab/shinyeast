@@ -16,7 +16,7 @@ public partial class stock_purchases : System.Web.UI.Page
 {
     public void fill_grid()
     {
-        string select = "select purchases.id,purchases.[date],suppliers.name as supplier_name,suppliers.id as supplier_id, purchases.status, sum(purchases_details.quantity) as sum_qty, users.name as user_name, users.id as user_id from purchases inner join purchases_details on purchases.id = purchases_details.purchase_id inner join suppliers on purchases.supplier_id = suppliers.id left join users on purchases.user_id = users.id Group by purchases.id, purchases.[date], suppliers.name,suppliers.id , purchases.status, users.name, users.id,  purchases.action having purchases.action = 0";
+        string select = "select purchases.id,purchases.[date],purchases.[time],suppliers.name as supplier_name,suppliers.id as supplier_id, purchases.status, sum(purchases_details.quantity) as sum_qty, users.name as user_name, users.id as user_id from purchases inner join purchases_details on purchases.id = purchases_details.purchase_id inner join suppliers on purchases.supplier_id = suppliers.id left join users on purchases.user_id = users.id Group by purchases.id, purchases.[date], suppliers.name,suppliers.id , purchases.status, users.name, users.id, purchases.[time], purchases.action having purchases.action = 0";
         db.select(select, GRD_STOCK_IN);
         ViewState.Add("grid_ds", db.ds1);
         int row_count = GRD_STOCK_IN.Rows.Count;
@@ -43,6 +43,26 @@ public partial class stock_purchases : System.Web.UI.Page
         }
 
     }
+
+    public void hide_product_cost_grid(bool hide = true)
+    {
+        if (hide == false)
+        {
+            GRD_PROD_COST.Visible = true;
+            LBL_COST_DETAILS.Visible = true;
+        }
+        else
+        {
+            GRD_PROD_COST.Visible = false;
+            LBL_COST_DETAILS.Visible = false;
+        }
+
+    }
+
+    
+
+
+
     public void start_load()
     {             
         string date = DateTime.Now.ToString("yyyy-MM-dd");        
@@ -50,6 +70,7 @@ public partial class stock_purchases : System.Web.UI.Page
         TXT_Date.Enabled = false;        
         fill_grid();
         GRD_STOCK_DETAILS.Visible = false;
+        
 
     }
     database db = new database();
@@ -60,6 +81,7 @@ public partial class stock_purchases : System.Web.UI.Page
         {
             start_load();
             txt_id();
+            hide_product_cost_grid(true);
 
         }
         
@@ -77,23 +99,20 @@ public partial class stock_purchases : System.Web.UI.Page
         string select = "select purchases.id, purchases.date, products.id as prod_id, products.name, purchases_details.quantity as qty from purchases inner join purchases_details on purchases.id = purchases_details.purchase_id inner join products on purchases_details.product_id = products.id where purchase_id = " + id;
         //string select_prod_qty = "select purchases.id, purchases.date, products.name, purchases_details.quantity as qty from purchases inner join purchases_details on purchases.id = purchases_details.purchase_id inner join products on purchases_details.product_id = products.id where purchase_id = " + id;
 
-        if (e.CommandName == "Select")
-        {
-            int purchase_id = int.Parse(db.select(select, GRD_STOCK_DETAILS, "id"));
-            ViewState.Add("purchase_id", purchase_id); 
-            if (GRD_STOCK_DETAILS.Visible == false)
-                GRD_STOCK_DETAILS.Visible = true;
-            
-        }
+        //define variabls used on permit of discard orders
+        int sum_qty = int.Parse(((Label)(GRD_STOCK_IN.Rows[index].FindControl("LBL_SUM_QTY_GRD"))).Text);
+        int supplier_id = int.Parse(((Label)(GRD_STOCK_IN.Rows[index].FindControl("LBL_SUPP_ID"))).Text);
+        int user_id = int.Parse(((Label)(GRD_STOCK_IN.Rows[index].FindControl("LBL_USER_ID"))).Text);
+        int inv_id = int.Parse(((DropDownList)(GRD_STOCK_IN.Rows[index].FindControl("DRP_INV_GRD"))).SelectedValue);
+        string time = DateTime.Now.ToString("HH:mm:ss");
 
-        if (e.CommandName == "New")
-        {                        
-            int sum_qty = int.Parse(((Label)(GRD_STOCK_IN.Rows[index].FindControl("LBL_SUM_QTY_GRD"))).Text);           
-            int supplier_id = int.Parse(((Label)(GRD_STOCK_IN.Rows[index].FindControl("LBL_SUPP_ID"))).Text);
-            int user_id = int.Parse(((Label)(GRD_STOCK_IN.Rows[index].FindControl("LBL_USER_ID"))).Text);
-            int inv_id = int.Parse(((DropDownList)(GRD_STOCK_IN.Rows[index].FindControl("DRP_INV_GRD"))).SelectedValue);
-            string time = DateTime.Now.ToString("HH:mm:ss");
-            string insert_stock_order = "INSERT INTO stock_orders (id, date, time, total_quantity, inventory_id, supplier_id, purchase_id, user_id, status, [in]) " +
+        //hide_cost_gird
+        hide_product_cost_grid(true);
+
+        //Common database process in both selections 
+        if (e.CommandName == "New" || e.CommandName == "Delete")
+        {
+            string insert_stock_order = "INSERT INTO stock_orders (id, date, time, total_quantity, inventory_id, supplier_id, purchase_id, user_id, [in]) " +
             " VALUES (" +
             "" + TXT_ID.Text + "," +
             "'" + TXT_Date.Text + "'," +
@@ -103,18 +122,14 @@ public partial class stock_purchases : System.Web.UI.Page
             "" + supplier_id + "," +
             "" + id + "," +
             "" + user_id + ", " +
-            ""+ 1 + ", " +
-            ""+ 1 +")";
-            db.insert(insert_stock_order);         
-
-            string update_purchase = "update purchases set status = '" + 1 + "', action = '" + 1 + "' where id = " + id + "";
-            db.update(update_purchase);
+            "" + 1 + ")";
+            db.insert(insert_stock_order);
 
             DataTable prod_details = db.select_values(select);
-            
+
             int[] prod_qty = new int[prod_details.Rows.Count];
             int[] prod_id = new int[prod_details.Rows.Count];
-            for (int i =0; i < prod_details.Rows.Count; i++)
+            for (int i = 0; i < prod_details.Rows.Count; i++)
             {
                 // insert into stock_order_details
                 prod_qty[i] = int.Parse(prod_details.Rows[i]["qty"].ToString());
@@ -129,8 +144,84 @@ public partial class stock_purchases : System.Web.UI.Page
                 "" + prod_qty[i] + " from stock_order_details";
                 db.insert(insert_stock_details);
 
-                //update stock_total_quantity
-                string check_prod_total_qty = "select * from stock_total_quantity where product_id = "+ prod_id[i] + "";
+                //product cost
+                string get_prurchase_details = "select * from purchases_details where purchase_id = " + id + "";
+                DataTable purchase_details_check = db.select_values(get_prurchase_details);
+                string product_cost = "select * from purchase_product_cost where product_id = " + prod_id[i] + " and purchase_id = " + id + "";
+                if (purchase_details_check.Rows.Count > 0)
+                {
+                    string product_cost_check = "select * from purchase_product_cost where product_id = " + prod_id[i] + " and purchase_id = " + id + "";
+                    DataTable product_cost_checks = db.select_values(product_cost_check);
+                    if (product_cost_checks.Rows.Count > 0)
+                    {
+                        int prod_cost = 0;
+                        string update_cost = "update purchases_details set cost = (select sum(product_cost_amount) from purchase_product_cost where product_id =  " + prod_id[i] + " and purchase_id = " + id + " ) where product_id = " + prod_id[i] + " and purchase_id = " + id + "";
+                        db.update(update_cost);
+                        string get_prod_cost = "select sum(product_cost_amount) as product_cost_amount from purchase_product_cost where product_id = " + prod_id[i] + " and purchase_id = " + id + "";
+                        prod_cost = int.Parse(db.select_value(get_prod_cost, "product_cost_amount"));
+                        if (prod_cost != -1)
+                        {
+
+                            int qty_prod_purchase = int.Parse(db.select_value(select, "qty"));
+                            int total_cost = prod_cost * qty_prod_purchase;
+                            string update_total_cost = "update purchases_details set total_cost = " + total_cost + " where product_id = " + prod_id[i] + " and purchase_id = " + id + "";
+                            db.update(update_total_cost);
+                        }
+                    }
+                    
+                }
+            }
+            
+                
+            }
+        
+
+        if (e.CommandName == "Select")
+        {
+            int purchase_id = int.Parse(db.select(select, GRD_STOCK_DETAILS, "id"));
+            ViewState.Add("purchase_id", purchase_id); 
+            if (GRD_STOCK_DETAILS.Visible == false)
+                GRD_STOCK_DETAILS.Visible = true;
+            
+        }
+
+        if (e.CommandName == "New")
+        {
+
+            // update stock order
+            string update_stock_order_status = "update stock_orders set status = '" + 1 + "' where id = " + TXT_ID.Text + " and purchase_id = " + id + " ";
+            db.update(update_stock_order_status);
+
+            // update purchase
+            string update_purchase = "update purchases set status = '" + 1 + "', action = '" + 1 + "' where id = " + id + "";
+            db.update(update_purchase);
+
+            DataTable prod_details = db.select_values(select);
+            
+            int[] prod_qty = new int[prod_details.Rows.Count];
+            int[] prod_id = new int[prod_details.Rows.Count];
+            for (int i =0; i < prod_details.Rows.Count; i++)
+            {
+                // update into stock_order_details
+
+                prod_qty[i] = int.Parse(prod_details.Rows[i]["qty"].ToString());
+                prod_id[i] = int.Parse(prod_details.Rows[i]["prod_id"].ToString());
+
+                //update product_price in stock_order_details 
+                string product_price = "select purchase_price from price_list where product_id = " + prod_id[i] + "";
+                decimal purchase_product_price = int.Parse(db.select_value(product_price, "purchase_price"));
+                string product_tax = "select product_tax from purchases_details where product_id = " + prod_id[i] + " and purchase_id = " + id + "";
+                decimal purchase_product_tax = decimal.Parse(db.select_value(product_tax, "product_tax"));
+                string product_cost = "select cost from purchases_details where product_id = " + prod_id[i] + " and purchase_id = " + id + "";
+                decimal product_cost_value = decimal.Parse(db.select_value(product_cost, "cost"));
+
+                decimal product_price_result = (decimal)purchase_product_price + purchase_product_tax + product_cost_value;
+                
+                string update_product_price = "update stock_order_details set product_price = " + product_price_result + " from stock_order_details join stock_orders on stock_order_details.stock_order_id = stock_orders.id where stock_order_details.product_id = " + prod_id[i] + " and stock_orders.purchase_id = " + id + " and stock_orders.id = " + TXT_ID.Text + "";
+                db.update(update_product_price);
+
+                //update or insert product_quantities
+                string check_prod_total_qty = "select * from product_quantities where product_id = " + prod_id[i] + "";
                 string select_prod_id_total_qty = db.select_value(check_prod_total_qty, "product_id");
                 string select_prod_qty_total_qty_in = db.select_value(check_prod_total_qty, "total_in");
                 if (string.IsNullOrEmpty(select_prod_qty_total_qty_in))
@@ -141,7 +232,7 @@ public partial class stock_purchases : System.Web.UI.Page
                 string update_stock_total_quantity="";
                 if (string.IsNullOrEmpty(select_prod_id_total_qty))
                 {
-                    string insert_stock_total_quantity = "insert into stock_total_quantity (product_id , total_in, total_net_in) VALUES (" + prod_id[i] + ","+ prod_qty[i] + ", "+ prod_qty[i] +")";
+                    string insert_stock_total_quantity = "insert into product_quantities (product_id , total_in, total_net_in) VALUES (" + prod_id[i] + ","+ prod_qty[i] + ", "+ prod_qty[i] +")";
                     db.insert(insert_stock_total_quantity);
 
                 }
@@ -151,26 +242,89 @@ public partial class stock_purchases : System.Web.UI.Page
                     if (select_prod_qty_total_qty_out != 0)
                     {   
                         int total_net_in = int.Parse(select_prod_qty_total_qty_in) - select_prod_qty_total_qty_out;
-                        update_stock_total_quantity = "update stock_total_quantity set total_in = " + total_in + ", total_net_in = " + total_net_in + " where product_id = " + prod_id[i] + "";
+                        update_stock_total_quantity = "update product_quantities set total_in = " + total_in + ", total_net_in = " + total_net_in + " where product_id = " + prod_id[i] + "";
                         //db.update(update_stock_total_quantity);
                     }
                     else
                     {                                                
-                        update_stock_total_quantity = "update stock_total_quantity set total_in = " + total_in + " , total_net_in = " + total_in + " where product_id = " + prod_id[i] + "";                       
+                        update_stock_total_quantity = "update product_quantities set total_in = " + total_in + " , total_net_in = " + total_in + " where product_id = " + prod_id[i] + "";                       
                     }
 
                     db.update(update_stock_total_quantity);
 
                 }
-     
+
+                //update or insert stock_total_quantity
+                string check_prod_inv_stock_qty = "select * from stock_total_quantities where product_id = " + prod_id[i] + " and inventory_id = "+inv_id+"";
+                string select_prod_id_stock_qty = db.select_value(check_prod_inv_stock_qty, "product_id");
+                string select_inv_id_stock_qty = db.select_value(check_prod_inv_stock_qty, "inventory_id");
+                string select_stock_total_in = db.select_value(check_prod_inv_stock_qty, "total_in");
+
+                if (string.IsNullOrEmpty(select_stock_total_in))
+                {
+                    select_stock_total_in = "0";
+                }
+                int stoc_total_in = int.Parse(select_stock_total_in) + prod_qty[i];
+                string update_stock_total_qty = "";
+                if (string.IsNullOrEmpty(select_inv_id_stock_qty))
+                {
+                    string insert_stock_total_quantity = "insert into stock_total_quantities (inventory_id, product_id , total_in, total_net_in) VALUES (" + inv_id + ", " + prod_id[i] + "," + prod_qty[i] + ", " + prod_qty[i] + ")";
+                    db.insert(insert_stock_total_quantity);
+
+                }
+                else
+                {
+                    int select_prod_qty_total_qty_out = int.Parse(db.select_value(check_prod_inv_stock_qty, "total_out"));
+                    if (select_prod_qty_total_qty_out != 0)
+                    {
+                        int total_net_in = int.Parse(select_stock_total_in) - select_prod_qty_total_qty_out;
+                        update_stock_total_qty = "update stock_total_quantities set total_in = " + total_in + ", total_net_in = " + total_net_in + " where product_id = " + prod_id[i] + " and inventory_id = " + inv_id + "";
+                        //db.update(update_stock_total_quantity);
+                    }
+                    else
+                    {
+
+                        update_stock_total_qty = "update stock_total_quantities set total_in = " + stoc_total_in + " , total_net_in = " + stoc_total_in + " where product_id = " + prod_id[i] + " and inventory_id = " + inv_id + "";
+                    }
+
+                    db.update(update_stock_total_qty);
+
+                }
+
+
+                //insert or update sales_stock price in stock price
+                string sum_product_price = "select sum(product_price) as sum_product_price from stock_order_details where product_id = "+prod_id[i]+"";
+                decimal get_sum_product_price = decimal.Parse(db.select_value(sum_product_price, "sum_product_price"));
+                string select_total_net_in = "select total_net_in from product_quantities where product_id = " + prod_id[i]+"";
+                int get_total_net_in = int.Parse(db.select_value(select_total_net_in, "total_net_in"));
+                decimal salse_product_price = get_sum_product_price / get_total_net_in;
+
+                string chk_sales_product_price = "select sales_stock_price from stock_prices where product_id = " + prod_id[i] + "";
+                string get_sales_product_price = db.select_value(chk_sales_product_price, "sales_stock_price");
+
+                if (!(string.IsNullOrEmpty(get_sales_product_price)))
+                {
+                    string update_stock_price = "update stock_prices set sales_stock_price = " + salse_product_price + " where product_id = " + prod_id[i] + "";
+                    db.update(update_stock_price);
+                }
+                else
+                {
+                    string insert_stock_price = "insert into stock_prices (product_id, sales_stock_price) VALUES (" + prod_id[i] + ", " + salse_product_price + ") ";
+                    db.insert(insert_stock_price);
+                }
+                
             }
             start_load();
         }
 
         if (e.CommandName == "Delete")
         {
-            string update_purchase = "update purchases set status = '" + 1 + "', action = '" + 1 + "' where id = " + id + "";
+            string update_purchase = "update purchases set status = '" + 0 + "', action = '" + 1 + "' where id = " + id + "";
             db.update(update_purchase);
+
+            string update_stock_order_status = "update stock_orders set status = '" + 0 + "' where id = " + TXT_ID.Text + " and purchase_id = " + id + " ";
+            db.update(update_stock_order_status);
+
             start_load();
 
         }
@@ -203,6 +357,7 @@ public partial class stock_purchases : System.Web.UI.Page
             DataSet grid_cost_ds = new DataSet();
             DataTable prod_cost_data_table = new DataTable("prod_cost");
 
+            hide_product_cost_grid(false);
             // fill grd_cost
             //DataTable prod_cost_data_table = db.add_new_datatable("prod_cost");
 
@@ -458,7 +613,11 @@ public partial class stock_purchases : System.Web.UI.Page
 
         //define global variables
         DataSet grid_cost_ds = (DataSet)ViewState["grid_cost_ds"];
-        int drp_prod_name_index_grd = (int)(ViewState["drp_cost_name_index_grd"]);
+        if (ViewState["drp_cost_name_index_grd"] != null)
+        {
+            int drp_prod_name_index_grd = (int)(ViewState["drp_cost_name_index_grd"]);
+        }
+            
         int purchase_id = (int)ViewState["purchase_id"];
         int prod_id = int.Parse(((Label)GRD_PROD_COST.Rows[0].FindControl("LBL_COST_PROD_ID_GRD")).Text);
         string prod_name = ((Label)GRD_PROD_COST.Rows[0].FindControl("LBL_COST_PROD_NAME_GRD")).Text;

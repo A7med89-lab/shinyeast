@@ -526,14 +526,42 @@ public partial class purchases : System.Web.UI.Page
 
         //}
 
+        string get_purchases = db.select_value("select * from purchases where id = " + TXT_ID.Text + "", "id");
         string purchases_details_get = db.select_value("select * from purchases_details where purchase_id = " + TXT_ID.Text + "", "id");
         int purchases_details_id = int.Parse(purchases_details_get);
-
+        
         if (purchases_details_id != -1)
         {
             string delete_row = "delete from purchases_details where product_id = " + ((Label)(GridView1.Rows[e.RowIndex].Cells[2].FindControl("LBL_PROD_ID_GRD"))).Text + " and purchase_id = " + TXT_ID.Text + "";
             db.delete(delete_row);
-            //fill_grid();
+            if (GridView1.Rows.Count == 2)
+            {
+                //if last row deleted, delete purchase
+                int purchases_id = int.Parse(get_purchases);
+                if (purchases_id != -1)
+                {
+                    string delete_purchase = "delete from purchases where id = " + TXT_ID.Text + "";
+                    db.delete(delete_purchase);
+                    Response.Write("<script>alert('تم حذف طلب الشراء بنجاح');</script>");
+                }
+
+            }
+            else
+            {
+                Response.Write("<script>alert('تم حذف الصنف بنجاح');</script>");
+            }
+
+        }
+        else
+        {
+            
+            int purchases_id = int.Parse(get_purchases);
+            if (purchases_id != -1)
+            {
+                string delete_purchase = "delete from purchases where id = " + TXT_ID.Text + "";
+                db.delete(delete_purchase);
+            }
+            
         }
 
         grid_ds.Tables[0].Rows[e.RowIndex].Delete();
@@ -546,6 +574,10 @@ public partial class purchases : System.Web.UI.Page
         GridView1.DataBind();
         ViewState.Add("grid_ds", grid_ds);
 
+        
+
+
+        // fill drop prodct name in gridview
         DropDownList grid_dr_n = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD") as DropDownList;
         grid_dr_n.DataSource = drp_prod_name_grd_ds.Tables[0];
         grid_dr_n.DataBind();
@@ -553,6 +585,7 @@ public partial class purchases : System.Web.UI.Page
         grid_dr_n.DataValueField = drp_prod_name_grd_ds.Tables[0].Columns["id"].ToString();
         grid_dr_n.Items.Insert(0, "اختيار المنتج");
 
+        //hide dropdown list and show label product name
         for (int i = 0; i < GridView1.Rows.Count - 1; i++)
         {
             ((DropDownList)GridView1.Rows[i].FindControl("DRP_NAME_GRD")).Visible = false;
@@ -640,14 +673,18 @@ public partial class purchases : System.Web.UI.Page
 
         if (e.CommandName == "New")
         {
-            // confirm calculation before save
-
-            // confirm calculation
-
-
+            // define index row
+            int rowindex = Convert.ToInt32(e.CommandArgument);
+            //get Dataset from viewstate
+            grid_ds = (DataSet)ViewState["grid_ds"];
             //validate at least price and qty inserted
-
-            //validate price & qty
+            decimal? price = (decimal)grid_ds.Tables[0].Rows[rowindex][2];
+            int? qty = (int)grid_ds.Tables[0].Rows[rowindex][3];
+            if ((!qty.HasValue || qty ==0) || (!price.HasValue || qty == 0))
+            {
+                Response.Write("<script>alert('يجب تحديد السعر و الكمية');</script>");
+                return;
+            }                  
 
 
             //get user data from cookies
@@ -662,7 +699,7 @@ public partial class purchases : System.Web.UI.Page
                 return;
             }
 
-            int rowindex = Convert.ToInt32(e.CommandArgument);
+            
 
             if (((DropDownList)GridView1.Rows[rowindex].FindControl("DRP_NAME_GRD")).SelectedIndex == 0)
             {
@@ -729,7 +766,7 @@ public partial class purchases : System.Web.UI.Page
             DataSet drp_prod_name_grd_ds = (DataSet)ViewState["drp_prod_name_grd_ds"];
             int [] prod_id = new int[GridView1.Rows.Count ];
             string [] prod_name = new string[GridView1.Rows.Count];
-            grid_ds = (DataSet)ViewState["grid_ds"];   
+             
 
         
             Label LBL_ID = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("LBL_PROD_ID_GRD") as Label;
@@ -772,6 +809,7 @@ public partial class purchases : System.Web.UI.Page
             }
 
             //database section
+            double prod_tax = 0, prod_disc = 0;
             string select_id = "select id from purchases where id = " + TXT_ID.Text + "";
             string id = db.select_value(select_id, "id");
             if (string.IsNullOrEmpty(id))
@@ -788,7 +826,28 @@ public partial class purchases : System.Web.UI.Page
                 db.insert(insert_purchase);
             }
 
-            string insert_prod_details = "INSERT INTO purchases_details (purchase_id, product_id, price, quantity, total_price, tax, total_after_tax, discount, total_after_discount, profit)" +
+            //calculate prodcut_tax and product_discount
+            decimal? total_tax = (decimal)grid_ds.Tables[0].Rows[rowindex][6];
+            decimal? total_disc = (decimal)grid_ds.Tables[0].Rows[rowindex][8];
+            decimal? total_price = (decimal) grid_ds.Tables[0].Rows[rowindex][4];
+            if (total_price.HasValue && total_price != 0)
+            {
+                if (total_tax.HasValue && total_tax != 0)
+                {
+                    prod_tax = (double)(total_tax / total_price) ;
+                }
+                if (total_disc.HasValue && total_disc != 0)
+                {
+                    prod_disc= (double)(total_disc / total_price);
+                }
+
+            }
+
+                      
+            
+
+
+            string insert_prod_details = "INSERT INTO purchases_details (purchase_id, product_id, price, quantity, total_price, tax, product_tax, total_after_tax, discount, product_discount, total_after_discount, profit)" +
                 " VALUES (" +
                 "" + TXT_ID.Text + "," +
                 "" + LBL_ID_GRD + "," +
@@ -796,8 +855,10 @@ public partial class purchases : System.Web.UI.Page
                 "" + grid_ds.Tables[0].Rows[rowindex][3] + "," +
                 "" + grid_ds.Tables[0].Rows[rowindex][4] + "," +
                 "" + grid_ds.Tables[0].Rows[rowindex][5] + "," +
+                "" + Math.Round(prod_tax,4) + "," +
                 "" + grid_ds.Tables[0].Rows[rowindex][6] + "," +
                 "" + grid_ds.Tables[0].Rows[rowindex][7] + "," +
+                "" + Math.Round(prod_disc,4) + "," +
                 "" + grid_ds.Tables[0].Rows[rowindex][8] + "," +
                 "" + grid_ds.Tables[0].Rows[rowindex][9] + ")";
             db.insert(insert_prod_details);

@@ -43,6 +43,11 @@
                             <asp:Label ID="LBL_DATE_GRD" runat="server" Text='<%# Bind("date") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
+                    <asp:TemplateField HeaderText="الوقت">
+                        <ItemTemplate>
+                            <asp:Label ID="LBL_TIME_GRD" runat="server" Text='<%# Bind("time") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
                     <asp:TemplateField HeaderText="المورد">
                         <ItemTemplate>
                             <asp:Label ID="LBL_SUPP_NAME" runat="server" Text='<%# Bind("supplier_name") %>'></asp:Label>
@@ -124,7 +129,7 @@
                 <SortedDescendingHeaderStyle BackColor="#820000" />
             </asp:GridView>
             <br />
-            <asp:Label ID="Label13" runat="server" Text="تكلفة المنتج"></asp:Label>
+            <asp:Label ID="LBL_COST_DETAILS" runat="server" Text="تكلفة المنتج"></asp:Label>
             <br />
             <br />
             <asp:GridView ID="GRD_PROD_COST" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowCommand="GRD_PROD_COST_RowCommand" OnRowDeleting="GRD_PROD_COST_RowDeleting">
