@@ -98,7 +98,7 @@
                             </asp:MenuItem>
                             <asp:MenuItem Text="المخزن" Value="Stock">
                                 <asp:MenuItem Text="امر توريد" Value="امر توريد" NavigateUrl="~/stock_purchases.aspx"></asp:MenuItem>
-                                <asp:MenuItem Text="امر صرف" Value="امر صرف"></asp:MenuItem>
+                                <asp:MenuItem Text="امر صرف" Value="امر صرف" NavigateUrl="~/stock_sales.aspx"></asp:MenuItem>
                                 <asp:MenuItem Text="امر مرتجع صرف" Value="امر مرتجع صرف"></asp:MenuItem>
                                 <asp:MenuItem Text="امر مرتجع توريد" Value="امر مرتجع توريد"></asp:MenuItem>
                                 <asp:MenuItem NavigateUrl="~/stock_in_out.aspx" Text="اوامر الصرف و التوريد" Value="IN/Out"></asp:MenuItem>
