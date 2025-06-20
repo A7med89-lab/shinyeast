@@ -195,7 +195,7 @@ public partial class purchases : System.Web.UI.Page
         {
             //calculate total
             grid_ds.Tables[0].Rows[rindex][3] = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[3].FindControl("TXT_QTY_GRD"))).Text);
-            total_price_grd = int.Parse(price) * int.Parse(qty);
+            total_price_grd = decimal.Parse(price) * int.Parse(qty);
             grid_ds.Tables[0].Rows[rindex][4] = total_price_grd;
 
             for (int i = 5; i <= 9; i++)
@@ -230,8 +230,12 @@ public partial class purchases : System.Web.UI.Page
             //calculate profit
             if (!(tax != null && (string.IsNullOrEmpty(tax) || tax == "0")))
             {
-                profit = total_price_grd * int.Parse(disc) / 100;
-                grid_ds.Tables[0].Rows[rindex][9] = profit;
+                if (!(disc != null && (string.IsNullOrEmpty(disc) || disc == "0")))
+                {
+                    profit = total_price_grd * int.Parse(disc) / 100;
+                    grid_ds.Tables[0].Rows[rindex][9] = profit;
+                }
+                    
             }
 
 
@@ -385,7 +389,7 @@ public partial class purchases : System.Web.UI.Page
         {
             //calculate total
             grid_ds.Tables[0].Rows[rindex][3] = int.Parse(((TextBox)(GridView1.Rows[rindex].Cells[3].FindControl("TXT_QTY_GRD"))).Text);
-            total_price_grd = int.Parse(price) * int.Parse(qty);
+            total_price_grd = decimal.Parse(price) * int.Parse(qty);
             grid_ds.Tables[0].Rows[rindex][4] = total_price_grd;
             
             for (int i = 5; i <= 9; i++)
@@ -865,7 +869,7 @@ public partial class purchases : System.Web.UI.Page
 
                 //update price list and prices_trans
             string select_price = "select purchase_price from price_list where product_id = " + LBL_ID_GRD + "";            
-            int purchase_price = int.Parse(db.select_value(select_price, "purchase_price"));
+            decimal purchase_price = decimal.Parse(db.select_value(select_price, "purchase_price"));
 
             if (purchase_price != (decimal)grid_ds.Tables[0].Rows[rowindex][2])
             {

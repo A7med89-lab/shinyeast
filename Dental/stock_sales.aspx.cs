@@ -12,7 +12,7 @@ using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 using Microsoft.Ajax.Utilities;
 
-public partial class stock_purchases : System.Web.UI.Page
+public partial class stock_sales : System.Web.UI.Page
 {
     public void fill_grid()
     {
@@ -167,14 +167,12 @@ public partial class stock_purchases : System.Web.UI.Page
                             db.update(update_total_cost);
                         }
                     }
-
                 }
                 
             }
             
                 
         }
-
         
 
         if (e.CommandName == "Select")
@@ -208,9 +206,7 @@ public partial class stock_purchases : System.Web.UI.Page
                 prod_qty[i] = int.Parse(prod_details.Rows[i]["qty"].ToString());
                 prod_id[i] = int.Parse(prod_details.Rows[i]["prod_id"].ToString());
 
-
-                //update product_price in stock_order_details
-
+                //update product_price in stock_order_details 
                 string product_price = "select purchase_price from price_list where product_id = " + prod_id[i] + "";
                 decimal purchase_product_price = int.Parse(db.select_value(product_price, "purchase_price"));
                 string product_tax = "select product_tax from purchases_details where product_id = " + prod_id[i] + " and purchase_id = " + id + "";
@@ -295,8 +291,7 @@ public partial class stock_purchases : System.Web.UI.Page
                 }
 
 
-                //insert or update sales_stock price in stock price and update products stock_in flag and update price_list
-
+                //insert or update sales_stock price in stock price
                 string sum_product_price = "select sum(product_price) as sum_product_price from stock_order_details where product_id = "+prod_id[i]+"";
                 decimal get_sum_product_price = decimal.Parse(db.select_value(sum_product_price, "sum_product_price"));
                 string select_total_net_in = "select total_net_in from product_quantities where product_id = " + prod_id[i]+"";
@@ -316,15 +311,7 @@ public partial class stock_purchases : System.Web.UI.Page
                     string insert_stock_price = "insert into stock_prices (product_id, sales_stock_price) VALUES (" + prod_id[i] + ", " + salse_product_price + ") ";
                     db.insert(insert_stock_price);
                 }
-
-                //update products stock_in
-                string update_products_stock_in = "update products set stock_in = " + 1 + " where product_id = " + prod_id[i] + "";
-                db.update(update_products_stock_in);
-
-                //update price list             
-                string update_price_list = "update price_list set sales_price = " + salse_product_price + " where product_id = " + prod_id[i] + "";
-                db.update(update_price_list);
-
+                
             }
             start_load();
         }

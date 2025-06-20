@@ -149,7 +149,8 @@ public partial class sales : System.Web.UI.Page
         GridView1.DataBind();
 
 
-        string qurey = "select id, name from products";
+        string qurey = "select id, name from products where stock_in = 1";
+        //string qurey = "select stock_prices.product_id as id, products.name from stock_prices inner join products on stock_prices.product_id = products.id";       
         DropDownList drp_prod_name_grid = GridView1.Rows[0].FindControl("DRP_NAME_GRD") as DropDownList;
         DataSet drp_prod_name_grd_ds = db.fill_drop_grid(qurey, drp_prod_name_grid, "اختيار المنتج");
         ViewState.Add("drp_prod_name_grd_ds", drp_prod_name_grd_ds);
@@ -158,6 +159,134 @@ public partial class sales : System.Web.UI.Page
         ViewState.Add("drp_prod_name_index_grd", drp_prod_name_index_grd);
         delete_flag = false;
         ViewState.Add("delete_flag", delete_flag);
+    }
+
+    public void grid_calculate()
+    {
+        int rindex = GridView1.Rows.Count - 1;
+        //define variables
+        grid_ds = (DataSet)ViewState["grid_ds"];
+        string qty = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_QTY_GRD")).Text.Trim();
+        string price = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_PRICE_GRD")).Text.Trim();
+        string disacc = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_DISACC_GRD")).Text.Trim();
+        decimal total_price_grd = 0;
+        int profit_grd_discc = 0;
+        int drp_prod_name_index_grd = (int)ViewState["drp_prod_name_index_grd"];
+        DataSet drp_prod_name_grd_ds = ViewState["drp_prod_name_grd_ds"] as DataSet;
+        int[] prod_id = new int[GridView1.Rows.Count - 1];
+        string[] prod_name = new string[GridView1.Rows.Count - 1];
+
+        //store all product id and name in arrays
+        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
+        {
+            prod_id[i] = int.Parse(((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Text);
+            prod_name[i] = ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Text;
+
+        }
+
+        // assgin price = 0 if price fild in grid = null or empty
+        if (price != null && string.IsNullOrWhiteSpace(price.ToString()))
+        {
+            grid_ds.Tables[0].Rows[grid_ds.Tables[0].Rows.Count - 1][2] = 0;
+            price = 0.ToString();
+        }
+        else
+        {
+            grid_ds.Tables[0].Rows[grid_ds.Tables[0].Rows.Count - 1][2] = price;
+        }
+
+        // assgin all product's values as per qty value or 0 if qty = 0
+        if (qty != null && (string.IsNullOrEmpty(qty) || qty == "0"))
+        {
+
+            for (int i = 3; i <= 10; i++)
+                grid_ds.Tables[0].Rows[rindex][i] = 0;
+
+        }
+
+        else
+        {
+            //calculate total
+            grid_ds.Tables[0].Rows[rindex][3] = int.Parse(((TextBox)(GridView1.Rows[rindex].FindControl("TXT_QTY_GRD"))).Text);
+            total_price_grd = decimal.Parse(price) * int.Parse(qty);
+            grid_ds.Tables[0].Rows[rindex][4] = total_price_grd;
+
+            //calculate profite
+            string select_purchase_price = "select purchase_price from price_list where product_id = " + int.Parse(((DropDownList)GridView1.Rows[rindex].FindControl("DRP_NAME_GRD")).SelectedValue) + "";
+            string purchase_price = db.select_value(select_purchase_price, "purchase_price");
+            decimal profit = ((decimal)total_price_grd - (decimal.Parse(purchase_price)) * int.Parse(qty));
+            grid_ds.Tables[0].Rows[rindex][5] = profit;
+
+            //calculate profite percentage
+            decimal profit_perc = (decimal)(((decimal)profit / (decimal)total_price_grd) * 100);
+            profit_perc = Math.Round(profit_perc, 2);
+            grid_ds.Tables[0].Rows[rindex][6] = profit_perc;
+
+            //calculate disscount
+            if (disacc != null && (string.IsNullOrEmpty(disacc) || disacc == "0"))
+            {
+
+                //grid_ds.Tables[0].Rows[rindex][6] = 0;
+                for (int i = 7; i <= 10; i++)
+                    grid_ds.Tables[0].Rows[rindex][i] = 0;
+            }
+            else
+            {
+                grid_ds.Tables[0].Rows[rindex][7] = disacc;
+                //calculate_net_total_price
+                decimal net_total_price = (decimal)total_price_grd - (decimal)((decimal)total_price_grd * (decimal)int.Parse(disacc) / 100);
+                grid_ds.Tables[0].Rows[rindex][8] = net_total_price;
+
+                //calculate_net_profit                
+                decimal net_profit = (decimal)profit - ((((decimal)profit * ((decimal)int.Parse(disacc)))) / 100);
+                grid_ds.Tables[0].Rows[rindex][9] = net_profit;
+
+                //calculate_net_profit_percent
+                //calculate profite percentage
+                decimal net_profit_perc = (decimal)(((decimal)net_profit / (decimal)net_total_price) * 100);
+                net_profit_perc = Math.Round(profit_perc, 2);
+                grid_ds.Tables[0].Rows[rindex][6] = net_profit_perc;
+
+
+            }
+
+        }
+
+        //// calculate profit after discount
+        //if (!(disacc != null && (string.IsNullOrEmpty(disacc) || disacc == "0")))
+        //{
+        //    profit_grd_discc = total_price_grd * int.Parse(disacc) / 100;
+        //    grid_ds.Tables[0].Rows[rindex][6] = profit_grd_discc;
+        //}
+
+        // restore product id and name to dataset to bind into grid
+        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
+        {
+            grid_ds.Tables[0].Rows[i][0] = prod_name[i];
+            grid_ds.Tables[0].Rows[i][1] = prod_id[i];
+        }
+        ViewState["grid_ds"] = grid_ds;
+        GridView1.DataSource = grid_ds;
+        GridView1.DataBind();
+
+        //fill_drp_prod_name_grd;
+        DropDownList dr_prod_name_grid = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD") as DropDownList;
+        dr_prod_name_grid.DataSource = drp_prod_name_grd_ds.Tables[0];
+        dr_prod_name_grid.DataTextField = drp_prod_name_grd_ds.Tables[0].Columns["name"].ToString();
+        dr_prod_name_grid.DataValueField = drp_prod_name_grd_ds.Tables[0].Columns["id"].ToString();
+        dr_prod_name_grid.DataBind();
+        dr_prod_name_grid.Items.Insert(0, "اختيار المنتج");
+
+        //store index of selected product in dropdown list
+        dr_prod_name_grid.SelectedIndex = drp_prod_name_index_grd;
+
+        //hide dropdown list and show label
+        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
+        {
+            ((DropDownList)GridView1.Rows[i].FindControl("DRP_NAME_GRD")).Visible = false;
+            ((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Visible = false;
+            ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Visible = true;
+        }
     }
 
     //bool validation_cash(int total_price)
@@ -270,274 +399,17 @@ public partial class sales : System.Web.UI.Page
 
     protected void TXT_QTY_GRD_TextChanged(object sender, EventArgs e)
     {
-        int rindex = GridView1.Rows.Count - 1;
-        //define variables
-        grid_ds = (DataSet)ViewState["grid_ds"];
-        string qty = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_QTY_GRD")).Text.Trim();
-        string price = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_PRICE_GRD")).Text.Trim();
-        string disacc = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_DISACC_GRD")).Text.Trim();
-        int total_price_grd = 0, profit_grd_discc = 0;
-        int drp_prod_name_index_grd = (int)ViewState["drp_prod_name_index_grd"];
-        DataSet drp_prod_name_grd_ds = ViewState["drp_prod_name_grd_ds"] as DataSet;
-        int[] prod_id = new int[GridView1.Rows.Count - 1];
-        string[] prod_name = new string[GridView1.Rows.Count - 1];
-
-        //store all product id and name in arrays
-        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
-        {
-            prod_id[i] = int.Parse(((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Text);
-            prod_name[i] = ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Text;
-
-        }
-
-        // assgin price = 0 if price fild in grid = null or empty
-        if (price != null && string.IsNullOrWhiteSpace(price.ToString()))
-        {
-            grid_ds.Tables[0].Rows[grid_ds.Tables[0].Rows.Count - 1][2] = 0;
-            price = 0.ToString();
-        }
-        else
-        {
-            grid_ds.Tables[0].Rows[grid_ds.Tables[0].Rows.Count - 1][2] = price;
-        }
-
-        // assgin all product's values as per qty value or 0 if qty = 0
-        if (qty != null && (string.IsNullOrEmpty(qty) || qty == "0"))
-        {
-            
-            for (int i = 3; i <= 10; i++)
-            grid_ds.Tables[0].Rows[rindex][i] = 0;
-            
-        }
-
-        else
-        {
-            //calculate total
-            grid_ds.Tables[0].Rows[rindex][3] = int.Parse(((TextBox)(GridView1.Rows[rindex].FindControl("TXT_QTY_GRD"))).Text);
-            total_price_grd = int.Parse(price) * int.Parse(qty);
-            grid_ds.Tables[0].Rows[rindex][4] = total_price_grd;
-
-            //calculate profite
-            string select_purchase_price = "select purchase_price from price_list where product_id = " + int.Parse(((DropDownList)GridView1.Rows[rindex].FindControl("DRP_NAME_GRD")).SelectedValue) + "";
-            string purchase_price = db.select_value(select_purchase_price, "purchase_price");
-            decimal profit =(decimal)((decimal)total_price_grd - ((decimal)(int.Parse(purchase_price)) * (decimal)(int.Parse(qty))));
-            grid_ds.Tables[0].Rows[rindex][5] = profit;
-
-            //calculate profite percentage
-            decimal profit_perc = (decimal)(((decimal) profit / (decimal) total_price_grd) * 100);
-            profit_perc = Math.Round(profit_perc, 2);
-            grid_ds.Tables[0].Rows[rindex][6] = profit_perc ;
-
-            //calculate disscount
-            if (disacc != null && (string.IsNullOrEmpty(disacc) || disacc == "0"))
-            {
-
-                //grid_ds.Tables[0].Rows[rindex][6] = 0;
-                for (int i = 7; i <= 10; i++)
-                    grid_ds.Tables[0].Rows[rindex][i] = 0;
-            }
-            else
-            {
-                grid_ds.Tables[0].Rows[rindex][7] = disacc;
-                //calculate_net_total_price
-                decimal net_total_price = (decimal)total_price_grd - (decimal)((decimal)total_price_grd * (decimal)int.Parse(disacc) / 100);
-                grid_ds.Tables[0].Rows[rindex][8] = net_total_price;
-
-                //calculate_net_profit                
-                decimal net_profit = (decimal)profit - ((((decimal)profit * ((decimal)int.Parse(disacc)))) / 100);
-                grid_ds.Tables[0].Rows[rindex][9] = net_profit;
-
-                //calculate_net_profit_percent
-                //calculate profite percentage
-                decimal net_profit_perc = (decimal)(((decimal)net_profit / (decimal)net_total_price) * 100);
-                net_profit_perc = Math.Round(profit_perc, 2);
-                grid_ds.Tables[0].Rows[rindex][6] = net_profit_perc;
-                
-
-            }
-
-
-
-            //for (int i = 5; i <= 6; i++)
-            //    grid_ds.Tables[0].Rows[rindex][i] = 0;
-
-
-        }
-
-        //// calculate profit after discount
-        //if (!(disacc != null && (string.IsNullOrEmpty(disacc) || disacc == "0")))
-        //{
-        //    profit_grd_discc = total_price_grd * int.Parse(disacc) / 100;
-        //    grid_ds.Tables[0].Rows[rindex][6] = profit_grd_discc;
-        //}
-
-        // restore product id and name to dataset to bind into grid
-        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
-        {
-            grid_ds.Tables[0].Rows[i][0] = prod_name[i];
-            grid_ds.Tables[0].Rows[i][1] = prod_id[i];
-        }
-        ViewState["grid_ds"] = grid_ds;
-        GridView1.DataSource = grid_ds;
-        GridView1.DataBind();
-
-        //fill_drp_prod_name_grd;
-        DropDownList dr_prod_name_grid = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD") as DropDownList;
-        dr_prod_name_grid.DataSource = drp_prod_name_grd_ds.Tables[0];
-        dr_prod_name_grid.DataTextField = drp_prod_name_grd_ds.Tables[0].Columns["name"].ToString();
-        dr_prod_name_grid.DataValueField = drp_prod_name_grd_ds.Tables[0].Columns["id"].ToString();
-        dr_prod_name_grid.DataBind();
-        dr_prod_name_grid.Items.Insert(0, "اختيار المنتج");
-
-        //store index of selected product in dropdown list
-        dr_prod_name_grid.SelectedIndex = drp_prod_name_index_grd;
-
-        //hide dropdown list and show label
-        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
-        {
-            ((DropDownList)GridView1.Rows[i].FindControl("DRP_NAME_GRD")).Visible = false;
-            ((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Visible = false;
-            ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Visible = true;
-        }
-
+        grid_calculate();
     }
 
     protected void TXT_PRICE_GRD_TextChanged(object sender, EventArgs e)
     {
-        
+        grid_calculate();
     }
     
     protected void TXT_DISACC_DRD_TextChanged(object sender, EventArgs e)
     {
-        int rindex = GridView1.Rows.Count - 1;
-        //define variables
-        grid_ds = (DataSet)ViewState["grid_ds"];
-        string qty = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_QTY_GRD")).Text.Trim();
-        string price = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_PRICE_GRD")).Text.Trim();
-        string disacc = ((TextBox)GridView1.Rows[rindex].FindControl("TXT_DISACC_GRD")).Text.Trim();
-        int total_price_grd = 0, profit_grd_discc = 0;
-        int drp_prod_name_index_grd = (int)ViewState["drp_prod_name_index_grd"];
-        DataSet drp_prod_name_grd_ds = ViewState["drp_prod_name_grd_ds"] as DataSet;
-        int[] prod_id = new int[GridView1.Rows.Count - 1];
-        string[] prod_name = new string[GridView1.Rows.Count - 1];
-
-        //store all product id and name in arrays
-        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
-        {
-            prod_id[i] = int.Parse(((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Text);
-            prod_name[i] = ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Text;
-
-        }
-
-        // assgin price = 0 if price fild in grid = null or empty
-        if (price != null && string.IsNullOrWhiteSpace(price.ToString()))
-        {
-            grid_ds.Tables[0].Rows[grid_ds.Tables[0].Rows.Count - 1][2] = 0;
-            price = 0.ToString();
-        }
-        else
-        {
-            grid_ds.Tables[0].Rows[grid_ds.Tables[0].Rows.Count - 1][2] = price;
-        }
-
-        // assgin all product's values as per qty value or 0 if qty = 0
-        if (qty != null && (string.IsNullOrEmpty(qty) || qty == "0"))
-        {
-
-            for (int i = 3; i <= 10; i++)
-                grid_ds.Tables[0].Rows[rindex][i] = 0;
-
-        }
-
-        else
-        {
-            //calculate total
-            grid_ds.Tables[0].Rows[rindex][3] = int.Parse(((TextBox)(GridView1.Rows[rindex].FindControl("TXT_QTY_GRD"))).Text);
-            total_price_grd = int.Parse(price) * int.Parse(qty);
-            grid_ds.Tables[0].Rows[rindex][4] = total_price_grd;
-
-            //calculate profite
-            string select_purchase_price = "select purchase_price from price_list where product_id = " + int.Parse(((DropDownList)GridView1.Rows[rindex].FindControl("DRP_NAME_GRD")).SelectedValue) + "";
-            string purchase_price = db.select_value(select_purchase_price, "purchase_price");
-            decimal profit = (decimal)((decimal)total_price_grd - ((decimal)(int.Parse(purchase_price)) * (decimal)(int.Parse(qty))));
-            grid_ds.Tables[0].Rows[rindex][5] = profit;
-
-            //calculate profite percentage
-            decimal profit_perc = (decimal)(((decimal)profit / (decimal)total_price_grd) * 100);
-            profit_perc = Math.Round(profit_perc, 2);
-            grid_ds.Tables[0].Rows[rindex][6] = profit_perc;
-
-            //calculate disscount
-            if (disacc != null && (string.IsNullOrEmpty(disacc) || disacc == "0"))
-            {
-
-                //grid_ds.Tables[0].Rows[rindex][6] = 0;
-                for (int i = 7; i <= 10; i++)
-                    grid_ds.Tables[0].Rows[rindex][i] = 0;
-            }
-            else
-            {
-                grid_ds.Tables[0].Rows[rindex][7] = disacc;
-                //calculate_net_total_price
-                decimal net_total_price = (decimal)total_price_grd - (decimal)((decimal)total_price_grd * (decimal)int.Parse(disacc) / 100);
-                grid_ds.Tables[0].Rows[rindex][8] = net_total_price;
-
-                //calculate_net_profit                
-                decimal net_profit = (decimal)profit - ((((decimal)profit * ((decimal)int.Parse(disacc)))) / 100);
-                grid_ds.Tables[0].Rows[rindex][9] = net_profit;
-
-                //calculate_net_profit_percent
-                //calculate profite percentage
-                decimal net_profit_perc = (decimal)(((decimal)net_profit / (decimal)net_total_price) * 100);
-                net_profit_perc = Math.Round(profit_perc, 2);
-                grid_ds.Tables[0].Rows[rindex][6] = net_profit_perc;
-
-
-            }
-
-
-
-            //for (int i = 5; i <= 6; i++)
-            //    grid_ds.Tables[0].Rows[rindex][i] = 0;
-
-
-        }
-
-        //// calculate profit after discount
-        //if (!(disacc != null && (string.IsNullOrEmpty(disacc) || disacc == "0")))
-        //{
-        //    profit_grd_discc = total_price_grd * int.Parse(disacc) / 100;
-        //    grid_ds.Tables[0].Rows[rindex][6] = profit_grd_discc;
-        //}
-
-        // restore product id and name to dataset to bind into grid
-        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
-        {
-            grid_ds.Tables[0].Rows[i][0] = prod_name[i];
-            grid_ds.Tables[0].Rows[i][1] = prod_id[i];
-        }
-        ViewState["grid_ds"] = grid_ds;
-        GridView1.DataSource = grid_ds;
-        GridView1.DataBind();
-
-        //fill_drp_prod_name_grd;
-        DropDownList dr_prod_name_grid = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD") as DropDownList;
-        dr_prod_name_grid.DataSource = drp_prod_name_grd_ds.Tables[0];
-        dr_prod_name_grid.DataTextField = drp_prod_name_grd_ds.Tables[0].Columns["name"].ToString();
-        dr_prod_name_grid.DataValueField = drp_prod_name_grd_ds.Tables[0].Columns["id"].ToString();
-        dr_prod_name_grid.DataBind();
-        dr_prod_name_grid.Items.Insert(0, "اختيار المنتج");
-
-        //store index of selected product in dropdown list
-        dr_prod_name_grid.SelectedIndex = drp_prod_name_index_grd;
-
-        //hide dropdown list and show label
-        for (int i = 0; i < GridView1.Rows.Count - 1; i++)
-        {
-            ((DropDownList)GridView1.Rows[i].FindControl("DRP_NAME_GRD")).Visible = false;
-            ((Label)GridView1.Rows[i].FindControl("LBL_PROD_ID_GRD")).Visible = false;
-            ((Label)GridView1.Rows[i].FindControl("LBL_PROD_NAME_GRD")).Visible = true;
-        }
+        grid_calculate();
     }
 
     protected void TXT_ID_TextChanged(object sender, EventArgs e)
@@ -802,6 +674,7 @@ public partial class sales : System.Web.UI.Page
 
         if (e.CommandName == "New")
         {
+
             // confirm calculation before save
 
             // confirm calculation
@@ -810,6 +683,22 @@ public partial class sales : System.Web.UI.Page
 
             //validate price & qty
 
+            //define global variable
+            int rowindex = Convert.ToInt32(e.CommandArgument);
+            DropDownList grid_dr = GridView1.Rows[rowindex].FindControl("DRP_NAME_GRD") as DropDownList;
+            string LBL_ID_GRD = grid_dr.SelectedValue;
+            string LBL_NAME_GRD = grid_dr.SelectedItem.ToString();
+            DropDownList[] grid_prod_name_dr = new DropDownList[GridView1.Rows.Count - 1];
+            DataSet drp_prod_name_grd_ds = (DataSet)ViewState["drp_prod_name_grd_ds"];
+            int[] prod_id = new int[GridView1.Rows.Count];
+            string[] prod_name = new string[GridView1.Rows.Count];
+            grid_ds = (DataSet)ViewState["grid_ds"];
+            Label LBL_ID = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("LBL_PROD_ID_GRD") as Label;
+            Label LBL_NAME = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("LBL_PROD_NAME_GRD") as Label;
+            LBL_ID.Text = LBL_ID_GRD;
+            LBL_NAME.Text = LBL_NAME_GRD;
+            int sales_price_grd = int.Parse(((TextBox)GridView1.Rows[GridView1.Rows.Count - 1].FindControl("TXT_PRICE_GRD")).Text);
+
             //get user data from cookies
             HttpCookie users = Request.Cookies["users"];
             int user_id = 0;
@@ -817,7 +706,7 @@ public partial class sales : System.Web.UI.Page
                 user_id = int.Parse(Request.Cookies["users"]["user_id"].ToString());
             }
 
-            int rowindex = Convert.ToInt32(e.CommandArgument);
+            
 
             if (((DropDownList)GridView1.Rows[rowindex].FindControl("DRP_NAME_GRD")).SelectedIndex == 0)
             {
@@ -850,6 +739,7 @@ public partial class sales : System.Web.UI.Page
 
                 
             }
+
             string prod_id_grd = ((Label)GridView1.Rows[rowindex].FindControl("LBL_PROD_ID_GRD")).Text;
             if(string.IsNullOrEmpty(prod_id_grd))
             {
@@ -863,22 +753,25 @@ public partial class sales : System.Web.UI.Page
                 return;
             }
 
-            //define global variable
+            //validate at least price and qty inserted
+            decimal? price = (decimal)grid_ds.Tables[0].Rows[rowindex][2];
+            int? qty = (int)grid_ds.Tables[0].Rows[rowindex][3];
+            if ((!qty.HasValue || qty == 0) || (!price.HasValue || qty == 0))
+            {
+                Response.Write("<script>alert('يجب تحديد السعر و الكمية');</script>");
+                return;
+            }
 
-            DropDownList grid_dr = GridView1.Rows[rowindex].FindControl("DRP_NAME_GRD") as DropDownList;
-            string LBL_ID_GRD = grid_dr.SelectedValue; 
-            string LBL_NAME_GRD = grid_dr.SelectedItem.ToString();
-            DropDownList[] grid_prod_name_dr = new DropDownList[GridView1.Rows.Count - 1];
-            DataSet drp_prod_name_grd_ds = (DataSet)ViewState["drp_prod_name_grd_ds"];
-            int [] prod_id = new int[GridView1.Rows.Count ];
-            string [] prod_name = new string[GridView1.Rows.Count];
-            grid_ds = (DataSet)ViewState["grid_ds"];   
+            //vaildate sales price not allowed less than stock price
+            string select_stock_price = "select sales_stock_price from stock_prices  where product_id = " + LBL_ID_GRD + "";
+            decimal db_stock_price = decimal.Parse(db.select_value(select_stock_price, "sales_stock_price"));
+            if (sales_price_grd < db_stock_price)
+            {
+                Response.Write("<script>alert('سعر بيع الصنف اقل من سعر الشراء');</script>");
+                return;
+            }
 
-        
-            Label LBL_ID = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("LBL_PROD_ID_GRD") as Label;
-            Label LBL_NAME = GridView1.Rows[GridView1.Rows.Count - 1].FindControl("LBL_PROD_NAME_GRD") as Label;
-            LBL_ID.Text = LBL_ID_GRD;
-            LBL_NAME.Text = LBL_NAME_GRD;
+            
                               
             for (int i = 0; i < GridView1.Rows.Count ; i++)
             {
@@ -937,18 +830,23 @@ public partial class sales : System.Web.UI.Page
                 "" + grid_ds.Tables[0].Rows[rowindex][3] + "," +
                 "" + grid_ds.Tables[0].Rows[rowindex][4] + "," +
                 "" + grid_ds.Tables[0].Rows[rowindex][5] + "," +
-                "" + grid_ds.Tables[0].Rows[rowindex][6] + ")";
+                "" + grid_ds.Tables[0].Rows[rowindex][6] + "," +
+                "" + grid_ds.Tables[0].Rows[rowindex][7] + "," +
+                "" + grid_ds.Tables[0].Rows[rowindex][8] + "," +
+                "" + grid_ds.Tables[0].Rows[rowindex][9] + "," +
+                "" + grid_ds.Tables[0].Rows[rowindex][10] + ")";
             db.insert(insert_prod_details);
 
             //update price list and prices_trans
             string select_price = "select sales_price from price_list where product_id = " + LBL_ID_GRD + "";
-            int sales_price = int.Parse(db.select_value(select_price, "purchase_price"));
+            //string select_price = "select sales_stock_price from stock_prices  where product_id = " + LBL_ID_GRD + "";
+            int sales_price = int.Parse(db.select_value(select_price, "sales_price"));
+            //int sales_price = int.Parse(db.select_value(select_price, "sales_stock_price"));
 
-            if (sales_price != (int)grid_ds.Tables[0].Rows[rowindex][2])
+            if (sales_price != (decimal)grid_ds.Tables[0].Rows[rowindex][2])
             {
                 string update_price = "update price_list set sales_price = " + grid_ds.Tables[0].Rows[rowindex][2] + " where product_id = " + LBL_ID_GRD + "";
                 db.update(update_price);
-
                 string insert_price = "INSERT INTO prices_trans (product_id, sales_price) " +
                 " VALUES (" +
                 "" + LBL_ID_GRD + "," +
@@ -965,8 +863,10 @@ public partial class sales : System.Web.UI.Page
     protected void DRP_NAME_GRD_SelectedIndexChanged(object sender, EventArgs e)
     {
 
-        string query = string.Format("select sales_price from price_list where product_id = '{0}'", ((DropDownList)(GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD"))).SelectedValue);
-        string purchase_price = db.select_value(query, "sales_price");
+        //string query = string.Format("select sales_price from price_list where product_id = '{0}'", ((DropDownList)(GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD"))).SelectedValue);
+        string query = string.Format("select stock_prices.product_id , products.name, stock_prices.sales_stock_price from stock_prices inner join products on stock_prices.product_id = products.id where product_id = '{0}'", ((DropDownList)(GridView1.Rows[GridView1.Rows.Count - 1].FindControl("DRP_NAME_GRD"))).SelectedValue);
+        
+        string purchase_price = db.select_value(query, "sales_stock_price");
         if (string.IsNullOrEmpty(purchase_price))
         {
             ((TextBox)(GridView1.Rows[GridView1.Rows.Count - 1].FindControl("TXT_PRICE_GRD"))).Text = 0.ToString();
@@ -993,6 +893,7 @@ public partial class sales : System.Web.UI.Page
         //grid_ds.Tables[0].Rows[grid_ds.Tables[0].Rows.Count - 1][2] = purchase_price;
         //GridView1.DataSource = grid_ds;
         //GridView1.DataBind();
+        grid_calculate();
     }
 
 
