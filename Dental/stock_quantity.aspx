@@ -10,6 +10,7 @@
           <br />
           <br />
           <asp:GridView ID="GRD_STOCK_TOTAL" runat="server" CellPadding="4" AutoGenerateColumns="False" BackColor="White" BorderColor="#3366CC" BorderStyle="None" BorderWidth="1px">
+
               <Columns>
                   <asp:TemplateField HeaderText="رقم المخزن">
                       <ItemTemplate>
